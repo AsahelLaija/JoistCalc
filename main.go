@@ -10,12 +10,17 @@ func main() {
     e.Use(middleware.Recover())
 
     e.GET("/", func(c echo.Context) error {
-	return c.File("static/index.html")
+	return c.File("views/index.html")
     })
+
     e.GET("/styles", func(c echo.Context) error {
 	return c.File("static/styles.css")
     })
 
+    e.POST("/dataEnter" func(c echo.Context) error {
+	name := c.FormValue("name")
+	return c.String(http.StatusOK, "name: " + name)
+    })
 
-    e.Logger.Fatal(e.Start(":8080"))
+    e.Logger.Fatal(e.Start(":3000"))
 } 
