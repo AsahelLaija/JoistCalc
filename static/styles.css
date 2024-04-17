@@ -11,6 +11,9 @@ body {
   align-items: center;
   flex-direction: column;
 }
+.geometry {
+    display: flex;
+}
 body, p, input, select, textarea, button {
   font-family: 'Montserrat', sans-serif;
   letter-spacing: -0.2px;
