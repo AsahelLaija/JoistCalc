@@ -1,20 +1,21 @@
-{{ define "Home" }}
-<!DOCTYPE html>
+{{ block "Home" . }}
+<div>
 <html>
     <head>
 	<meta charset="UTF-8">
 	<meta name="viewprt" content="width=device-width, initial-scale-1">
 	<script src="https://unpkg.com/htmx.org@1.9.11" integrity="sha384-0gxUXCCR8yv9FM2b+U3FDbsKthCI66oH5IA9fHppQq9DDMHuMauqq1ZHBpJxQ0J0" crossorigin="anonymous"></script>
 	<link href="/styles" rel="stylesheet">
-	<title>{{.}}</title>
+	<title>joist</title>
     </head>
     <body>
 	<header class="segment">
-	    <h1>{{.}}</h1>
+	    <h1>
+	    {{ template "form" .Data }}
+	    </h1>
 	</header> 
 	<div class="geometry">
-	    <h2 id="res"></h2>
-	    <form hx-post="/geometry" hx-target="#res">
+	    <form hx-post="/geometry"  hx-target="#tabla">
 		<label>
 		    Truss Type:
 		    <select name="trussType">
@@ -61,35 +62,9 @@
 		</label>
 		<button type="submit"> submit </button>
 	    </form>
-	    <div>
-		<table>
-		    <tbody>
-			<tr>
-			    <td>bottom chord to bottom panel</td>
-			    <td>36.16</td>
-			</tr>
-			<tr>
-			    <td>Design length</td>
-			    <td>586.52</td>
-			</tr>
-			<tr>
-			    <td>Total interior Panels</td>
-			    <td>20</td>
-			</tr>
-			<tr>
-			    <td>Total Diagonals</td>
-			    <td>24</td>
-			</tr>
-			<tr>
-			    <td>Total struts</td>
-			    <td>10</td>
-			</tr>
-			<tr>
-			    <td>Effective Depth</td>
-			    <td>27</td>
-			</tr>
-		    </tbody>
-		</table>
+
+	    <div id="tabla">
+	    {{ template "geometryResponse" .ResGeom }}
 	    </div>
 	</div>	
 	<h2>Material and Section</h2>
@@ -175,6 +150,20 @@
 	</form>
 
 	<script>
+	    document.addEventListener("DOMContentLoaded", (event) => {
+		document.body.addEventListener("htmx:beforeSwap", function(evt) {
+		    if(evt.detail.xhr.status === 422) {
+			// allow 422 responses to swap as we are using this as a signal that
+			// a form was submitted with bad data and want to rerender with the
+			// errors
+			//
+			// set isError to false to avoid error logging in console
+			evt.detail.shouldSwap = true;
+			evt.detail.isError = false;
+		    }
+		})
+	    })
+
 	    function IPCalculation(){
 		let spanInput = document.getElementById("spanInput").value*1
 		let Linput = document.getElementById("L")
@@ -238,80 +227,48 @@
     </body>
     <html>
 {{ end }}
-	<!--
-	    <div id="d">
-	    d:
-	    <input type="number" placeholder="inches"/>
-	    </div>
-	    <div >
-	    Lep1:
-	    <input
-	    type="number"
-	    placeholder="inches"
-	    onkeyup="lbe2Calculation()"
-	    id="Lep1"
-	    />
-	    </div>
-	    <div id="lep2">
-	    Lep2:
-	    <input
-	    type="number"
-	    placeholder="inches"
-	    onkeyup="lbe2Calculation()"
-	    id="Lep2"
-	    />
-	    </div>
-	    <div id="lip">
-	    Lip:
-	    <input
-		    type="number"
-		    placeholder="inches"
-		    onkeyup="lbe2Calculation()"
-		    id="Lip"
-		    />
-		    </div>
-		    <div id="lbe">
-		    Lbe:
-		    <input
-			    type="number"
-			    placeholder="inches"
-			    onkeyup="lbe2Calculation()"
-			    id="Lbe"
-			    />
-			    </DIv>
-			    <div id="lbe2">
-			    Lbe2:
-			    <input id="Lbe2" disabled/>
-			    </div>
-			    <div id="l">
-			    L:
-			    <input id="L" disabled/>
-			    </div>
-			    <div id="ip">
-			    IP:
-			    <input id="IPInput" disabled/>
-			    </div>
-			    <div id="w">
-			    W:
-			    <input id="WInput" disabled/>
-			    </div>
-			    <div id="v">
-			    V:
-			    <input id="VInput" disabled/>
-			    </div>
-			    <div id="de">
-			    de:
-			    <input id="deInput" disabled/>
-			    </div>
-			    </div>
 
-			    <div>
-			    <form name="myform">
-			    <label>value 1</label>
-			    <input type="number" name="qty" onkeyup="calculate()"/> <br/>
-			    <label>value 2</label>
-			    <input type="number" name="Cost" onkeyup="calculate()"/> <br/>
-			    <label>results</label>
-			    <input type="text" name="textbox5"/>
-			    </form>
-	-->
+{{ block "form" . }}
+    {{ range .Contacts }}
+    	{{ template "contact" . }}
+    {{ end }}
+{{ end }}
+
+{{ block "contact" . }}
+	{{ .Name }}
+	{{ .Email }}
+{{ end }}
+
+{{ block "geometryResponse" . }}
+    {{ $ResProp := index .ResProps 0 }}
+    <p></p>
+		<table>
+		    <tbody>
+			<tr>
+			    <td>bottom chord to bottom panel</td>
+			    <td>{{ $ResProp.Lbe2 }}</td>
+			</tr>
+			<tr>
+			    <td>Design length</td>
+			    <td>{{ $ResProp.DLength }}</td>
+			</tr>
+			<tr>
+			    <td>Total interior Panels</td>
+			    <td>{{ $ResProp.Tip }}</td>
+			</tr>
+			<tr>
+			    <td>Total Diagonals</td>
+			    <td>{{ $ResProp.Tod }}</td>
+			</tr>
+			<tr>
+			    <td>Total struts</td>
+			    <td>{{ $ResProp.Ts }}</td>
+			</tr>
+			<tr>
+			    <td>Effective Depth</td>
+			    <td>{{ $ResProp.Ed }}</td>
+			</tr>
+		    </tbody>
+		</table>
+    <hr>
+{{ end }}
