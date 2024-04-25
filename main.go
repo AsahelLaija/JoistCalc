@@ -7,7 +7,9 @@ import (
     "fmt"
     "html/template"
     "io"
-    // "log"
+    "encoding/csv"
+    "os"
+    "math"
 )
 
 // templates Code
@@ -17,21 +19,96 @@ type Template struct {
 func (t *Template) Render(w io.Writer, name string, data interface{}, c echo.Context) error {
     return t.templates.ExecuteTemplate(w, name, data)
 }
-
 // logic Code
 func bChordtobPanel(fepl, sepl, ipl, lbe float64) float64 {
     return (fepl + sepl + ipl) - lbe
 }
-
 func designLength(span float64) float64 {
     return span*12 - 4
 }
+func totalInteriorPanel(dLength, fepl, sepl, ipl float64)float64 {
+    return (dLength -(2*fepl) - (2*sepl))/ipl
+}
+func totalDiagonal (tip float64)float64 {
+    return tip + 4
+}
+func totalStruts(tip float64) float64 {
+    return tip/2
+}
+func spanDepth(span float64)float64 {
+    return span/24
+}
+func doubleAngle(area, ix, y string, sbca float64) (string, string, string) {
+    areaStr,_  := strconv.ParseFloat(area, 64)
+    areaFlt := 2*areaStr
 
-// Films Struct
+    areaDAngle := strconv.FormatFloat(areaFlt, 'g', -1, 64)
 
-type Film struct {
-    Title	string
-    Director	string
+    ixStr,_ := strconv.ParseFloat(ix, 64)
+    yStr,_ := strconv.ParseFloat(y, 64)
+    
+    ixFlt := 2*ixStr
+    ixDAngle := strconv.FormatFloat(ixFlt, 'g', -1, 64)
+    
+    // res is egual to ((sbca/2)+Ytc)^2
+    res := math.Pow(((sbca/2)+yStr), 2)
+    iyFlt := 2*(ixStr + areaStr*res)
+
+    iyDAngle := strconv.FormatFloat(iyFlt, 'g', -1, 64)
+
+    return areaDAngle, ixDAngle, iyDAngle
+}
+func getAnglProps(noAngleTop, noAngleBot, sbca float64) AnglProp{
+    var rT int = int(noAngleTop)
+    var rB int = int(noAngleBot)
+    // Read CSV File
+    file, err := os.Open("Propiedades.csv")
+    if err != nil {
+	fmt.Println("Error: ", err)
+    }
+    defer file.Close()
+    reader := csv.NewReader(file)
+    record, err := reader.ReadAll()
+    if err != nil {
+	fmt.Println("Error: ", err)
+    }
+    areaTop, IxTop, IyTop := doubleAngle(
+	record[rT][3], 
+	record[rT][11],
+	record[rT][10],
+	sbca,
+    )
+    areaBot, IxBot, IyBot := doubleAngle(
+	record[rB][3], 
+	record[rB][11],
+	record[rB][10],
+	sbca,
+    )
+
+    a := newAnglProp(
+	areaTop,	//AreaTop
+	record[rT][7],	//RxTop
+	record[rT][8],	//RzTop
+	record[rT][9],	//RyTop
+	record[rT][10],	//YTop
+	IxTop,		//IxTop
+	IyTop,		//IyTop
+	record[rT][5],	//BTop
+	record[rT][4],	//TTop
+	record[rT][12],	//QTop
+
+	areaBot,	//AreaBot
+	record[rB][7],	//RxBot
+	record[rB][8],	//RzBot
+	record[rB][9],	//RyBot
+	record[rB][10],	//YBot
+	IxBot,		//IxBot
+	IyBot,	        //IyBot
+	record[rB][5],	//BBot
+	record[rB][4],	//TBot
+	record[rB][12],	//QBot
+    )
+    return a
 }
 /* 		page		*/
 type Contact struct {
@@ -50,13 +127,43 @@ type Propertie struct {
     depth	float64
 }
 type ResProp struct {
-    Lbe2, DLength, Tip, Tod, Ts, Ed string
+    Lbe2, DLength, Tip, Tod, Ts, Ed, Dmin, Lbrdng1, Lbrdng2 string
 }
-
+type Force struct {
+    YieldStress, ModElas, SpaceChord, Weight, BSeat, TopChord, BottomChord float64
+}
+type AnglProp struct {
+    AreaTop,
+    RxTop,
+    RzTop,
+    RyTop,
+    YTop,
+    IxTop,
+    IyTop,
+    BTop,
+    TTop,
+    QTop,
+    AreaBot,
+    RxBot,
+    RzBot,
+    RyBot,
+    YBot,
+    IxBot,
+    IyBot,
+    BBot,
+    TBot,
+    QBot float64
+}
+type BridgingProp struct {
+    Brdgng1,
+    Brdgng2 float64
+}
 type Contacts = []Contact
 type Properties = []Propertie
 type ResProps = []ResProp
-
+type Forces = []Force
+type AnglProps = []AnglProp
+type BridgingProps = []BridgingProp
 type Data struct {
     Contacts Contacts
 }
@@ -66,7 +173,15 @@ type Geometry struct{
 type ResGeom struct {
     ResProps ResProps
 }
-
+type Material struct {
+    Forces Forces
+}
+type ResMater struct {
+    AnglProps AnglProps
+}
+type ResBrid struct {
+    BridgingProps BridgingProps
+}
 func newContact(name, email string) Contact {
     return Contact {
 	Name: name,
@@ -94,7 +209,7 @@ func newPropertie(tt, jt, df, sp, fe, se, ip, lb, de string) Propertie {
 	depth:		depth,
     }
 } 
-func newResProp(lb, dl, ti, to, ts, ed string) ResProp {
+func newResProp(lb, dl, ti, to, ts, ed, Dmin string) ResProp {
     return ResProp {
 	Lbe2:		lb,
 	DLength:	dl,
@@ -102,13 +217,86 @@ func newResProp(lb, dl, ti, to, ts, ed string) ResProp {
 	Tod:		to,
 	Ts:		ts,
 	Ed:		ed,
+	Dmin:		Dmin,
     }
 }
-
+func newForce(yi, mo, sp, we, bs, to, bo string) Force {
+    yieldForce,_ := strconv.ParseFloat(yi, 64)
+    modElas,_ := strconv.ParseFloat(mo, 64)
+    spaceChord,_ := strconv.ParseFloat(sp, 64)
+    weight,_ := strconv.ParseFloat(we, 64)
+    bSeat,_ := strconv.ParseFloat(bs, 64)
+    topChord,_ := strconv.ParseFloat(to, 64)
+    bottomChord,_ := strconv.ParseFloat(bo, 64)
+    return Force {
+	YieldStress:	yieldForce,
+	ModElas:	modElas,
+	SpaceChord:	spaceChord,
+	Weight:		weight,
+	BSeat:		bSeat,
+	TopChord:	topChord,
+	BottomChord:	bottomChord,
+    }
+}
+func newAnglProp (at, rxt, rzt, ryt, yt, ixt, iyt, bt, tt, qt, ab, rxb, rzb, ryb, yb, ixb, iyb, bb, tb, qb string) AnglProp{
+    areaTop,_ := strconv.ParseFloat(at, 32)
+    rxTop,_ := strconv.ParseFloat(rxt, 32)
+    rzTop,_ := strconv.ParseFloat(rzt, 32)
+    ryTop,_ := strconv.ParseFloat(ryt, 32)
+    yTop,_ := strconv.ParseFloat(yt, 32)
+    ixTop,_ := strconv.ParseFloat(ixt, 32)
+    iyTop,_ := strconv.ParseFloat(iyt, 32)
+    bTop,_ := strconv.ParseFloat(bt, 32)
+    tTop,_ := strconv.ParseFloat(tt, 32)
+    qTop,_ := strconv.ParseFloat(qt, 32)
+    areaBot,_ := strconv.ParseFloat(ab, 32)
+    rxBot,_ := strconv.ParseFloat(rxb, 32)
+    rzBot,_ := strconv.ParseFloat(rzb, 32)
+    ryBot,_ := strconv.ParseFloat(ryb, 32)
+    yBot,_ := strconv.ParseFloat(yb, 32)
+    ixBot,_ := strconv.ParseFloat(ixb, 32)
+    iyBot,_ := strconv.ParseFloat(iyb, 32)
+    bBot,_ := strconv.ParseFloat(bb, 32)
+    tBot,_ := strconv.ParseFloat(tb, 32)
+    qBot,_ := strconv.ParseFloat(qb, 32)
+    return AnglProp{
+	AreaTop:	areaTop,
+	RxTop:		rxTop,
+	RzTop:		rzTop,
+	RyTop:		ryTop,
+	YTop:		yTop,
+	IxTop:		ixTop,
+	IyTop:		iyTop,
+	BTop:		bTop,
+	TTop:		tTop,
+	QTop:		qTop,
+	AreaBot:	areaBot,
+	RxBot:		rxBot,
+	RzBot:		rzBot,
+	RyBot:		ryBot,
+	YBot:		yBot,
+	IxBot:		ixBot,
+	IyBot:		iyBot,
+	BBot:		bBot,
+	TBot:		tBot,
+	QBot:		qBot,
+    }
+}
+func newBridgingProp (brid1, brid2 string) BridgingProp {
+    bridging1,_ := strconv.ParseFloat(brid1, 64)
+    bridging2,_ := strconv.ParseFloat(brid2, 64)
+    return BridgingProp{
+	Brdgng1: bridging1,
+	Brdgng2: bridging2,
+    }
+}
 type Page struct {
     Data Data
     Geometry Geometry
     ResGeom ResGeom
+    Material Material
+    ResMater ResMater 
+    ResBrid ResBrid
 }
 func newData() Data {
     return Data{
@@ -127,34 +315,51 @@ func newGeometry() Geometry {
 func newResGeom() ResGeom {
     return ResGeom{
 	ResProps: []ResProp{
-	    //newResProp("36.16", "586.52", "20", "24", "10", "27.01456693"),
-	    newResProp("", "", "", "", "", ""),
+	    newResProp("", "", "", "", "", "", ""),
 	},
     }
 }
+func newMaterial() Material{
+    return Material{
+	Forces: []Force{
+	    newForce("50000", "29000", "1", "", "", "", ""),
+	},
+    }
+}
+func newResMater() ResMater{
+    return ResMater{
+	AnglProps: []AnglProp{
+	    newAnglProp("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""),
+	},
+    }
+}
+func newResBrid() ResBrid{
+    return ResBrid{
+	BridgingProps: []BridgingProp{
+	    newBridgingProp("", ""),
+	},
+    }
+}
+
 func newPage() Page {
     return Page {
 	Data: newData(),
 	Geometry: newGeometry(),
 	ResGeom: newResGeom(),
+	Material: newMaterial(),
+	ResMater: newResMater(),
+	ResBrid: newResBrid(),
     }
 }
-
-/*tmp		send Data back		*/
-
 func main() {
     t := &Template{
 	templates: template.Must(template.ParseGlob("views/*.html")),
     }
     e := echo.New()
     page := newPage()
-    fmt.Println(page.Geometry)
-
     e.Renderer = t
-
     e.Use(middleware.Logger())
     e.Use(middleware.Recover())
-
     /*		Home		*/
     e.GET("/", func(c echo.Context) error {
 	return c.Render(http.StatusOK, "Home", page)
@@ -162,23 +367,41 @@ func main() {
 		Refresh response data to zero
 	*/
     })
-
-    e.GET("/hello", func (c echo.Context) error {
-	films := map[string][]Film {
-	    "Films" : {
-		{Title: "The Godfather", Director: "Francis Ford Copola"},
-		{Title: "Blade Runner", Director: "Ridley Scott"},
-		{Title: "The Thing", Director: "John Carpenter"},
-	    },
-	}
-	return c.Render(http.StatusOK, "hello", films)
-    })
-
     /*		Styles		*/
     e.GET("/styles", func(c echo.Context) error {
 	return c.File("static/styles.css")
     })
+    e.POST("/material", func(c echo.Context) error {
+	yieldStress := c.FormValue("yieldStress")
+	modElas := c.FormValue("modElas")
+	spaceChord := c.FormValue("spaceChord")
+	weight := c.FormValue("weight")
+	bSeat := c.FormValue("bSeat")
+	topChord := c.FormValue("topChord")
+	bottomChord := c.FormValue("bottomChord")
+	force := newForce(
+	    yieldStress,
+	    modElas,
+	    spaceChord,
+	    weight,
+	    bSeat,
+	    topChord,
+	    bottomChord,
+	)
+	page.Material.Forces = append(page.Material.Forces, force)
+	page.Material.Forces = page.Material.Forces[1:]
+	anglsProp := getAnglProps(
+	    page.Material.Forces[0].TopChord, 
+	    page.Material.Forces[0].BottomChord,
+	    page.Material.Forces[0].SpaceChord,
+	)
+	page.ResMater.AnglProps = append(page.ResMater.AnglProps, anglsProp)
+	page.ResMater.AnglProps = page.ResMater.AnglProps[1:]
 
+	//bridSpace := bridSpaceCheck()
+
+	return c.Render(http.StatusOK, "materialResponse", page )
+    })
     e.POST("/geometry", func(c echo.Context) error {
 	trussType := c.FormValue("trussType")
 	joistType := c.FormValue("joistType")
@@ -189,19 +412,6 @@ func main() {
 	ipl := c.FormValue("ipl")
 	lbe := c.FormValue("lbe")
 	depth := c.FormValue("depth")
-
-	/* cannot use deflexion (variable of type string) as float64 value in assignment
-	page.Geometry.Properties[0].TrussType = trussType
-	page.Geometry.Properties[0].JoistType = JoistType
-	page.Geometry.Properties[0].deflexion = deflexion
-	page.Geometry.Properties[0].span = span
-	page.Geometry.Properties[0].fepl = fepl
-	page.Geometry.Properties[0].sepl = sepl
-	page.Geometry.Properties[0].ipl = ipl
-	page.Geometry.Properties[0].lbe = lbe
-	page.Geometry.Properties[0].depth = depth
-	*/
-
 	propertie := newPropertie(
 	    trussType,
 	    joistType,
@@ -213,54 +423,37 @@ func main() {
 	    lbe,
 	    depth,
 	)
-
 	page.Geometry.Properties = append(page.Geometry.Properties, propertie)
 	page.Geometry.Properties = page.Geometry.Properties[1:]
-
-	dLength := designLength(page.Geometry.Properties[0].span)
 	lbe2 := bChordtobPanel(
 	    page.Geometry.Properties[0].fepl,
 	    page.Geometry.Properties[0].sepl,
 	    page.Geometry.Properties[0].ipl,
 	    page.Geometry.Properties[0].lbe,
 	)
-	/*
+	dLength := designLength(page.Geometry.Properties[0].span)
 	tip := totalInteriorPanel(
 	    dLength,
 	    page.Geometry.Properties[0].fepl,
 	    page.Geometry.Properties[0].sepl,
+	    page.Geometry.Properties[0].ipl,
 	)
-	*/
- 
-	s := strconv.FormatFloat(lbe2, 'g', -1, 64)
-	d := strconv.FormatFloat(dLength, 'g', -1, 64)
-
-	page.ResGeom.ResProps[0].Lbe2 = s
-	page.ResGeom.ResProps[0].DLength = d
-
-	// res := s + " " + d
-
-	fmt.Print("\n\n\n", page.Geometry, "\n\n\n")
-	// fmt.Print("\n\n", page.ResGeom, "\n\n")
-
+	tod := totalDiagonal(tip)
+	ts := totalStruts(tip)
+	dmin := spanDepth(page.Geometry.Properties[0].span)
+	q := strconv.FormatFloat(lbe2, 'g', -1, 64)
+	w := strconv.FormatFloat(dLength, 'g', -1, 64)
+	e := strconv.FormatFloat(tip, 'g', -1, 64)
+	r := strconv.FormatFloat(tod, 'g', -1, 64)
+	t := strconv.FormatFloat(ts, 'g', -1, 64)
+	y := strconv.FormatFloat(dmin, 'g', -1, 64)
+	page.ResGeom.ResProps[0].Lbe2 = q
+	page.ResGeom.ResProps[0].DLength = w
+	page.ResGeom.ResProps[0].Tip = e
+	page.ResGeom.ResProps[0].Tod = r
+	page.ResGeom.ResProps[0].Ts = t
+	page.ResGeom.ResProps[0].Dmin = y
 	return c.Render(http.StatusOK, "geometryResponse", page.ResGeom)
-	// return c.String(http.StatusOK, res)
     })
-
-    e.POST("/add-film", func (c echo.Context) error {
-	title := c.FormValue("title")
-	director := c.FormValue("director")
-	htmlStr := fmt.Sprintf("<li class='list-group-item bg-primary text-white'>%s - %s</li>", title, director)
-	fmt.Print("\n\n", title, "\n", director, "\n")
-	return c.String(http.StatusOK, htmlStr) 
-    })
-
-    // test of routing and htmx
-    // e.POST("/save", saveUser)
-    // e.GET("/users/:id", getUser)
-    // e.PUT("/users/:id", updateUser)
-    // e.DELETE("/users/:id", deleteUser)
-
-
     e.Logger.Fatal(e.Start(":8080"))
 }

@@ -1,5 +1,5 @@
 {{ block "Home" . }}
-<div>
+<!DOCTYPE html>
 <html>
     <head>
 	<meta charset="UTF-8">
@@ -15,7 +15,7 @@
 	    </h1>
 	</header> 
 	<div class="geometry">
-	    <form hx-post="/geometry"  hx-target="#tabla">
+	    <form hx-post="/geometry"  hx-target="#tabla1">
 		<label>
 		    Truss Type:
 		    <select name="trussType">
@@ -34,7 +34,7 @@
 		    Deflexion
 		    <select name="deflexion">
 			<option value="240">240</option>
-			<option value="360">360</option>
+<option value="360">360</option>
 		    </select>
 		</label>
 		<label>Span:
@@ -63,72 +63,79 @@
 		<button type="submit"> submit </button>
 	    </form>
 
-	    <div id="tabla">
+	    <div id="tabla1">
 	    {{ template "geometryResponse" .ResGeom }}
 	    </div>
+	    {{ template "webMember" }}
 	</div>	
 	<h2>Material and Section</h2>
-	<form action="">
-	    <label>
-		Yield Stress (Fy):
-		<input type="number">
-	    </label>
-	    <label>
-		Modulus of Elasticity (E):
-		<input type="number">
-	    </label>
-	    <label>
-		Sapcing between chord angles:
-		<input type="number">
-	    </label>
-	    <label>
-		weight:
-		<input placeholder="lb/ft" type="number">
-		<input placeholder="kg/ml" type="number">
-	    </label>
-	    <label>
-		B. Seat D:
-		<input type="number">
-	    </label>
-	    <label>
-		Top Chord Mark
-		<input type="number">
-	    </label>
-	    <label>
-		Bottom Chord Mark
-		<input type="number">
-	    </label>
+	<div class="material">
+	    <form hx-post="/material"  hx-target="#tabla2">
+		<label>
+		    Yield Stress (Fy):
+		    <input name="yieldStress" type="number" step=".001" >
+		</label>
+		<label>
+		    Modulus of Elasticity (E):
+		    <input name="modElas" type="number" step=".001">
+		</label>
+		<label>
+		    Spacing between chord angles:
+		    <input type="number" name="spaceChord" step=".001">
+		</label>
+		<label>
+		    weight:
+		    <input placeholder="lb/ft" type="number" name="weight" step=".001">
+		</label>
+		<label>
+		    B. Seat D:
+		    <input type="number" name="bSeat" step=".001">
+		</label>
+		<label>
+		    Top Chord Mark
+		    <input type="number" name="topChord">
+		</label>
+		<label>
+		    Bottom Chord Mark
+		    <input type="number" name="bottomChord">
+		</label>
 
-	    <h3>Please fill Mid-panel info</h3>
-	    <label>
-		Top Chord (max)
-		<select name="topChord">
-		    <option value="yes">yes</option>
-		    <option value="no">no</option>
-		</select>
-	    </label>
-	    <label>
-		Bottom Chord (max)
-		<select name="bottomChord">
-		    <option value="yes">yes</option>
-		    <option value="no">no</option>
-		</select>
-	    </label>
-	    <label>
-		Top Chord End Panel 1
-		<select name="topChordEP1">
-		    <option value="yes">yes</option>
-		    <option value="no">no</option>
-		</select>
-	    </label>
-	    <label>
-		Top Chord End Panel 2
-		<select name="topChordEP2">
-		    <option value="yes">yes</option>
-		    <option value="no">no</option>
-		</select>
-	    </label>
-	</form>
+		<h3>Please fill Mid-panel info</h3>
+		<label>
+		    Top Chord (max)
+		    <select name="topChord">
+			<option value="yes">yes</option>
+			<option value="no">no</option>
+		    </select>
+		</label>
+		<label>
+		    Bottom Chord (max)
+		    <select name="bottomChord">
+			<option value="yes">yes</option>
+			<option value="no">no</option>
+		    </select>
+		</label>
+		<label>
+		    Top Chord End Panel 1
+		    <select name="topChordEP1">
+			<option value="yes">yes</option>
+			<option value="no">no</option>
+		    </select>
+		</label>
+		<label>
+		    Top Chord End Panel 2
+		    <select name="topChordEP2">
+			<option value="yes">yes</option>
+			<option value="no">no</option>
+		    </select>
+		</label>
+		<button type="submit"> submit </button>
+	    </form>
+	    <div id="tabla2">
+	    {{ template "materialResponse" . }}
+	    </div>
+	</div>
+
 	<h2>Design Loads</h2>
 	<form>
 	    <label>
@@ -163,66 +170,6 @@
 		    }
 		})
 	    })
-
-	    function IPCalculation(){
-		let spanInput = document.getElementById("spanInput").value*1
-		let Linput = document.getElementById("L")
-		L = spanInput*12-4
-		Linput.value = L
-
-		let Lep1 = document.getElementById("Lep1").value*1
-		let Lep2 = document.getElementById("Lep2").value*1
-		let Lip = document.getElementById("Lip").value*1
-
-		let IP = document.getElementById("IPInput")
-		let V = document.getElementById("VInput")
-
-		let restL = L - (Lep1 + Lep2) * 2
-		IPValue = restL / Lip
-		IP.value = IPValue 
-		V.value = IPValue / 2
-		console.log(IP.value)
-	    }
-	    function calculate(){
-		if(isNaN(document.forms["myform"]["qty"].value) || document.forms["myform"]["qty"].value==""){
-		    var text1 = 0;
-		}else{
-		    var text1 = parseInt(document.forms["myform"]["qty"].value);
-		}
-
-		if(isNaN(document.forms["myform"]["Cost"].value) || document.forms["myform"]["Cost"].value==""){
-		    var text2 = 0;
-		}else{
-		    var text2 = parseFloat(document.forms["myform"]["Cost"].value);
-		}
-		document.forms["myform"]["textbox5"].value = (text1*text2);
-	    }
-
-	    function lbe2Calculation(){
-		// Lbe2 = Lep1+Lep2+Lip-Lbe
-		let Lbe2Input = document.getElementById("Lbe2")
-		let Lep1Input = document.getElementById("Lep1")
-		let Lep2Input = document.getElementById("Lep2")
-		let LipInput = document.getElementById("Lip")
-		let LbeInput = document.getElementById("Lbe")
-
-		let Lbe2 = Lep1Input.value*1 + Lep2Input.value*1 + LipInput.value*1 - LbeInput.value*1;
-		Lbe2 = Lbe2*1;
-		Lbe2Input.value = Lbe2.toFixed(2)
-		IPCalculation()
-	    }
-
-	    function Lcalculation(){
-		// L = span-4inches
-		let spanInput = document.getElementById("spanInput")
-		let a = spanInput.value
-
-		let Linput = document.getElementById("L")
-		L = spanInput.value*1*12-4
-		Linput.value = L
-
-		IPCalculation()
-	    }
 	</script>
     </body>
     <html>
@@ -241,7 +188,6 @@
 
 {{ block "geometryResponse" . }}
     {{ $ResProp := index .ResProps 0 }}
-    <p></p>
 		<table>
 		    <tbody>
 			<tr>
@@ -270,5 +216,109 @@
 			</tr>
 		    </tbody>
 		</table>
-    <hr>
+		<hr>
+		<p>The span of a joist shall not exceed 24 time the depth</p>
+		<p>Span/Depth Ratio = {{ $ResProp.Dmin }} less than depth joist =  </p>
+{{ end }}
+
+
+{{ block "materialResponse" . }}
+    {{ $AnglProp := index .ResMater.AnglProps 0 }}
+		<table>
+		    <tbody>
+			<tr>
+			    <td>Area Top Chord</td>
+			    <td>{{ $AnglProp.AreaTop }}</td>
+			</tr>
+			<tr>
+			    <td>rx Top Chord</td>
+			    <td>{{ $AnglProp.RxTop }}</td>
+			</tr>
+			<tr>
+			    <td>rz Top Chord</td>
+			    <td>{{ $AnglProp.RxTop }}</td>
+			</tr>
+			<tr>
+			    <td>ry Top Chord</td>
+			    <td>{{ $AnglProp.RyTop }}</td>
+			</tr>
+			<tr>
+			    <td>Y Top Chord</td>
+			    <td>{{ $AnglProp.YTop }}</td>
+			</tr>
+			<tr>
+			    <td>Ix Top Chord</td>
+			    <td>{{ $AnglProp.IxTop }}</td>
+			</tr>
+			<tr>
+			    <td>Iy Top Chord</td>
+			    <td>{{ $AnglProp.IyTop }}</td>
+			</tr>
+			<tr>
+			    <td>b Top Chord</td>
+			    <td>{{ $AnglProp.BTop }}</td>
+			</tr>
+			<tr>
+			    <td>t Top Chord</td>
+			    <td>{{ $AnglProp.TTop }}</td>
+			</tr>
+			<tr>
+			    <td>Q Top Chord</td>
+			    <td>{{ $AnglProp.QTop }}</td>
+			</tr>
+		    </tbody>
+		</table>
+		<hr>
+		
+		<table>
+		    <tbody>
+			<tr>
+			    <td>Area Bottom Chord</td>
+			    <td>{{ $AnglProp.AreaBot }}</td>
+			</tr>
+			<tr>
+			    <td>rx Bottom Chord</td>
+			    <td>{{ $AnglProp.RxBot }}</td>
+			</tr>
+			<tr>
+			    <td>rz Bottom Chord</td>
+			    <td>{{ $AnglProp.RzBot }}</td>
+			</tr>
+			<tr>
+			    <td>ry Bottom Chord</td>
+			    <td>{{ $AnglProp.RyBot }}</td>
+			</tr>
+			<tr>
+			    <td>Y Bottom Chord</td>
+			    <td>{{ $AnglProp.YBot }}</td>
+			</tr>
+			<tr>
+			    <td>Ix Bottom Chord</td>
+			    <td>{{ $AnglProp.IxBot }}</td>
+			</tr>
+			<tr>
+			    <td>Iy Bottom Chord</td>
+			    <td>{{ $AnglProp.IyBot }}</td>
+			</tr>
+			<tr>
+			    <td>b Bottom Chord</td>
+			    <td>{{ $AnglProp.BBot }}</td>
+			</tr>
+			<tr>
+			    <td>t Bottom Chord</td>
+			    <td>{{ $AnglProp.TBot }}</td>
+			</tr>
+			<tr>
+			    <td>Q Bottom Chord</td>
+			    <td>{{ $AnglProp.QBot }}</td>
+			</tr>
+		    </tbody>
+		</table>
+		<hr>
+	    <div class="brid">
+		<p>maximum spacing of bridging</p>
+		<p>Line bridging 1</p>
+
+		<p>Line bridging 2</p>
+	    </div>
 {{ end }}
