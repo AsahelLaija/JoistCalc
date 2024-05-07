@@ -1,5 +1,4 @@
 {{ block "Home" . }}
-<!DOCTYPE html>
 <html>
     <head>
 	<meta charset="UTF-8">
@@ -16,123 +15,147 @@
 	</header> 
 	<div class="geometry">
 	    <form hx-post="/geometry"  hx-target="#tabla1">
-		<label>
-		    Truss Type:
-		    <select name="trussType">
-			<option value="warren">warren</option>
-			<option value="warrenModified">warren modified</option>
-		    </select>
-		</label>
-		<label>
-		    Joist Type
-		    <select name="joistType">
-			<option value="roof">roof</option>
-			<option value="mezzanine">mezzanine</option>
-		    </select>
-		</label>
-		<label>
-		    Deflexion
-		    <select name="deflexion">
-			<option value="240">240</option>
-<option value="360">360</option>
-		    </select>
-		</label>
-		<label>Span:
-		    <input name="span" type="number" step=".001">
-		</label>
-		<label>
-		    First End Panel Length:
-		    <input name="fepl" type="number" step=".001">
-		</label>
-		<label>
-		    Second End Panel Length:
-		    <input name="sepl" type="number" step=".001">
-		</label>
-		<label>
-		    Interior Panel Length:
-		    <input name="ipl" type="number" step=".001">
-		</label>
-		<label>
-		    From End Panel to Bottom Chord:
-		    <input name="lbe" type="number" step=".001">
-		</label>
-		<label>
-		    Joist depth:
-		    <input name="depth" type="number" step=".001">
-		</label>
+		<div>
+		    <label>
+			Truss Type:
+			<select name="trussType">
+			    <option value="warren">warren</option>
+			    <option value="warrenModified">warren modified</option>
+			</select>
+		    </label>
+		    <label>
+			Joist Type
+			<select name="joistType">
+			    <option value="roof">roof</option>
+			    <option value="mezzanine">mezzanine</option>
+			</select>
+		    </label>
+		    <label>
+			Deflexion
+			<select name="deflexion">
+			    <option value="240">240</option>
+			    <option value="360">360</option>
+			</select>
+		    </label>
+		</div>
+		<div>
+		    <label>Span:
+			<input placeholder="49.21" name="span" type="number" step=".001">
+		    </label>
+		    <label>
+			First End Panel Length:
+			<input placeholder="27.28" name="fepl" type="number" step=".001">
+		    </label>
+		    <label>
+			Second End Panel Length:
+			<input placeholder="26" name="sepl" type="number" step=".001">
+		    </label>
+		</div>
+		<div>
+		    <label>
+			Interior Panel Length:
+			<input placeholder="24" name="ipl" type="number" step=".001">
+		    </label>
+		    <label>
+			From End Panel to Bottom Chord:
+			<input placeholder="41.1"name="lbe" type="number" step=".001">
+		    </label>
+		    <label>
+			Joist depth:
+			<input placeholder="28" name="depth" type="number" step=".001">
+		    </label>
+		</div>
 		<button type="submit"> submit </button>
 	    </form>
 
 	    <div id="tabla1">
 	    {{ template "geometryResponse" .ResGeom }}
 	    </div>
-	    {{ template "webMember" }}
 	</div>	
 	<h2>Material and Section</h2>
+
 	<div class="material">
 	    <form hx-post="/material"  hx-target="#tabla2">
-		<label>
-		    Yield Stress (Fy):
-		    <input name="yieldStress" type="number" step=".001" >
-		</label>
-		<label>
-		    Modulus of Elasticity (E):
-		    <input name="modElas" type="number" step=".001">
-		</label>
-		<label>
-		    Spacing between chord angles:
-		    <input type="number" name="spaceChord" step=".001">
-		</label>
-		<label>
-		    weight:
-		    <input placeholder="lb/ft" type="number" name="weight" step=".001">
-		</label>
-		<label>
-		    B. Seat D:
-		    <input type="number" name="bSeat" step=".001">
-		</label>
-		<label>
-		    Top Chord Mark
-		    <input type="number" name="topChord">
-		</label>
-		<label>
-		    Bottom Chord Mark
-		    <input type="number" name="bottomChord">
-		</label>
-
-		<h3>Please fill Mid-panel info</h3>
-		<label>
-		    Top Chord (max)
-		    <select name="topChord">
-			<option value="yes">yes</option>
-			<option value="no">no</option>
-		    </select>
-		</label>
-		<label>
-		    Bottom Chord (max)
-		    <select name="bottomChord">
-			<option value="yes">yes</option>
-			<option value="no">no</option>
-		    </select>
-		</label>
-		<label>
-		    Top Chord End Panel 1
-		    <select name="topChordEP1">
-			<option value="yes">yes</option>
-			<option value="no">no</option>
-		    </select>
-		</label>
-		<label>
-		    Top Chord End Panel 2
-		    <select name="topChordEP2">
-			<option value="yes">yes</option>
-			<option value="no">no</option>
-		    </select>
-		</label>
+		<!--first row-->
+		<div>
+		    <label>
+			<p>Yield Stress (Fy):</p>
+			<input name="yieldStress" type="number" step=".001" >
+		    </label>
+		    <label>
+			<p>Modulus of Elasticity (E):</p>
+			<input name="modElas" type="number" step=".001">
+		    </label>
+		    <label>
+			<p>Spacing between chord angles:</p>
+			<input type="number" name="spaceChord" step=".001">
+		    </label>
+		</div>
+		<!--second row-->
+		<div>
+		    <label>
+			weight:
+			<input placeholder="lb/ft" type="number" name="weight" step=".001">
+		    </label>
+		    <label>
+			B. Seat D:
+			<input name="bSeat" type="number" step=".001">
+		    </label>
+		</div>
+		<!--third row-->
+		<div>
+		    <label>
+			Top Chord Mark
+			<input type="number" name="topChord">
+		    </label>
+		    <label>
+			Bottom Chord Mark
+			<input type="number" name="bottomChord">
+		    </label>
+		</div>
 		<button type="submit"> submit </button>
 	    </form>
-	    <div id="tabla2">
-	    {{ template "materialResponse" . }}
+	    <form>
+		<!-- <h3>Please fill Mid-panel info</h3> -->
+		<div>
+		    <label>
+			<p>Mid-Panel fill Top Chord (max)</p>
+			<select name="topChord">
+			    <option value="yes">yes</option>
+			    <option value="no">no</option>
+			</select>
+		    </label>
+		    <label>
+			<p>Mid-Panel fill Bottom Chord (max)</p>
+			
+			<select name="bottomChord">
+			    <option value="yes">yes</option>
+			    <option value="no">no</option>
+			</select>
+		    </label>
+		</div>
+		<div>
+		    <label>
+			<p>Mid-Panel fill Top Chord End Panel 1</p>
+			
+			<select name="topChordEP1">
+			    <option value="yes">yes</option>
+			    <option value="no">no</option>
+			</select>
+		    </label>
+		    <label>
+			<p>Mid-Panel fill Top Chord End Panel 2</p>
+			
+			<select name="topChordEP2">
+			    <option value="yes">yes</option>
+			    <option value="no">no</option>
+			</select>
+		    </label>
+		</div>
+		<button type="submit"> submit </button>
+	    </form>
+	    <div class="materialTable" id="tabla2">
+		{{ template "materialResponse" . }}
 	    </div>
 	</div>
 
@@ -220,105 +243,211 @@
 		<p>The span of a joist shall not exceed 24 time the depth</p>
 		<p>Span/Depth Ratio = {{ $ResProp.Dmin }} less than depth joist =  </p>
 {{ end }}
-
-
 {{ block "materialResponse" . }}
     {{ $AnglProp := index .ResMater.AnglProps 0 }}
+	    <div class="materialTableDiv">
 		<table>
+		    <thead>
+			<tr>
+			    <th>Secction 2L</th>
+			    <th>
+				<p>{{ $AnglProp.SecTop }}</p>
+			    </th>
+			</tr>
+		    </thead>
 		    <tbody>
 			<tr>
 			    <td>Area Top Chord</td>
-			    <td>{{ $AnglProp.AreaTop }}</td>
+			    <td>
+				<p>{{ $AnglProp.AreaTop }}</p>
+			    </td>
 			</tr>
 			<tr>
 			    <td>rx Top Chord</td>
-			    <td>{{ $AnglProp.RxTop }}</td>
+			    <td>
+				<p>{{ $AnglProp.RxTop }}</p>
+			    </td>
 			</tr>
 			<tr>
 			    <td>rz Top Chord</td>
-			    <td>{{ $AnglProp.RxTop }}</td>
+			    <td>
+				<p>{{ $AnglProp.RxTop }}</p>
+			    </td>
 			</tr>
 			<tr>
 			    <td>ry Top Chord</td>
-			    <td>{{ $AnglProp.RyTop }}</td>
+			    <td>
+				<p>{{ $AnglProp.RyTop }}</p>
+			    </td>
 			</tr>
 			<tr>
 			    <td>Y Top Chord</td>
-			    <td>{{ $AnglProp.YTop }}</td>
+			    <td>
+				<p>{{ $AnglProp.YTop }}</p>
+			    </td>
 			</tr>
 			<tr>
 			    <td>Ix Top Chord</td>
-			    <td>{{ $AnglProp.IxTop }}</td>
+			    <td>
+				<p>{{ $AnglProp.IxTop }}</p>
+			    </td>
 			</tr>
 			<tr>
 			    <td>Iy Top Chord</td>
-			    <td>{{ $AnglProp.IyTop }}</td>
+			    <td>
+				<p>{{ $AnglProp.IyTop }}</p>
+			    </td>
 			</tr>
 			<tr>
 			    <td>b Top Chord</td>
-			    <td>{{ $AnglProp.BTop }}</td>
+			    <td>
+				<p>{{ $AnglProp.BTop }}</p>
+			    </td>
 			</tr>
 			<tr>
 			    <td>t Top Chord</td>
-			    <td>{{ $AnglProp.TTop }}</td>
+			    <td>
+				<p>{{ $AnglProp.TTop }}</p>
+			    </td>
 			</tr>
 			<tr>
 			    <td>Q Top Chord</td>
-			    <td>{{ $AnglProp.QTop }}</td>
+			    <td>
+				<p>{{ $AnglProp.QTop }}</p>
+			    </td>
 			</tr>
 		    </tbody>
 		</table>
-		<hr>
-		
 		<table>
+		    <thead>
+			<tr>
+			    <th>Secction 2L</th>
+			    <th>
+				<p>{{ $AnglProp.SecBot }}</p>
+			    </th>
+			</tr>
+		    </thead>
 		    <tbody>
 			<tr>
 			    <td>Area Bottom Chord</td>
-			    <td>{{ $AnglProp.AreaBot }}</td>
+			    <td>
+				<p>{{ $AnglProp.AreaBot }}</p>
+			    </td>
 			</tr>
 			<tr>
 			    <td>rx Bottom Chord</td>
-			    <td>{{ $AnglProp.RxBot }}</td>
+			    <td>
+				<p>{{ $AnglProp.RxBot }}</p>
+			    </td>
 			</tr>
 			<tr>
 			    <td>rz Bottom Chord</td>
-			    <td>{{ $AnglProp.RzBot }}</td>
+			    <td>
+				<p>{{ $AnglProp.RzBot }}</p>
+			    </td>
 			</tr>
 			<tr>
 			    <td>ry Bottom Chord</td>
-			    <td>{{ $AnglProp.RyBot }}</td>
+			    <td>
+				<p>{{ $AnglProp.RyBot }}</p>
+			    </td>
 			</tr>
 			<tr>
 			    <td>Y Bottom Chord</td>
-			    <td>{{ $AnglProp.YBot }}</td>
+			    <td>
+				<p>{{ $AnglProp.YBot }}</p>
+			    </td>
 			</tr>
 			<tr>
 			    <td>Ix Bottom Chord</td>
-			    <td>{{ $AnglProp.IxBot }}</td>
+			    <td>
+				<p>{{ $AnglProp.IxBot }}</p>
+			    </td>
 			</tr>
 			<tr>
 			    <td>Iy Bottom Chord</td>
-			    <td>{{ $AnglProp.IyBot }}</td>
+			    <td>
+				<p>{{ $AnglProp.IyBot }}</p>
+			    </td>
 			</tr>
 			<tr>
 			    <td>b Bottom Chord</td>
-			    <td>{{ $AnglProp.BBot }}</td>
+			    <td>
+				<p>{{ $AnglProp.BBot }}</p>
+			    </td>
 			</tr>
 			<tr>
 			    <td>t Bottom Chord</td>
-			    <td>{{ $AnglProp.TBot }}</td>
+			    <td>
+				<p>{{ $AnglProp.TBot }}</p>
+			    </td>
 			</tr>
 			<tr>
 			    <td>Q Bottom Chord</td>
-			    <td>{{ $AnglProp.QBot }}</td>
+			    <td>
+				<p>{{ $AnglProp.QBot }}</p>
+			    </td>
 			</tr>
 		    </tbody>
 		</table>
-		<hr>
-	    <div class="brid">
-		<p>maximum spacing of bridging</p>
-		<p>Line bridging 1</p>
 
-		<p>Line bridging 2</p>
+		<!-- <div class="brid">
+		    <p>maximum spacing of bridging</p>
+		    <p>Line bridging 1</p>
+		    <p>Line bridging 2</p>
+		</div> -->
 	    </div>
+	    <div>
+		{{ template "webMem" .}}
+	    </div>
+{{ end }}
+
+{{ block "webMem" .}}
+    <form hx-post="/member" hx-swap="outerHTML">
+	<table>
+	    <thead>
+	        <tr>
+	            <th>Element</th>
+	            <th>Parts</th>
+	            <th>Mark</th>
+	            <th>Secction</th>
+	            <th>Crimped</th>
+	            <th>mid-panell fill</th>
+	        </tr>
+	    </thead>
+	    {{ range .WebMember.MemberInputs }}
+		{{ template "InputMembers" . }}
+	    {{ end }}
+	</table>
+    <button type="submit">submit</button>
+    </form>
+{{ end }}
+
+{{ block "InputMembers" .}}
+	    <tr>
+	        <td>
+		    <p>{{ .ElemName }}</p>
+		</td>
+		<td>
+		    <input value="1" type="number" name="part{{ .InputName }}">
+		</td>
+		<td>
+		    <input value="{{ .Mark }}"type="number" name="mark{{ .InputName }}">
+		</td>
+		<td>
+		    <p>{{ .Secction }}</p>
+		</td>
+		<td>
+		    <select id="" name="crimped{{ .InputName }}">
+		        <option value="yes">yes</option>
+		        <option value="no">no</option>
+		    </select>
+		</td>
+		<td>
+		    <select id="" name="crimped{{ .InputName }}">
+		        <option value="yes">yes</option>
+		        <option value="no">no</option>
+		    </select>
+		</td>
+	    </tr>
 {{ end }}

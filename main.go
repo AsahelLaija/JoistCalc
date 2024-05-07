@@ -55,10 +55,12 @@ func doubleAngle(area, ix, y string, sbca float64) (string, string, string) {
     iyFlt := 2*(ixStr + areaStr*res)
 
     iyDAngle := strconv.FormatFloat(iyFlt, 'g', -1, 64)
-
     return areaDAngle, ixDAngle, iyDAngle
 }
 func getAnglProps(noAngleTop, noAngleBot, sbca float64) AnglProp{
+    /* TOOD: 
+	    make function to get angle info
+    */
     var rT int = int(noAngleTop)
     var rB int = int(noAngleBot)
     // Read CSV File
@@ -86,6 +88,7 @@ func getAnglProps(noAngleTop, noAngleBot, sbca float64) AnglProp{
     )
 
     a := newAnglProp(
+	record[rT][2],	//secctionTop
 	areaTop,	//AreaTop
 	record[rT][7],	//RxTop
 	record[rT][8],	//RzTop
@@ -97,6 +100,7 @@ func getAnglProps(noAngleTop, noAngleBot, sbca float64) AnglProp{
 	record[rT][4],	//TTop
 	record[rT][12],	//QTop
 
+	record[rB][2],	//secctionBot
 	areaBot,	//AreaBot
 	record[rB][7],	//RxBot
 	record[rB][8],	//RzBot
@@ -107,7 +111,7 @@ func getAnglProps(noAngleTop, noAngleBot, sbca float64) AnglProp{
 	record[rB][5],	//BBot
 	record[rB][4],	//TBot
 	record[rB][12],	//QBot
-    )
+)
     return a
 }
 /* 		page		*/
@@ -133,6 +137,9 @@ type Force struct {
     YieldStress, ModElas, SpaceChord, Weight, BSeat, TopChord, BottomChord float64
 }
 type AnglProp struct {
+    SecTop,
+    SecBot string
+    
     AreaTop,
     RxTop,
     RzTop,
@@ -158,12 +165,24 @@ type BridgingProp struct {
     Brdgng1,
     Brdgng2 float64
 }
+type MemberInput struct {
+    InputName string
+    ElemName string
+    // request
+    Part string
+    Mark string
+    Crimped string
+    // response
+    Secction string
+    MidPanel string
+}
 type Contacts = []Contact
 type Properties = []Propertie
 type ResProps = []ResProp
 type Forces = []Force
 type AnglProps = []AnglProp
 type BridgingProps = []BridgingProp
+type MemberInputs = []MemberInput
 type Data struct {
     Contacts Contacts
 }
@@ -181,6 +200,9 @@ type ResMater struct {
 }
 type ResBrid struct {
     BridgingProps BridgingProps
+}
+type WebMember struct {
+    MemberInputs MemberInputs
 }
 func newContact(name, email string) Contact {
     return Contact {
@@ -238,7 +260,7 @@ func newForce(yi, mo, sp, we, bs, to, bo string) Force {
 	BottomChord:	bottomChord,
     }
 }
-func newAnglProp (at, rxt, rzt, ryt, yt, ixt, iyt, bt, tt, qt, ab, rxb, rzb, ryb, yb, ixb, iyb, bb, tb, qb string) AnglProp{
+func newAnglProp (st, at, rxt, rzt, ryt, yt, ixt, iyt, bt, tt, qt, sb, ab, rxb, rzb, ryb, yb, ixb, iyb, bb, tb, qb string) AnglProp{
     areaTop,_ := strconv.ParseFloat(at, 32)
     rxTop,_ := strconv.ParseFloat(rxt, 32)
     rzTop,_ := strconv.ParseFloat(rzt, 32)
@@ -260,6 +282,7 @@ func newAnglProp (at, rxt, rzt, ryt, yt, ixt, iyt, bt, tt, qt, ab, rxb, rzb, ryb
     tBot,_ := strconv.ParseFloat(tb, 32)
     qBot,_ := strconv.ParseFloat(qb, 32)
     return AnglProp{
+	SecTop:		st,
 	AreaTop:	areaTop,
 	RxTop:		rxTop,
 	RzTop:		rzTop,
@@ -270,6 +293,7 @@ func newAnglProp (at, rxt, rzt, ryt, yt, ixt, iyt, bt, tt, qt, ab, rxb, rzb, ryb
 	BTop:		bTop,
 	TTop:		tTop,
 	QTop:		qTop,
+	SecBot:		sb,
 	AreaBot:	areaBot,
 	RxBot:		rxBot,
 	RzBot:		rzBot,
@@ -290,6 +314,17 @@ func newBridgingProp (brid1, brid2 string) BridgingProp {
 	Brdgng2: bridging2,
     }
 }
+func newMemberInput(numInput, elemName, part, mark, crimped, secction, midPanel string) MemberInput {
+    return MemberInput{
+	InputName: numInput,
+	ElemName: elemName,
+	Part: part,
+	Mark: mark,
+	Crimped: crimped,
+	Secction: secction,
+	MidPanel: midPanel,
+    }
+}
 type Page struct {
     Data Data
     Geometry Geometry
@@ -297,6 +332,7 @@ type Page struct {
     Material Material
     ResMater ResMater 
     ResBrid ResBrid
+    WebMember WebMember
 }
 func newData() Data {
     return Data{
@@ -329,7 +365,7 @@ func newMaterial() Material{
 func newResMater() ResMater{
     return ResMater{
 	AnglProps: []AnglProp{
-	    newAnglProp("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""),
+	    newAnglProp("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""),
 	},
     }
 }
@@ -337,6 +373,13 @@ func newResBrid() ResBrid{
     return ResBrid{
 	BridgingProps: []BridgingProp{
 	    newBridgingProp("", ""),
+	},
+    }
+}
+func newWebMember() WebMember{
+    return WebMember{
+	MemberInputs: []MemberInput{
+	    newMemberInput("", "", "", "", "", "", ""),
 	},
     }
 }
@@ -349,6 +392,7 @@ func newPage() Page {
 	Material: newMaterial(),
 	ResMater: newResMater(),
 	ResBrid: newResBrid(),
+	WebMember: newWebMember(),
     }
 }
 func main() {
@@ -372,6 +416,7 @@ func main() {
 	return c.File("static/styles.css")
     })
     e.POST("/material", func(c echo.Context) error {
+	page.WebMember.MemberInputs = page.WebMember.MemberInputs[:0]
 	yieldStress := c.FormValue("yieldStress")
 	modElas := c.FormValue("modElas")
 	spaceChord := c.FormValue("spaceChord")
@@ -398,9 +443,76 @@ func main() {
 	page.ResMater.AnglProps = append(page.ResMater.AnglProps, anglsProp)
 	page.ResMater.AnglProps = page.ResMater.AnglProps[1:]
 
-	//bridSpace := bridSpaceCheck()
+	tod,_  := strconv.Atoi(page.ResGeom.ResProps[0].Tod)
+	ts,_  := strconv.Atoi(page.ResGeom.ResProps[0].Ts)
 
+	halfTod := tod/2
+	halfTs := ts/2
+
+	totalAngles := halfTod +1 + halfTs
+	// totalAngles = totalAngles/2
+	fmt.Println()
+	fmt.Println(totalAngles)
+	fmt.Println()
+
+	obj := newMemberInput("", "", "", "", "", "", "")
+	fmt.Printf("obj\t%v\n", obj)
+
+	for i := 1; i < totalAngles; i++{
+	    obj.InputName = fmt.Sprintf("%v", i)
+	    if i == 1 {
+		obj.ElemName = "sv"
+	    } else if i <= halfTod+1 && i != 1{
+		obj.ElemName = fmt.Sprintf("w%v", i)
+	    } else {
+		obj.ElemName = fmt.Sprintf("v%v", i - (halfTod+1))
+	    }
+	    page.WebMember.MemberInputs = append(page.WebMember.MemberInputs, obj)
+	    //fmt.Println(page.WebMember.MemberInputs)
+	}
+	// page.WebMember.MemberInputs = page.WebMember.MemberInputs[1:]
+	// fmt.Println(page.WebMember.MemberInputs)
 	return c.Render(http.StatusOK, "materialResponse", page )
+    })
+
+    e.POST("/member", func(c echo.Context) error {
+	/* TOOD: 
+		make function to get angle info
+	*/
+	// read csv file 
+
+	file, err := os.Open("Propiedades.csv")
+	if err != nil {
+	    fmt.Println("Error: ", err)
+	}
+	defer file.Close()
+	reader := csv.NewReader(file)
+	record, err := reader.ReadAll()
+	if err != nil {
+	    fmt.Println("Error: ", err)
+	}
+
+	membersTable := len(page.WebMember.MemberInputs)
+	for i := 0; i < membersTable; i++ {
+	    si := strconv.Itoa(i + 1)
+
+	    part := "part" + si
+	    mark := "mark" + si
+	    crimped := "crimped" + si
+
+	    page.WebMember.MemberInputs[i].Part = c.FormValue(part)
+	    page.WebMember.MemberInputs[i].Mark = c.FormValue(mark)
+	    page.WebMember.MemberInputs[i].Crimped = c.FormValue(crimped)
+
+	    mmark,_ := strconv.Atoi(page.WebMember.MemberInputs[i].Mark)
+	    page.WebMember.MemberInputs[i].Secction = record[mmark][2]
+
+	    fmt.Println(page.WebMember.MemberInputs[i])
+
+	}
+	fmt.Println(page.WebMember.MemberInputs)
+	return c.Render(http.StatusOK, "webMem", page )
+	return nil
     })
     e.POST("/geometry", func(c echo.Context) error {
 	trussType := c.FormValue("trussType")
@@ -440,6 +552,10 @@ func main() {
 	)
 	tod := totalDiagonal(tip)
 	ts := totalStruts(tip)
+	tip = math.Round(tip)
+	tod = math.Round(tod)
+	ts = math.Round(ts)
+
 	dmin := spanDepth(page.Geometry.Properties[0].span)
 	q := strconv.FormatFloat(lbe2, 'g', -1, 64)
 	w := strconv.FormatFloat(dLength, 'g', -1, 64)

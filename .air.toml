@@ -13,7 +13,7 @@ run_cmd = "./tmp/main"
   exclude_file = []
   exclude_regex = ["_test.go"]
   exclude_unchanged = false
-  follow_symlink = false
+  follow_symlink = true
   full_bin = ""
   include_dir = []
   include_ext = ["go", "tpl", "tmpl", "html"]
@@ -41,8 +41,13 @@ run_cmd = "./tmp/main"
   time = false
 
 [misc]
-  clean_on_exit = false
+  clean_on_exit = true
 
 [screen]
-  clear_on_rebuild = false
+  clear_on_rebuild = true
   keep_scroll = true
+
+[proxy]
+  enabled = true
+  proxy_port = 8090
+  app_port = 8080

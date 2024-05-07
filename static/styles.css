@@ -13,13 +13,55 @@ body {
 }
 .geometry {
     display: flex;
+    justify-content: center;
+}
+.geometry form div{
+    display:flex
 }
 .material {
     display: flex;
+    justify-content: center;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
 }
-.material div {
-    display: block;
+.materialTable {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%
 }
+.materialTable tr td{
+    padding: 5px;
+}
+.materialTableDiv{
+    display: flex;
+}
+.materialTable p {
+  margin: 5px;
+  box-shadow: inset 2px 2px 5px #babecc, inset -5px -5px 10px #fff;
+  width: 100%;
+  box-sizing: border-box;
+  transition: all 0.2s ease-in-out;
+  appearance: none;
+  -webkit-appearance: none;
+  border: 0;
+  outline: 0;
+  font-size: 16px;
+  border-radius: 320px;
+  padding: 8px;
+  background-color: #ebecf0;
+  text-shadow: 1px 1px 0 #fff;
+}
+.materialTable div {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+}
+.material form div{
+    display: flex;
+} 
 .brid{
     display: flex;
     flex-direction: column;
@@ -50,8 +92,10 @@ div, p {
 }
 form {
   padding: 16px;
-  width: 320px;
-  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  width: 45%;
 }
 .segment {
   color: #babecc;
@@ -69,9 +113,13 @@ button, input {
   text-shadow: 1px 1px 0 #fff;
 }
 label {
-  display: block;
-  margin-bottom: 24px;
+  display: flex;
+  /* margin-bottom: 24px; */
   width: 100%;
+  flex-direction: column;
+  justify-content: space-between;
+  margin-left: 5px;
+  margin-right: 5px;
 }
 input {
   margin: 5px;
