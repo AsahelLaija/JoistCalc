@@ -1,6 +1,6 @@
 {{ block "Home" . }}
-<html>
-    <head>
+<label class="input--form__chords6">
+    </div>
 	<meta charset="UTF-8">
 	<meta name="viewprt" content="width=device-width, initial-scale-1">
 	<script src="https://unpkg.com/htmx.org@1.9.11" integrity="sha384-0gxUXCCR8yv9FM2b+U3FDbsKthCI66oH5IA9fHppQq9DDMHuMauqq1ZHBpJxQ0J0" crossorigin="anonymous"></script>
@@ -13,6 +13,117 @@
 	    {{ template "form" .Data }}
 	    </h1>
 	</header> 
+	<div class="input">
+	    <form class="input--form">
+		<div class="input--form__geometry">
+		    <label class="input--form__geometry1">
+			<p>Truss Type</p>
+			<input type="">
+		    </label>
+		    <label class="input--form__geometry2">
+			<p>Joist Type</p>
+			<input type="">
+		    </label>
+		    <label class="input--form__geometry3">
+			<p>Deflexion</p>
+			<input type="">
+		    </label>
+		    <label class="input--form__geometry4">
+			<p>Span</p>
+			<input type="">
+		    </label>
+		    <label class="input--form__geometry5">
+			<p>Joist depth</p>
+			<input type="">
+		    </label>
+		    <label class="input--form__geometry6">
+			<p>First End Panel Length</p>
+			<input type="">
+		    </label>
+		    <label class="input--form__geometry7">
+			<p>Second End Panel Length</p>
+			<input type="">
+		    </label>
+		    <label class="input--form__geometry8">
+			<p>Interior Panel Length</p>
+			<input type="">
+		    </label>
+		    <label class="input--form__geometry9">
+			<p>End Panel to B.Chord</p>
+			<input type="">
+		    </label>
+		</div>
+		<div class="input--form__stress">
+		    <label class="input--form__stress1">
+			<p>Yield Stress</p>
+			<input type="">
+		    </label>
+		    <label class="input--form__stress2">
+			<p>weight:</p>
+			<input type="">
+		    </label>
+		    <label class="input--form__stress3">
+			<p>B. Seat D:</p>
+			<input type="">
+		    </label>
+		    <label class="input--form__stress4">
+			<p>Modulus of Elasticuty (E)</p>
+			<input type="">
+		    </label>
+		    <label class="input--form__stress5">
+			<p>Spacing between chord angles</p>
+			<input input="">
+		    </label>
+		</div>
+		<div class="input--form__loads">
+		    <label class="input--form__loads1">
+			<p>Ultimate design load Wu</p>
+			<input type="">
+		    </label>
+		    <label class="input--form__loads2">
+			<p>Live Load Wll (service load)</p>
+			<input type="">
+		    </label>
+		    <label class="input--form__loads3">
+			<p>Net suction LRFD</p>
+			<input type="">
+		    </label>
+		    <label class="input--form__loads4">
+			<p>Net suction ASD</p>
+			<input type="">
+		    </label>
+		</div>
+		<div class="input--form__chords">
+		    <label class="input--form__chords1">
+			<p>Top Chord Mark</p>
+			<input type="">
+		    </label>
+		    <label class="input--form__chords2">
+			<p>Mid-Panel Top fill Chord (max)</p>
+			<input type="">
+		    </label>
+		    <label class="input--form__chords3">
+			<p>Mid-Panel fill Chord End Panel 1</p>
+			<input type="">
+		    </label>
+		    <label class="input--form__chords4">
+			<p>Mid-Panel fill Chord End Panel 2</p>
+			<input type="">
+		    </label>
+		    <label class="input--form__chords5">
+			<p>Bottom Chord Mark</p>
+			<input type="">
+		    </label>
+		    <label class="input--form__chords6">
+			<p>fill Bottom Chord (max)</p>
+			<input type="">
+		    </label>
+		</div>
+		<div class="input--form__submit">
+		    <button>submit</button>
+		</div>
+	    </form>
+	</div>
 	<div class="geometry">
 	    <form hx-post="/geometry"  hx-target="#tabla1">
 		<div>
@@ -68,10 +179,26 @@
 		<button type="submit"> submit </button>
 	    </form>
 
-	    <div id="tabla1">
-	    {{ template "geometryResponse" .ResGeom }}
-	    </div>
 	</div>	
+	<form>
+	    <h2>Design Loads</h2>
+	    <label>
+		Ultimate design load Wu:
+		<input name="udlw" type="number">
+	    </label>
+	    <label>
+		Live Load WLL (service load):
+		<input name="llWLL" type="number">
+	    </label>
+	    <label>
+		Net suction LRFD:
+		<input name="nsLRFD" type="number">
+	    </label>
+	    <label>
+		Net suction ASD:
+		<input name="nsASD" type="number">
+	    </label>
+	</form>
 	<h2>Material and Section</h2>
 
 	<div class="material">
@@ -154,31 +281,13 @@
 		</div>
 		<button type="submit"> submit </button>
 	    </form>
+	    <div id="tabla1">
+	    {{ template "geometryResponse" .ResGeom }}
+	    </div>
 	    <div class="materialTable" id="tabla2">
 		{{ template "materialResponse" . }}
 	    </div>
 	</div>
-
-	<h2>Design Loads</h2>
-	<form>
-	    <label>
-		Ultimate design load Wu:
-		<input name="udlw" type="number">
-	    </label>
-	    <label>
-		Live Load WLL (service load):
-		<input name="llWLL" type="number">
-	    </label>
-	    <label>
-		Net suction LRFD:
-		<input name="nsLRFD" type="number">
-	    </label>
-	    <label>
-		Net suction ASD:
-		<input name="nsASD" type="number">
-	    </label>
-	</form>
-
 	<script>
 	    document.addEventListener("DOMContentLoaded", (event) => {
 		document.body.addEventListener("htmx:beforeSwap", function(evt) {
