@@ -13,7 +13,7 @@
 	    {{ template "form" .Data }}
 	    </h1>
 	</header> 
-	<div class="input">
+	<!-- <div class="input">
 	    <form class="input--form">
 		<div class="input--form__geometry">
 
@@ -140,7 +140,230 @@
 		    <button>submit</button>
 		</div>
 	    </form>
+	</div> -->
+	<!--
+	    new forms 
+	-->
+	<div class="input">
+	    <form hx-post="/sendform" class="input--form">
+		<div class="input--form__geometry">
+		    <div class="input--form__geometry0">
+			<h3>Geometry</h3>
+		    </div>
+
+		    <label class="input--form__geometry1">
+			<p>Truss Type</p>
+			<select name="trussType">
+			    <option value="warren">warren</option>
+			    <option value="warrenModified">warren modified</option>
+			</select>
+		    </label>
+		    <label class="input--form__geometry2">
+			<p>Joist Type</p>
+			<select name="joistType">
+			    <option value="roof">roof</option>
+			    <option value="mezzanine">mezzanine</option>
+			</select>
+		    </label>
+		    <label class="input--form__geometry3">
+			<p>Deflexion</p>
+			<select name="deflexion">
+			    <option value="240">240</option>
+			    <option value="360">360</option>
+			</select>
+		    </label>
+		    <label class="input--form__geometry4">
+			<p>Span (ft)</p>
+			<input 
+			    placeholder="49.21" 
+			    value="49.21" 
+			    name="span" 
+			    type="number" 
+			    step=".001">
+		    </label>
+		    <label class="input--form__geometry5">
+			<p>Joist depth</p>
+			<input 
+			    placeholder="28"
+			    value="28"
+			    name="depth" 
+			    type="number" 
+			    step=".001">
+		    </label>
+		    <label class="input--form__geometry6">
+			<p>First End Panel Length</p>
+			<input 
+			    placeholder="27.28" 
+			    value="27.28"
+			    name="fepl" 
+			    type="number" 
+			    step=".001">
+		    </label>
+		    <label class="input--form__geometry7">
+			<p>Second End Panel Length</p>
+			<input 
+			    placeholder="26" 
+			    value="26"
+			    name="sepl" 
+			    type="number" 
+			    step=".001">
+		    </label>
+		    <label class="input--form__geometry8">
+			<p>Interior Panel Length</p>
+			<input 
+			    placeholder="24" 
+			    value="24"
+			    name="ipl" 
+			    type="number" 
+			    step=".001">
+		    </label>
+		    <label class="input--form__geometry9">
+			<p>End Panel to B.Chord</p>
+			<input 
+			    placeholder="41.1"
+			    value="41.1"
+			    name="epbc" 
+			    type="number" 
+			    step=".001">
+		    </label>
+		</div>
+		<div class="input--form__stress">
+		    <div class="input--form__stress0">
+			<h3>Stress</h3>
+		    </div>
+		    <label class="input--form__stress1">
+			<p>Yield Stress (ksi)</p>
+			<input 
+			    name="yieldStress " 
+			    value="50"
+			    type="number" 
+			    step=".001" >
+		    </label>
+		    <label class="input--form__stress2">
+			<p>weight (lb/ft)</p>
+			<input 
+			    placeholder="" 
+			    value="8.5"
+			    type="number" 
+			    name="weight" 
+			    step=".001">
+		    </label>
+		    <label class="input--form__stress3">
+			<p>B. Seat D:</p>
+			<input 
+			    name="bSeat" 
+			    value="29"
+			    type="number" 
+			    step=".001">
+		    </label>
+		    <label class="input--form__stress4">
+			<p>Modulus of Elasticuty (ksi)</p>
+			<input 
+			    name="modElas" 
+			    value="29000"
+			    type="number" 
+			    step=".001">
+		    </label>
+		    <label class="input--form__stress5">
+			<p>Spacing between chord angles (in)</p>
+			<input 
+			    type="number" 
+			    value="1"
+			    name="spaceChord" 
+			    step=".001">
+		    </label>
+		</div>
+		<div class="input--form__loads">
+
+		    <div class="input--form__loads0">
+			<h3>Loads</h3>
+		    </div>
+
+		    <label class="input--form__loads1">
+			<p>Ultimate design load Wu (plf)</p>
+			<input 
+			    name="udlw"
+			    value="295"
+			    type="number"
+			    step=".001">
+		    </label>
+		    <label class="input--form__loads2">
+			<p>Live Load Wll (service load) (plf)</p>
+			<input 
+			    name="llWLL"
+			    value="110"
+			    type="number"
+			    step=".001">
+		    </label>
+		    <label class="input--form__loads3">
+			<p>Net suction LRFD (plf)</p>
+			<input 
+			    name="nsLRFD"
+			    value="0"
+			    type="number"
+			    step=".001">
+		    </label>
+		    <label class="input--form__loads4">
+			<p>Net suction ASD</p>
+			<input 
+			    name="nsASD" 
+			    type="number">
+		    </label>
+		</div>
+		<div class="input--form__chords">
+		    <div class="input--form__chords0">
+			<h3>Chords</h3>
+		    </div>
+
+		    <label class="input--form__chords1">
+			<p>Top Chord Mark</p>
+			<input 
+			   type="number" 
+			   value="16"
+			   name="topChord">
+		    </label>
+		    <label class="input--form__chords2">
+			<p>Mid-Panel Top fill Chord (max)</p>
+			<select name="fillTopChord">
+			    <option value="yes">yes</option>
+			    <option value="no">no</option>
+			</select>
+		    </label>
+		    <label class="input--form__chords3">
+			<p>Mid-Panel fill Chord End Panel 1</p>
+			<select name="topChordEP1">
+			    <option value="yes">yes</option>
+			    <option value="no">no</option>
+			</select>
+		    </label>
+		    <label class="input--form__chords4">
+			<p>Mid-Panel fill Chord End Panel 2</p>
+			<select name="topChordEP2">
+			    <option value="yes">yes</option>
+			    <option value="no">no</option>
+			</select>
+		    </label>
+		    <label class="input--form__chords5">
+			<p>Bottom Chord Mark</p>
+			<input 
+			   type="number" 
+			   value="8"
+			   name="bottomChord">
+		    </label>
+		    <label class="input--form__chords6">
+			<p>fill Bottom Chord (max)</p>
+			<select name="fillBottomChord">
+			    <option value="yes">yes</option>
+			    <option value="no">no</option>
+			</select>
+		    </label>
+		</div>
+		<div class="input--form__submit">
+		    <button>submit</button>
+		</div>
+	    </form>
 	</div>
+
 	<div class="geometry">
 	    <form hx-post="/geometry"  hx-target="#tabla1">
 		<div>

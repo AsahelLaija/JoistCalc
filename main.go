@@ -415,6 +415,33 @@ func main() {
     e.GET("/styles", func(c echo.Context) error {
 	return c.File("static/styles.css")
     })
+    e.POST("/geometry", func(c echo.Context) error {
+	trussType := c.FormValue("trussType")
+	joistType := c.FormValue("joistType")
+	deflexion := c.FormValue("deflexion")
+	span := c.FormValue("span")
+	depth := c.FormValue("depth")
+	fepl := c.FormValue("fepl")
+	sepl := c.FormValue("sepl")
+	ipl := c.FormValue("ipl")
+	epbc := c.FormValue("epbc")
+	c.FormValue("")
+	c.FormValue("")
+	c.FormValue("")
+	c.FormValue("")
+	c.FormValue("")
+	c.FormValue("")
+	c.FormValue("")
+	c.FormValue("")
+	c.FormValue("")
+	c.FormValue("")
+	c.FormValue("")
+	c.FormValue("")
+	c.FormValue("")
+	c.FormValue("")
+	c.FormValue("")
+	return nil
+    })
     e.POST("/material", func(c echo.Context) error {
 	page.WebMember.MemberInputs = page.WebMember.MemberInputs[:0]
 	yieldStress := c.FormValue("yieldStress")
