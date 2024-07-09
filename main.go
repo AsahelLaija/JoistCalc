@@ -130,13 +130,13 @@ type Propertie struct {
     depth	float64
 }
 type ResProp struct {
-    Lbe2, DLength, Tip, Tod, Ts, Ed, Dmin, Lbrdng1, Lbrdng2 string
+    Lbe2, DLength, Tip, Tod, Ts, Ed, Dmin, Lbrdng1, Lbrdng2 float64
 }
 type ResProps = []ResProp
 type ResGeom struct {
     ResProps ResProps
 }
-func newResProp(lb, dl, ti, to, ts, ed, Dmin string) ResProp {
+func newResProp(lb, dl, ti, to, ts, ed, Dmin float64) ResProp {
     return ResProp {
 	Lbe2:		lb,
 	DLength:	dl,
@@ -151,7 +151,7 @@ func newResProp(lb, dl, ti, to, ts, ed, Dmin string) ResProp {
 func newResGeom() ResGeom {
     return ResGeom{
 	ResProps: []ResProp{
-	    newResProp("", "", "", "", "", "", ""),
+	    newResProp(0, 0, 0, 0, 0, 0, 0),
 	},
     }
 }
@@ -1746,6 +1746,7 @@ func largeThree(num1, num2, num3 float64) float64 {
 }
 func slendernesRadio(page *Page) {
     geom := &page.Geometry.Properties[0]
+    resProp := &page.ResGeom.ResProps[0]
     check := &page.TableCheck.CheckSlenderness[0]
     bot := &page.ResMater.AnglProps[0]
 
@@ -1767,7 +1768,7 @@ func slendernesRadio(page *Page) {
     */
     
     check.TCIpMidIx = geom.ipl
-    // convert whole struct to float64
+    check.TCIpMidIy = math.Floor(resProp.Lbe2)
     check.TCIpMidIz = geom.ipl/2
     check.TCIpMidrx = bot.RxTop
     check.TCIpMidry = bot.RyTop
@@ -1844,7 +1845,7 @@ func deCalculation(page *Page) {
     ytc := &page.ResMater.AnglProps[0].YTop
     ybc := &page.ResMater.AnglProps[0].YBot
     de := (*d - *ytc) - *ybc
-    page.ResGeom.ResProps[0].Ed = strconv.FormatFloat(de, 'g', -1, 64)
+    page.ResGeom.ResProps[0].Ed = de
     // fmt.Println(de)
 }
 func efectiveSlend(page *Page) {
@@ -1913,19 +1914,15 @@ func efectiveSlend(page *Page) {
 func designLoads(page *Page) {
     udlw := &page.Material.Forces[0].Udlw
     llWLL := &page.Material.Forces[0].LlWLL
-    // LL is String
-    LL := &page.ResGeom.ResProps[0].DLength
-    L,_ := strconv.ParseFloat(*LL, 64)
-    // des is String
-    des := &page.ResGeom.ResProps[0].Ed 
-    de,_ := strconv.ParseFloat(*des, 64)
+    L := &page.ResGeom.ResProps[0].DLength
+    de := &page.ResGeom.ResProps[0].Ed 
     // divide by 12000 is the same than divide by 1000 and then by 12
     Wu := *udlw/12000
     Wll := *llWLL/12000
 
-    tst := math.Pow(L, 2) 
+    tst := math.Pow(*L, 2) 
     Msji := (Wu * tst)/8
-    Pchord := Msji/de
+    Pchord := Msji / *de
 
     page.TableResForce.ResForces[0].KipUdlWu = Wu
     page.TableResForce.ResForces[0].KipLlWLL = Wll
@@ -2031,18 +2028,12 @@ func main() {
 
 
 	dmin := spanDepth(page.Geometry.Properties[0].span)
-	q := strconv.FormatFloat(lbe2, 'g', -1, 64)
-	w := strconv.FormatFloat(dLength, 'g', -1, 64)
-	e := strconv.FormatFloat(tip, 'g', -1, 64)
-	r := strconv.FormatFloat(tod, 'g', -1, 64)
-	t := strconv.FormatFloat(ts, 'g', -1, 64)
-	y := strconv.FormatFloat(dmin, 'g', -1, 64)
-	page.ResGeom.ResProps[0].Lbe2 = q
-	page.ResGeom.ResProps[0].DLength = w
-	page.ResGeom.ResProps[0].Tip = e
-	page.ResGeom.ResProps[0].Tod = r
-	page.ResGeom.ResProps[0].Ts = t
-	page.ResGeom.ResProps[0].Dmin = y
+	page.ResGeom.ResProps[0].Lbe2 = lbe2
+	page.ResGeom.ResProps[0].DLength = dLength
+	page.ResGeom.ResProps[0].Tip = tip
+	page.ResGeom.ResProps[0].Tod = tod
+	page.ResGeom.ResProps[0].Ts = ts
+	page.ResGeom.ResProps[0].Dmin = dmin
 
 
 	force := newForce(
