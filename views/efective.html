@@ -1,0 +1,124 @@
+{{ block "efectiveSlendernes" . }}
+{{ $EfectiveSlend := index .TableEfective.EfectiveSlenderness 0 }}
+<h2>Efective slenderness</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Element Chord</th>
+            <th>kI/rx</th>
+            <th>kI/ry</th>
+            <th>kI/rz</th>
+            <th>kIs/rz</th>
+	    <th>K-F'e KI/rx</th>
+            <th>kI/rx</th>
+            <th>kI/ry</th>
+            <th>kI/rz</th>
+            <th>kIs/rz</th>
+            <th>SLR gov</th>
+            <th>F'e KI/rx</th>
+	</tr>
+    </thead>
+    <tbody>
+	<tr>
+	    <th>Bottom Chord (max)</th>
+	    <td>{{$EfectiveSlend.BCklrx}}</td>
+	    <td>{{$EfectiveSlend.BCklry}}</td>
+	    <td>{{$EfectiveSlend.BCklrz}}</td>
+	    <td>{{$EfectiveSlend.BCklsrz}}</td>
+	    <td>{{$EfectiveSlend.BCKLrx}}</td>
+	    <td>{{$EfectiveSlend.BCSlendklrx}}</td>
+	    <td>{{$EfectiveSlend.BCSlendklry}}</td>
+	    <td>{{$EfectiveSlend.BCSlendklrz}}</td>
+	    <td>{{$EfectiveSlend.BCSlendklsrz}}</td>
+	    <td>{{$EfectiveSlend.BCSLRgov}}</td>
+	    <td>{{$EfectiveSlend.BCFeKlrx}}</td>
+	</tr>
+	<tr>
+	    <th>T.C. (Ip) mid-panel</th>
+	    <td>{{$EfectiveSlend.TCIpMidklrx}}</td>
+	    <td>{{$EfectiveSlend.TCIpMidklry}}</td>
+	    <td>{{$EfectiveSlend.TCIpMidklrz}}</td>
+
+	    <td>{{$EfectiveSlend.TCIpMidklsrz}}</td>
+
+	    <td>{{$EfectiveSlend.TCIpMidKLrx}}</td>
+	    <td>{{$EfectiveSlend.TCIpMidSlendklrx}}</td>
+	    <td>{{$EfectiveSlend.TCIpMidSlendklry}}</td>
+	    <td>{{$EfectiveSlend.TCIpMidSlendklrz}}</td>
+	    <td>{{$EfectiveSlend.TCIpMidSlendklsrz}}</td>
+	    <td>{{$EfectiveSlend.TCIpMidSLRgov}}</td>
+	    <td>{{$EfectiveSlend.TCIpMidFeKlrx}}</td>
+	</tr>
+	<tr>
+	    <th>T.C. (Ip) point-panel</th>
+	    <td>{{$EfectiveSlend.TCIpPointklrx}}</td>
+	    <td>{{$EfectiveSlend.TCIpPointklry}}</td>
+	    <td>{{$EfectiveSlend.TCIpPointklrz}}</td>
+	    <td>{{$EfectiveSlend.TCIpPointklsrz}}</td>
+	    <td>{{$EfectiveSlend.TCIpPointKLrx}}</td>
+	    <td>{{$EfectiveSlend.TCIpPointSlendklrx}}</td>
+	    <td>{{$EfectiveSlend.TCIpPointSlendklry}}</td>
+	    <td>{{$EfectiveSlend.TCIpPointSlendklrz}}</td>
+	    <td>{{$EfectiveSlend.TCIpPointSlendklsrz}}</td>
+	    <td>{{$EfectiveSlend.TCIpPointSLRgov}}</td>
+	    <td>{{$EfectiveSlend.TCIpPointFeKlrx}}</td>
+	</tr>
+	<tr>
+	    <th>T.C. (Ep1) mid-panel </th>
+	    <td>{{$EfectiveSlend.TCEp1Midklrx}}</td>
+	    <td>{{$EfectiveSlend.TCEp1Midklry}}</td>
+	    <td>{{$EfectiveSlend.TCEp1Midklrz}}</td>
+	    <td>{{$EfectiveSlend.TCEp1Midklsrz}}</td>
+	    <td>{{$EfectiveSlend.TCEp1MidKLrx}}</td>
+	    <td>{{$EfectiveSlend.TCEp1MidSlendklrx}}</td>
+	    <td>{{$EfectiveSlend.TCEp1MidSlendklry}}</td>
+	    <td>{{$EfectiveSlend.TCEp1MidSlendklrz}}</td>
+	    <td>{{$EfectiveSlend.TCEp1MidSlendklsrz}}</td>
+	    <td>{{$EfectiveSlend.TCEp1MidSLRgov}}</td>
+	    <td>{{$EfectiveSlend.TCEp1MidFeKlrx}}</td>
+	</tr>
+	<tr>
+	    <th>T.C. (Ep1) point-panel</th>
+	    <td>{{$EfectiveSlend.TCEp1Pointklrx}}</td>
+	    <td>{{$EfectiveSlend.TCEp1Pointklry}}</td>
+	    <td>{{$EfectiveSlend.TCEp1Pointklrz}}</td>
+	    <td>{{$EfectiveSlend.TCEp1Pointklsrz}}</td>
+	    <td>{{$EfectiveSlend.TCEp1PointKLrx}}</td>
+	    <td>{{$EfectiveSlend.TCEp1PointSlendklrx}}</td>
+	    <td>{{$EfectiveSlend.TCEp1PointSlendklry}}</td>
+	    <td>{{$EfectiveSlend.TCEp1PointSlendklrz}}</td>
+	    <td>{{$EfectiveSlend.TCEp1PointSlendklsrz}}</td>
+	    <td>{{$EfectiveSlend.TCEp1PointSLRgov}}</td>
+	    <td>{{$EfectiveSlend.TCEp1PointFeKlrx}}</td>
+	</tr>
+	<tr>
+	    <th>T.C. (Ep2) mid-panel </th>
+	    <td>{{$EfectiveSlend.TCEp2Midklrx}}</td>
+	    <td>{{$EfectiveSlend.TCEp2Midklry}}</td>
+	    <td>{{$EfectiveSlend.TCEp2Midklrz}}</td>
+	    <td>{{$EfectiveSlend.TCEp2Midklsrz}}</td>
+	    <td>{{$EfectiveSlend.TCEp2MidKLrx}}</td>
+	    <td>{{$EfectiveSlend.TCEp2MidSlendklrx}}</td>
+	    <td>{{$EfectiveSlend.TCEp2MidSlendklry}}</td>
+	    <td>{{$EfectiveSlend.TCEp2MidSlendklrz}}</td>
+	    <td>{{$EfectiveSlend.TCEp2MidSlendklsrz}}</td>
+	    <td>{{$EfectiveSlend.TCEp2MidSLRgov}}</td>
+	    <td>{{$EfectiveSlend.TCEp2MidFeKlrx}}</td>
+	</tr>
+	<tr>
+	    <th>T.C. (Ep2) point-panel</th>
+	    <td>{{$EfectiveSlend.TCEp2Pointklrx}}</td>
+	    <td>{{$EfectiveSlend.TCEp2Pointklry}}</td>
+	    <td>{{$EfectiveSlend.TCEp2Pointklrz}}</td>
+	    <td>{{$EfectiveSlend.TCEp2Pointklsrz}}</td>
+	    <td>{{$EfectiveSlend.TCEp2PointKLrx}}</td>
+	    <td>{{$EfectiveSlend.TCEp2PointSlendklrx}}</td>
+	    <td>{{$EfectiveSlend.TCEp2PointSlendklry}}</td>
+	    <td>{{$EfectiveSlend.TCEp2PointSlendklrz}}</td>
+	    <td>{{$EfectiveSlend.TCEp2PointSlendklsrz}}</td>
+	    <td>{{$EfectiveSlend.TCEp2PointSLRgov}}</td>
+	    <td>{{$EfectiveSlend.TCEp2PointFeKlrx}}</td>
+	</tr>
+    </tbody>
+</table>
+{{ end }}

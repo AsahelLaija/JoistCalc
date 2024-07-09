@@ -1,0 +1,469 @@
+{{ block "response" . }}
+    {{ template "res" . }}
+{{ end }}
+
+{{ block "res" . }}
+{{ $ResProp := index .ResGeom.ResProps 0 }}
+{{ $AnglProp := index .ResMater.AnglProps 0 }}
+{{ $ResisTable := index .TableResistance.ResistanceFactors 0 }}
+{{ $ResForce := index .TableResForce.ResForces 0 }}
+<!-- Geomery output -->
+<table>
+    <tbody>
+	<tr>
+	    <td>bottom chord to bottom panel</td>
+	    <td>
+		<p>
+		{{ $ResProp.Lbe2 }}
+		</p>
+	    </td>
+	</tr>
+	<tr>
+	    <td>Design length</td>
+	    <td>
+		<p>
+		{{ $ResProp.DLength }}
+		</p>
+	    </td>
+	</tr>
+	<tr>
+	    <td>Total interior Panels</td>
+	    <td>
+		<p>
+		{{ $ResProp.Tip }}
+		</p>
+	    </td>
+	</tr>
+	<tr>
+	    <td>Total Diagonals</td>
+	    <td>
+		<p>
+		{{ $ResProp.Tod }}
+		</p>
+	    </td>
+	</tr>
+	<tr>
+	    <td>Total struts</td>
+	    <td>
+		<p>
+		{{ $ResProp.Ts }}
+		</p>
+	    </td>
+	</tr>
+	<tr>
+	    <td>Effective Depth</td>
+	    <td>
+		<p>
+		{{ $ResProp.Ed }}
+		</p>
+	    </td>
+	</tr>
+    </tbody>
+</table>
+<!-- <p>The span of a joist shall not exceed 24 time the depth</p> -->
+<!-- <p>Span/Depth Ratio = {{ $ResProp.Dmin }} less than depth joist =  </p> -->
+
+<!-- Geomery output -->
+<table>
+    <thead>
+	<tr>
+	    <th>Secction 2L</th>
+	    <th>
+		<p>{{ $AnglProp.SecTop }}</p>
+	    </th>
+	</tr>
+    </thead>
+    <tbody>
+	<tr>
+	    <td>Area Top Chord</td>
+	    <td>
+		<p>{{ $AnglProp.AreaTop }}</p>
+	    </td>
+	</tr>
+	<tr>
+	    <td>rx Top Chord</td>
+	    <td>
+		<p>{{ $AnglProp.RxTop }}</p>
+	    </td>
+	</tr>
+	<tr>
+	    <td>rz Top Chord</td>
+	    <td>
+		<p>{{ $AnglProp.RxTop }}</p>
+	    </td>
+	</tr>
+	<tr>
+	    <td>ry Top Chord</td>
+	    <td>
+		<p>{{ $AnglProp.RyTop }}</p>
+	    </td>
+	</tr>
+	<tr>
+	    <td>Y Top Chord</td>
+	    <td>
+		<p>{{ $AnglProp.YTop }}</p>
+	    </td>
+	</tr>
+	<tr>
+	    <td>Ix Top Chord</td>
+	    <td>
+		<p>{{ $AnglProp.IxTop }}</p>
+	    </td>
+	</tr>
+	<tr>
+	    <td>Iy Top Chord</td>
+	    <td>
+		<p>{{ $AnglProp.IyTop }}</p>
+	    </td>
+	</tr>
+	<tr>
+	    <td>b Top Chord</td>
+	    <td>
+		<p>{{ $AnglProp.BTop }}</p>
+	    </td>
+	</tr>
+	<tr>
+	    <td>t Top Chord</td>
+	    <td>
+		<p>{{ $AnglProp.TTop }}</p>
+	    </td>
+	</tr>
+	<tr>
+	    <td>Q Top Chord</td>
+	    <td>
+		<p>{{ $AnglProp.QTop }}</p>
+	    </td>
+	</tr>
+    </tbody>
+</table>
+<table>
+    <thead>
+	<tr>
+	    <th>Secction 2L</th>
+	    <th>
+		<p>{{ $AnglProp.SecBot }}</p>
+	    </th>
+	</tr>
+    </thead>
+    <tbody>
+	<tr>
+	    <td>Area Bottom Chord</td>
+	    <td>
+		<p>{{ $AnglProp.AreaBot }}</p>
+	    </td>
+	</tr>
+	<tr>
+	    <td>rx Bottom Chord</td>
+	    <td>
+		<p>{{ $AnglProp.RxBot }}</p>
+	    </td>
+	</tr>
+t<tr>
+	    <td>rz Bottom Chord</td>
+	    <td>
+		<p>{{ $AnglProp.RzBot }}</p>
+	    </td>
+	</tr>
+	<tr>
+	    <td>ry Bottom Chord</td>
+	    <td>
+		<p>{{ $AnglProp.RyBot }}</p>
+	    </td>
+	</tr>
+	<tr>
+	    <td>Y Bottom Chord</td>
+	    <td>
+		<p>{{ $AnglProp.YBot }}</p>
+	    </td>
+	</tr>
+	<tr>
+	    <td>Ix Bottom Chord</td>
+	    <td>
+		<p>{{ $AnglProp.IxBot }}</p>
+	    </td>
+	</tr>
+	<tr>
+	    <td>Iy Bottom Chord</td>
+	    <td>
+		<p>{{ $AnglProp.IyBot }}</p>
+	    </td>
+	</tr>
+	<tr>
+	    <td>b Bottom Chord</td>
+	    <td>
+		<p>{{ $AnglProp.BBot }}</p>
+	    </td>
+	</tr>
+	<tr>
+	    <td>t Bottom Chord</td>
+	    <td>
+		<p>{{ $AnglProp.TBot }}</p>
+	    </td>
+	</tr>
+	<tr>
+	    <td>Q Bottom Chord</td>
+	    <td>
+		<p>{{ $AnglProp.QBot }}</p>
+	    </td>
+	</tr>
+    </tbody>
+</table>
+
+
+<div>
+    {{ template "webMem" . }}
+</div>
+		<!-- <div class="brid">
+		    <p>maximum spacing of bridging</p>
+		    <p>Line bridging 1</p>
+		    <p>Line bridging 2</p>
+		</div> -->
+<form action="">
+    <table>
+        <thead>
+            <tr>
+                <th>Condition</th>
+                <th>Factor</th>
+                <th>Value</th>
+                <th>D. stress</th>
+            </tr>
+        </thead>
+	<tbody>
+	    <tr>
+	        <td>Tension</td>
+		<td>&Phi;{{ $ResisTable.TensionFactor }} </td>
+		<td>
+		    <input type="number" value="{{ $ResisTable.TensionValue }}">
+		</td>
+		<td>{{ $ResisTable.TensionDStress }}</td>
+	    </tr>
+	    <tr>
+	        <td>Compression</td>
+		<td>&Phi;{{ $ResisTable.CompressionFactor }} </td>
+		<td>
+		    <input type="number" value="{{ $ResisTable.CompressionValue }}">
+		</td>
+		<td>{{ $ResisTable.CompressionDStress }}</td>
+	    </tr>
+	    <tr>
+	        <td>Bending</td>
+		<td>&Phi;{{ $ResisTable.BendingFactor }} </td>
+		<td>
+		    <input type="number" value="{{ $ResisTable.BendingValue }}">
+		</td>
+		<td>{{ $ResisTable.BendingDStress }}</td>
+	    </tr>
+	</tbody>
+    </table>
+</form>
+<table>
+    <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td>puntual</td>
+    </tr>
+    <tr>
+        <td>design load Wu(Kip/in)</td>
+	<td>{{ $ResForce.KipUdlWu }}</td>
+        <td></td>
+	<td>0</td>
+    </tr>
+    <tr>
+	<td>Live load WLL(Kip/in)</td>
+	<td>{{ $ResForce.KipLlWLL }}</td>
+    </tr>
+    <tr>
+	<td>Net suction LRFD(Kip/in)</td>
+	<td>0</td>
+    </tr>
+    <tr>
+	<td>Net suction ASD(Kip/in)</td>
+	<td>0</td>
+    </tr>
+    <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+	<th>Suction</th>
+    </tr>
+    <tr>
+        <td>Maximum design Moment</td>
+	<td>FORMULA</td>
+	<td>{{ $ResForce.MaxDsgnMoment }}</td>
+	<td>o</td>
+    </tr>
+    <tr>
+        <td>Chord force in center panel</td>
+        <td>FORMULA</td>
+	<td>{{ $ResForce.ChordForce }}</td>
+        <td>0</td> 
+    </tr>
+</table>
+<table>
+    <thead>
+	<tr>
+	    <th>Forces and stresses</th>
+	    <th>TENSION</th>
+	    <th></th>
+	    <th>COMPRESSION</th>
+	    <th></th>
+	    <th>MOMENT down</th>
+	    <th></th>
+	    <th>MOMENT up</th>
+	</tr>
+    </thead>
+    <tbody>
+        <tr>
+            <th>Forces and Stresses</th>
+            <th>Force</th>
+            <th>ft</th>
+            <th>Force</th>
+            <th>fc</th>
+            <th>Mu</th>
+            <th>fb</th>
+            <th>Mu</th>
+            <th>fb</th>
+        </tr>
+	<tr>
+	    <td>Bottom Chord (max)</td>
+	    <td></td>
+	    <td></td>
+	    <td></td>
+	    <td></td>
+	    <td></td>
+	    <td></td>
+	    <td></td>
+	    <td></td>
+	</tr>
+	<tr>
+	    <td>Top Chord (Ip) mid-Panel</td>
+	    <td></td>
+	    <td></td>
+	    <td></td>
+	    <td></td>
+	    <td></td>
+	    <td></td>
+	    <td></td>
+	    <td></td>
+	</tr>
+	<tr>
+	    <td>Top Chord (Ip) point-Panel</td>
+	    <td></td>
+	    <td></td>
+	    <td></td>
+	    <td></td>
+	    <td></td>
+	    <td></td>
+	    <td></td>
+	    <td></td>
+	</tr>
+	<tr>
+	    <td>Top Chord (Ep1) mid-Panel</td>
+	    <td></td>
+	    <td></td>
+	    <td></td>
+	    <td></td>
+	    <td></td>
+	    <td></td>
+	    <td></td>
+	    <td></td>
+	</tr>
+	<tr>
+	    <td>Top Chord (Ep1) point-Panel</td>
+	    <td></td>
+	    <td></td>
+	    <td></td>
+	    <td></td>
+	    <td></td>
+	    <td></td>
+	    <td></td>
+	    <td></td>
+	</tr>
+	<tr>
+	    <td>Top Chord (Ep2) mid-Panel</td>
+	    <td></td>
+	    <td></td>
+	    <td></td>
+	    <td></td>
+	    <td></td>
+	    <td></td>
+	    <td></td>
+	    <td></td>
+	</tr>
+	<tr>
+	    <td>Top Chord (Ep2) point-Panel</td>
+	    <td></td>
+	    <td></td>
+	    <td></td>
+	    <td></td>
+	    <td></td>
+	    <td></td>
+	    <td></td>
+	    <td></td>
+	</tr>
+    </tbody>
+</table>
+
+{{ template "checkSlendernes" . }}
+{{ template "efectiveSlendernes" . }}
+{{ template "design" . }}
+{{ template "relations" . }}
+
+{{ end }}
+{{ block "webMem" .}}
+    <form hx-post="/member" hx-swap="outerHTML">
+	<table>
+	    <thead>
+	        <tr>
+	            <th>Element</th>
+	            <th>Parts</th>
+	            <th>Mark</th>
+	            <th>Crimped</th>
+	            <th>Secction</th>
+	            <th>mid-panell fill</th>
+	        </tr>
+	    </thead>
+	    {{ range .WebMember.MemberInputs }}
+		{{ template "InputMembers" . }}
+	    {{ end }}
+	</table>
+    <button type="submit">submit</button>
+    </form>
+{{ end }}
+
+
+{{ block "InputMembers" .}}
+	    <tr>
+		<!-- Header is <th>Element</th> -->
+	        <td>
+		    <p>{{ .ElemName }}</p>
+		</td>
+		<!-- Header is <th>Parts</th> -->
+		<td>
+		    <input value="1" type="number" name="part{{ .InputName }}">
+		</td>
+		<!-- Header is <th>Mark</th> -->
+		<td>
+		    <input value="{{ .Mark }}"type="number" name="mark{{ .InputName }}">
+		</td>
+		<!-- Header is <th>Crimped</th> -->
+		<td>
+		    <select id="" name="crimped{{ .InputName }}">
+		        <option value="yes">yes</option>
+		        <option value="no">no</option>
+		    </select>
+		</td>
+		<!-- Header is <th>Secction</th> -->
+		<td>
+		    <p>{{ .Secction }}</p>
+		</td>
+		<!-- Header is <th>mid-panell fill</th> -->
+		<td>
+		    <select id="" name="crimped{{ .InputName }}">
+		        <option value="yes">yes</option>
+		        <option value="no">no</option>
+		    </select>
+		</td>
+	    </tr>
+{{ end }}

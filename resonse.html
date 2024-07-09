@@ -1,0 +1,261 @@
+{{ block "responsum" . }}
+{{ $AnglProp := index .ResMater.AnglProps 0 }}
+{{ $ResProp := index .ResGeom.ResProps 0 }}
+<div class="materialTableDiv">
+    <table>
+	<thead>
+	    <tr>
+		<th>Secction 2L</th>
+		<th>
+		    <p>{{ $AnglProp.SecTop }}</p>
+		</th>
+	    </tr>
+	</thead>
+	<tbody>
+	    <tr>
+		<td>Area Top Chord</td>
+		<td>
+		    <p>{{ $AnglProp.AreaTop }}</p>
+		</td>
+	    </tr>
+	    <tr>
+		<td>rx Top Chord</td>
+		<td>
+		    <p>{{ $AnglProp.RxTop }}</p>
+		</td>
+	    </tr>
+	    <tr>
+		<td>rz Top Chord</td>
+		<td>
+		    <p>{{ $AnglProp.RxTop }}</p>
+		</td>
+	    </tr>
+	    <tr>
+		<td>ry Top Chord</td>
+		<td>
+		    <p>{{ $AnglProp.RyTop }}</p>
+		</td>
+	    </tr>
+	    <tr>
+		<td>Y Top Chord</td>
+		<td>
+		    <p>{{ $AnglProp.YTop }}</p>
+		</td>
+	    </tr>
+	    <tr>
+		<td>Ix Top Chord</td>
+		<td>
+		    <p>{{ $AnglProp.IxTop }}</p>
+		</td>
+	    </tr>
+	    <tr>
+		<td>Iy Top Chord</td>
+		<td>
+		    <p>{{ $AnglProp.IyTop }}</p>
+		</td>
+	    </tr>
+	    <tr>
+		<td>b Top Chord</td>
+		<td>
+		    <p>{{ $AnglProp.BTop }}</p>
+		</td>
+	    </tr>
+	    <tr>
+		<td>t Top Chord</td>
+		<td>
+		    <p>{{ $AnglProp.TTop }}</p>
+		</td>
+	    </tr>
+	    <tr>
+		<td>Q Top Chord</td>
+		<td>
+		    <p>{{ $AnglProp.QTop }}</p>
+		</td>
+	    </tr>
+	</tbody>
+    </table>
+    <table>
+	<thead>
+	    <tr>
+		<th>Secction 2L</th>
+		<th>
+		    <p>{{ $AnglProp.SecBot }}</p>
+		</th>
+	    </tr>
+	</thead>
+	<tbody>
+	    <tr>
+		<td>Area Bottom Chord</td>
+		<td>
+		    <p>{{ $AnglProp.AreaBot }}</p>
+		</td>
+	    </tr>
+	    <tr>
+		<td>rx Bottom Chord</td>
+		<td>
+		    <p>{{ $AnglProp.RxBot }}</p>
+		</td>
+	    </tr>
+	    <tr>
+		<td>rz Bottom Chord</td>
+		<td>
+		    <p>{{ $AnglProp.RzBot }}</p>
+		</td>
+	    </tr>
+	    <tr>
+		<td>ry Bottom Chord</td>
+		<td>
+		    <p>{{ $AnglProp.RyBot }}</p>
+		</td>
+	    </tr>
+	    <tr>
+		<td>Y Bottom Chord</td>
+		<td>
+		    <p>{{ $AnglProp.YBot }}</p>
+		</td>
+	    </tr>
+	    <tr>
+		<td>Ix Bottom Chord</td>
+		<td>
+		    <p>{{ $AnglProp.IxBot }}</p>
+		</td>
+	    </tr>
+	    <tr>
+		<td>Iy Bottom Chord</td>
+		<td>
+		    <p>{{ $AnglProp.IyBot }}</p>
+		</td>
+	    </tr>
+	    <tr>
+		<td>b Bottom Chord</td>
+		<td>
+		    <p>{{ $AnglProp.BBot }}</p>
+		</td>
+	    </tr>
+	    <tr>
+		<td>t Bottom Chord</td>
+		<td>
+		    <p>{{ $AnglProp.TBot }}</p>
+		</td>
+	    </tr>
+	    <tr>
+		<td>Q Bottom Chord</td>
+		<td>
+		    <p>{{ $AnglProp.QBot }}</p>
+		</td>
+	    </tr>
+	</tbody>
+    </table>
+    <table>
+	<tbody>
+	    <tr>
+		<td>bottom chord to bottom panel</td>
+		<td>
+		    <p>
+		    {{ $ResProp.Lbe2 }}
+		    </p>
+		</td>
+	    </tr>
+	    <tr>
+		<td>Design length</td>
+		<td>
+		    <p>
+		    {{ $ResProp.DLength }}
+		    </p>
+		</td>
+	    </tr>
+	    <tr>
+		<td>Total interior Panels</td>
+		<td>
+		    <p>
+		    {{ $ResProp.Tip }}
+		    </p>
+		</td>
+	    </tr>
+	    <tr>
+		<td>Total Diagonals</td>
+		<td>
+		    <p>
+		    {{ $ResProp.Tod }}
+		    </p>
+		</td>
+	    </tr>
+	    <tr>
+		<td>Total struts</td>
+		<td>
+		    <p>
+		    {{ $ResProp.Ts }}
+		    </p>
+		</td>
+	    </tr>
+	    <tr>
+		<td>Effective Depth</td>
+		<td>
+		    <p>
+		    {{ $ResProp.Ed }}
+		    </p>
+		</td>
+	    </tr>
+	</tbody>
+    </table>
+</div>
+<div>
+    {{ template "webMem" .}}
+</div>
+{{ end }}
+
+{{ block "webMem" .}}
+    <form hx-post="/member" hx-swap="outerHTML">
+	<table>
+	    <thead>
+	        <tr>
+	            <th>Element</th>
+	            <th>Parts</th>
+	            <th>Mark</th>
+	            <th>Crimped</th>
+	            <th>Secction</th>
+	            <th>mid-panell fill</th>
+	        </tr>
+	    </thead>
+	    {{ range .WebMember.MemberInputs }}
+		{{ template "InputMembers" . }}
+	    {{ end }}
+	</table>
+    <button type="submit">submit</button>
+    </form>
+{{ end }}
+
+{{ block "InputMembers" .}}
+	    <tr>
+		<!-- Header is <th>Element</th> -->
+	        <td>
+		    <p>{{ .ElemName }}</p>
+		</td>
+		<!-- Header is <th>Parts</th> -->
+		<td>
+		    <input value="1" type="number" name="part{{ .InputName }}">
+		</td>
+		<!-- Header is <th>Mark</th> -->
+		<td>
+		    <input value="{{ .Mark }}"type="number" name="mark{{ .InputName }}">
+		</td>
+		<!-- Header is <th>Crimped</th> -->
+		<td>
+		    <select id="" name="crimped{{ .InputName }}">
+		        <option value="yes">yes</option>
+		        <option value="no">no</option>
+		    </select>
+		</td>
+		<!-- Header is <th>Secction</th> -->
+		<td>
+		    <p>{{ .Secction }}</p>
+		</td>
+		<!-- Header is <th>mid-panell fill</th> -->
+		<td>
+		    <select id="" name="crimped{{ .InputName }}">
+		        <option value="yes">yes</option>
+		        <option value="no">no</option>
+		    </select>
+		</td>
+	    </tr>
+{{ end }}

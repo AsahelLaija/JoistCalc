@@ -1,0 +1,127 @@
+{{ block "relations" . }}
+{{ $CheckSlend := index .TableCheck.CheckSlenderness 0 }}
+<h2>Check of relation capabilites vs solicitations</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Element Chord</th>
+	    <th>Put</th>
+	    <th>Pu sol</th>
+	    <th>ratio</th>
+	    <th>allowab</th>
+	    <th>Fau</th>
+	    <th>Fbu</th>
+	    <th>Fau/Fc</th>
+	    <th>ratio</th>
+	    <th>allowab</th>
+	</tr>
+    </thead>
+    <tbody>
+	<tr>
+	    <th>Bottom Chord (max)</th>
+	    <td> {{ $CheckSlend.BCIx }} </td>
+	    <td> {{ $CheckSlend.BCIy }} </td>
+	    <td> {{ $CheckSlend.BCIz }} </td>
+	    <td> {{ $CheckSlend.BCrx }} </td>
+	    <td> {{ $CheckSlend.BCry }} </td>
+	    <td> {{ $CheckSlend.BCrz }} </td>
+	    <td> {{ $CheckSlend.BCIxrx }} </td>
+	    <td> {{ $CheckSlend.BCIyry }} </td>
+	    <td> {{ $CheckSlend.BCIzrz }} </td>
+	    <td> {{ $CheckSlend.BCSLRym }} </td>
+	    <td> {{ $CheckSlend.BCrgov }} </td>
+	    <td> {{ $CheckSlend.BClimit }} </td>
+	</tr>
+	<tr>
+	    <th>T.C. (Ip) mid-panel</th>
+	    <td> {{ $CheckSlend.TCIpMidIx }} </td>
+	    <td> {{ $CheckSlend.TCIpMidIy }} </td>
+	    <td> {{ $CheckSlend.TCIpMidIz }} </td>
+	    <td> {{ $CheckSlend.TCIpMidrx }} </td>
+	    <td> {{ $CheckSlend.TCIpMidry }} </td>
+	    <td> {{ $CheckSlend.TCIpMidrz }} </td>
+	    <td> {{ $CheckSlend.TCIpMidIxrx }} </td>
+	    <td> {{ $CheckSlend.TCIpMidIyry }} </td>
+	    <td> {{ $CheckSlend.TCIpMidIzrz }} </td>
+	    <td> {{ $CheckSlend.TCIpMidSLRym }} </td>
+	    <td> {{ $CheckSlend.TCIpMidrgov }} </td>
+	    <td> {{ $CheckSlend.TCIpMidlimit }} </td>
+	</tr>
+	<tr>
+	    <th>T.C. (Ip) point-panel</th>
+	    <td> {{ $CheckSlend.TCIpPointIx }} </td>
+	    <td> {{ $CheckSlend.TCIpPointIy }} </td>
+	    <td> {{ $CheckSlend.TCIpPointIz }} </td>
+	    <td> {{ $CheckSlend.TCIpPointrx }} </td>
+	    <td> {{ $CheckSlend.TCIpPointry }} </td>
+	    <td> {{ $CheckSlend.TCIpPointrz }} </td>
+	    <td> {{ $CheckSlend.TCIpPointIxrx }} </td>
+	    <td> {{ $CheckSlend.TCIpPointIyry }} </td>
+	    <td> {{ $CheckSlend.TCIpPointIzrz }} </td>
+	    <td> {{ $CheckSlend.TCIpPointSLRym }} </td>
+	    <td> {{ $CheckSlend.TCIpPointrgov }} </td>
+	    <td> {{ $CheckSlend.TCIpPointlimit }} </td>
+	</tr>
+	<tr>
+	    <th>T.C. (Ep1) mid-panel </th>
+	    <td> {{ $CheckSlend.TCEp1MidIx }} </td>
+	    <td> {{ $CheckSlend.TCEp1MidIy }} </td>
+	    <td> {{ $CheckSlend.TCEp1MidIz }} </td>
+	    <td> {{ $CheckSlend.TCEp1Midrx }} </td>
+	    <td> {{ $CheckSlend.TCEp1Midry }} </td>
+	    <td> {{ $CheckSlend.TCEp1Midrz }} </td>
+	    <td> {{ $CheckSlend.TCEp1MidIxrx }} </td>
+	    <td> {{ $CheckSlend.TCEp1MidIyry }} </td>
+	    <td> {{ $CheckSlend.TCEp1MidIzrz }} </td>
+	    <td> {{ $CheckSlend.TCEp1MidSLRym }} </td>
+	    <td> {{ $CheckSlend.TCEp1Midrgov }} </td>
+	    <td> {{ $CheckSlend.TCEp1Midlimit }} </td>
+	</tr>
+	<tr>
+	    <th>T.C. (Ep1) point-panel</th>
+	    <td> {{ $CheckSlend.TCEp1PointIx }} </td>
+	    <td> {{ $CheckSlend.TCEp1PointIy }} </td>
+	    <td> {{ $CheckSlend.TCEp1PointIz }} </td>
+	    <td> {{ $CheckSlend.TCEp1Pointrx }} </td>
+	    <td> {{ $CheckSlend.TCEp1Pointry }} </td>
+	    <td> {{ $CheckSlend.TCEp1Pointrz }} </td>
+	    <td> {{ $CheckSlend.TCEp1PointIxrx }} </td>
+	    <td> {{ $CheckSlend.TCEp1PointIyry }} </td>
+	    <td> {{ $CheckSlend.TCEp1PointIzrz }} </td>
+	    <td> {{ $CheckSlend.TCEp1PointSLRym }} </td>
+	    <td> {{ $CheckSlend.TCEp1Pointrgov }} </td>
+	    <td> {{ $CheckSlend.TCEp1Pointlimit }} </td>
+	</tr>
+	<tr>
+	    <th>T.C. (Ep2) mid-panel </th>
+	    <td> {{ $CheckSlend.TCEp2MidIx }} </td>
+	    <td> {{ $CheckSlend.TCEp2MidIy }} </td>
+	    <td> {{ $CheckSlend.TCEp2MidIz }} </td>
+	    <td> {{ $CheckSlend.TCEp2Midrx }} </td>
+	    <td> {{ $CheckSlend.TCEp2Midry }} </td>
+	    <td> {{ $CheckSlend.TCEp2Midrz }} </td>
+	    <td> {{ $CheckSlend.TCEp2MidIxrx }} </td>
+	    <td> {{ $CheckSlend.TCEp2MidIyry }} </td>
+	    <td> {{ $CheckSlend.TCEp2MidIzrz }} </td>
+	    <td> {{ $CheckSlend.TCEp2MidSLRym }} </td>
+	    <td> {{ $CheckSlend.TCEp2Midrgov }} </td>
+	    <td> {{ $CheckSlend.TCEp2Midlimit }} </td>
+	</tr>
+	<tr>
+	    <th>T.C. (Ep2) point-panel</th>
+	    <td> {{ $CheckSlend.TCEp2PointIx }} </td>
+	    <td> {{ $CheckSlend.TCEp2PointIy }} </td>
+	    <td> {{ $CheckSlend.TCEp2PointIz }} </td>
+	    <td> {{ $CheckSlend.TCEp2Pointrx }} </td>
+	    <td> {{ $CheckSlend.TCEp2Pointry }} </td>
+	    <td> {{ $CheckSlend.TCEp2Pointrz }} </td>
+	    <td> {{ $CheckSlend.TCEp2PointIxrx }} </td>
+	    <td> {{ $CheckSlend.TCEp2PointIyry }} </td>
+	    <td> {{ $CheckSlend.TCEp2PointIzrz }} </td>
+	    <td> {{ $CheckSlend.TCEp2PointSLRym }} </td>
+	    <td> {{ $CheckSlend.TCEp2Pointrgov }} </td>
+	    <td> {{ $CheckSlend.TCEp2Pointlimit }} </td>
+	</tr>
+    </tbody>
+</table>
+{{ end }}
