@@ -19,6 +19,7 @@ type Template struct {
 func (t *Template) Render(w io.Writer, name string, data interface{}, c echo.Context) error {
     return t.templates.ExecuteTemplate(w, name, data)
 }
+
 // logic Code
 func bChordtobPanel(fepl, sepl, ipl, epbc float64) float64 {
     return (fepl + sepl + ipl) - epbc
@@ -41,22 +42,16 @@ func spanDepth(span float64)float64 {
 func doubleAngle(area, ix, y string, sbca float64) (string, string, string) {
     areaStr,_  := strconv.ParseFloat(area, 64)
     areaFlt := 2*areaStr
-
     areaDAngle := strconv.FormatFloat(areaFlt, 'g', -1, 64)
-
     ixStr,_ := strconv.ParseFloat(ix, 64)
     yStr,_ := strconv.ParseFloat(y, 32)
-    
-    
     ixFlt := 2*ixStr
     ixDAngle := strconv.FormatFloat(ixFlt, 'g', -1, 64)
-
     result := (sbca/2) + yStr
     
     // res is egual to ((sbca/2)+Ytc)^2
     res := math.Pow(result, 2)
     iyFlt := 2*(ixStr + areaStr*res)
-
     iyDAngle := strconv.FormatFloat(iyFlt, 'g', -1, 64)
     return areaDAngle, ixDAngle, iyDAngle
 }
@@ -129,6 +124,41 @@ type Propertie struct {
     epbc,
     depth	float64
 }
+type Properties = []Propertie
+type Geometry struct{
+    Properties Properties
+}
+
+func newPropertie(tt, jt, df, sp, fe, se, ip, lb, de string) Propertie {
+    deflexion,_ := strconv.ParseFloat(df, 64)
+    span,_ := strconv.ParseFloat(sp, 64)
+    fepl,_ := strconv.ParseFloat(fe, 64)
+    sepl,_ := strconv.ParseFloat(se, 64)
+    ipl,_ := strconv.ParseFloat(ip, 64)
+    epbc,_ := strconv.ParseFloat(lb, 64)
+    depth,_ := strconv.ParseFloat(de, 64)
+
+    return Propertie {
+	TrussType:	tt,
+	JoistType:	jt,
+	deflexion:	deflexion,
+	span:		span,
+	fepl:		fepl,
+	sepl:		sepl,
+	ipl:		ipl,
+	epbc:		epbc,
+	depth:		depth,
+    }
+} 
+func newGeometry() Geometry {
+    return Geometry{
+	Properties: []Propertie{
+	     newPropertie("warren", " roof", "240", "49.21", "27.28", "26", "24", "41.1", "28"),
+	},
+    }
+}
+
+/*	Geometry Response	*/
 type ResProp struct {
     Lbe2, DLength, Tip, Tod, Ts, Ed, Dmin, Lbrdng1, Lbrdng2 float64
 }
@@ -136,26 +166,18 @@ type ResProps = []ResProp
 type ResGeom struct {
     ResProps ResProps
 }
-func newResProp(lb, dl, ti, to, ts, ed, Dmin float64) ResProp {
-    return ResProp {
-	Lbe2:		lb,
-	DLength:	dl,
-	Tip:		ti,
-	Tod:		to,
-	Ts:		ts,
-	Ed:		ed,
-	Dmin:		Dmin,
-
-    }
+func newResProp() ResProp {
+    return ResProp {}
 }
 func newResGeom() ResGeom {
     return ResGeom{
 	ResProps: []ResProp{
-	    newResProp(0, 0, 0, 0, 0, 0, 0),
+	    newResProp(),
 	},
     }
 }
 
+/*	Stress		*/
 type Force struct {
     YieldStress, ModElas, SpaceChord, Weight, BSeat, TopChord, BottomChord, Udlw, LlWLL, NsLRFD float64
     FillTopChord, TopChordEP1, TopChordEP2 bool
@@ -235,26 +257,21 @@ type ResForces = []ResForce
 type TableResForce struct {
     ResForces ResForces
 }
-func newResForce(kipUdlWu, kipLlWLL, kipNsLRFD, maxDsgnMoment, chordForce float64) ResForce{
-    return ResForce{
-	KipUdlWu: kipUdlWu,
-	KipLlWLL: kipLlWLL,
-	KipNsLRFD: kipNsLRFD,
-	MaxDsgnMoment: maxDsgnMoment,
-	ChordForce: chordForce,
-    }
+
+func newResForce() ResForce{
+    return ResForce{}
 }
 func newTableResForce() TableResForce {
     return TableResForce {
 	ResForces: []ResForce{
-	    newResForce(0, 0, 0, 0, 0),
+	    newResForce(),
  	},
     }
 }
+
 type AnglProp struct {
     SecTop,
     SecBot string
-    
     AreaTop,
     RxTop,
     RzTop,
@@ -276,10 +293,110 @@ type AnglProp struct {
     TBot,
     QBot float64
 }
+type AnglProps = []AnglProp
+type ResMater struct {
+    AnglProps AnglProps
+}
+
+func newAnglProp (st, at, rxt, rzt, yt, ixt, iyt, bt, tt, qt, sb, ab, rxb, rzb, yb, ixb, iyb, bb, tb, qb string) AnglProp{
+    areaTop,_ := strconv.ParseFloat(at, 32)
+    areaTop = roundFloat(areaTop, 4)
+    rxTop,_ := strconv.ParseFloat(rxt, 32)
+    rxTop = roundFloat(rxTop, 4)
+    rzTop,_ := strconv.ParseFloat(rzt, 32)
+    rzTop = roundFloat(rzTop, 4)
+    // ryTop,_ := strconv.ParseFloat(ryt, 32)
+    yTop,_ := strconv.ParseFloat(yt, 32)
+    yTop = roundFloat(yTop, 4)
+    ixTop,_ := strconv.ParseFloat(ixt, 32)
+    ixTop = roundFloat(ixTop, 4)
+    iyTop,_ := strconv.ParseFloat(iyt, 32)
+    iyTop = roundFloat(iyTop, 4)
+    bTop,_ := strconv.ParseFloat(bt, 32)
+    bTop = roundFloat(bTop, 4)
+    tTop,_ := strconv.ParseFloat(tt, 32)
+    tTop = roundFloat(tTop, 4)
+    qTop,_ := strconv.ParseFloat(qt, 32)
+    qTop = roundFloat(qTop, 4)
+    areaBot,_ := strconv.ParseFloat(ab, 32)
+    areaBot = roundFloat(areaBot, 4)
+    rxBot,_ := strconv.ParseFloat(rxb, 32)
+    rxBot = roundFloat(rxBot, 4)
+    rzBot,_ := strconv.ParseFloat(rzb, 32)
+    rzBot = roundFloat(rzBot, 4)
+    // ryBot,_ := strconv.ParseFloat(ryb, 32)
+    yBot,_ := strconv.ParseFloat(yb, 32)
+    yBot = roundFloat(yBot, 4)
+    ixBot,_ := strconv.ParseFloat(ixb, 32)
+    ixBot = roundFloat(ixBot, 4)
+    iyBot,_ := strconv.ParseFloat(iyb, 32)
+    iyBot = roundFloat(iyBot, 4)
+    bBot,_ := strconv.ParseFloat(bb, 32)
+    bBot = roundFloat(bBot, 4)
+    tBot,_ := strconv.ParseFloat(tb, 32)
+    tBot = roundFloat(tBot, 4)
+    qBot,_ := strconv.ParseFloat(qb, 32)
+    qBot = roundFloat(qBot, 4)
+
+    ryTop := math.Sqrt(iyTop / areaTop)
+    ryTop = roundFloat(ryTop, 4)
+    ryBot := math.Sqrt(iyBot / areaBot)
+    ryBot = roundFloat(ryBot, 4)
+
+    return AnglProp{
+	SecTop:		st,
+	AreaTop:	areaTop,
+	RxTop:		rxTop,
+	RzTop:		rzTop,
+	RyTop:		ryTop,
+	YTop:		yTop,
+	IxTop:		ixTop,
+	IyTop:		iyTop,
+	BTop:		bTop,
+	TTop:		tTop,
+	QTop:		qTop,
+	SecBot:		sb,
+	AreaBot:	areaBot,
+	RxBot:		rxBot,
+	RzBot:		rzBot,
+	RyBot:		ryBot,
+	YBot:		yBot,
+	IxBot:		ixBot,
+	IyBot:		iyBot,
+	BBot:		bBot,
+	TBot:		tBot,
+	QBot:		qBot,
+    }
+}
+func newResMater() ResMater{
+    return ResMater{
+	AnglProps: []AnglProp{
+	    newAnglProp("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""),
+	},
+    }
+}
+
 type BridgingProp struct {
     Brdgng1,
     Brdgng2 float64
 }
+type BridgingProps = []BridgingProp
+type ResBrid struct {
+    BridgingProps BridgingProps
+}
+
+func newBridgingProp () BridgingProp {
+    return BridgingProp{}
+}
+func newResBrid() ResBrid{
+    return ResBrid{
+	BridgingProps: []BridgingProp{
+	    newBridgingProp(),
+	},
+    }
+}
+
+/*	 2.- Material and Section "Table Web member" :)		*/
 type MemberInput struct {
     InputName string 
     ElemName string
@@ -290,22 +407,34 @@ type MemberInput struct {
     // response
     Secction string
     MidPanel string
-
     rxDouble float64
     ryDouble float64
     rzDouble float64
-
     rxCrimped float64
     ryCrimped float64
-
     rxUncrimped float64
     ryUncrimped float64
-
     A float64
     Q float64
     S float64
     T float64
 }
+type MemberInputs = []MemberInput
+type WebMember struct {
+    MemberInputs MemberInputs
+}
+
+func newMemberInput() MemberInput {
+    return MemberInput{}
+}
+func newWebMember() WebMember{
+    return WebMember{
+	MemberInputs: []MemberInput{
+	    newMemberInput(),
+	},
+    }
+}
+
 type AnalysisResult struct {
     BotChrdTnsForce float64
     BotChrdTnsFt float64
@@ -368,6 +497,20 @@ type AnalysisResult struct {
     TopChrdEP2MomDwnFbPoint float64 
     TopChrdEP2MomUpMuPoint float64  
     TopChrdEP2MomUpfbPoint float64  
+}
+type AnalysisResults = []AnalysisResult
+type TableAnalysis struct {
+    AnalysisResults AnalysisResults
+}
+func newAnalysisResult () AnalysisResult {
+    return AnalysisResult {}
+}
+func newTableAnalysis() TableAnalysis {
+    return TableAnalysis {
+	AnalysisResults: []AnalysisResult{
+	    newAnalysisResult(),
+ 	},
+    }
 }
 // 5.- Design of Chords Begin
 // Resistance Factor
@@ -515,194 +658,22 @@ type CheckSlenderness = []CheckSlendernes
 type TableCheck struct {
     CheckSlenderness CheckSlenderness
 }
-func newCheckSlendernes(
-    bCIx,
-    bCIy,
-    bCIz,
-    bCrx,
-    bCry,
-    bCrz,
-    bCIxrx,
-    bCIyry,
-    bCIzrz,
-    bCSLRym,
-    bCrgov,
-    bClimit,
-
-    tCIpMidIx,
-    tCIpMidIy,
-    tCIpMidIz,
-    tCIpMidrx,
-    tCIpMidry,
-    tCIpMidrz,
-    tCIpMidIxrx,
-    tCIpMidIyry,
-    tCIpMidIzrz,
-    tCIpMidSLRym,
-    tCIpMidrgov,
-    tCIpMidlimit,
-    tCIpPointIx,
-    tCIpPointIy,
-    tCIpPointIz,
-    tCIpPointrx,
-    tCIpPointry,
-    tCIpPointrz,
-    tCIpPointIxrx,
-    tCIpPointIyry,
-    tCIpPointIzrz,
-    tCIpPointSLRym,
-    tCIpPointrgov,
-    tCIpPointlimit,
-    tCEp1MidIx,
-    tCEp1MidIy,
-    tCEp1MidIz,
-    tCEp1Midrx,
-    tCEp1Midry,
-    tCEp1Midrz,
-    tCEp1MidIxrx,
-    tCEp1MidIyry,
-    tCEp1MidIzrz,
-    tCEp1MidSLRym,
-    tCEp1Midrgov,
-    tCEp1Midlimit,
-    tCEp1PointIx,
-    tCEp1PointIy,
-    tCEp1PointIz,
-    tCEp1Pointrx,
-    tCEp1Pointry,
-    tCEp1Pointrz,
-    tCEp1PointIxrx,
-    tCEp1PointIyry,
-    tCEp1PointIzrz,
-    tCEp1PointSLRym,
-    tCEp1Pointrgov,
-    tCEp1Pointlimit,
-    tCEp2MidIx,
-    tCEp2MidIy,
-    tCEp2MidIz,
-    tCEp2Midrx,
-    tCEp2Midry,
-    tCEp2Midrz,
-    tCEp2MidIxrx,
-    tCEp2MidIyry,
-    tCEp2MidIzrz,
-    tCEp2MidSLRym,
-    tCEp2Midrgov,
-    tCEp2Midlimit,
-    tCEp2PointIx,
-    tCEp2PointIy,
-    tCEp2PointIz,
-    tCEp2Pointrx,
-    tCEp2Pointry,
-    tCEp2Pointrz,
-    tCEp2PointIxrx,
-    tCEp2PointIyry,
-    tCEp2PointIzrz,
-    tCEp2PointSLRym,
-    tCEp2Pointrgov,
-    tCEp2Pointlimit float64)CheckSlendernes{
-return CheckSlendernes{
-    BCIx:	bCIx,
-    BCIy:	bCIy,
-    BCIz:	bCIz,
-    BCrx:	bCrx,
-    BCry:	bCry,
-    BCrz:	bCrz,
-    BCIxrx:	bCIxrx,
-    BCIyry:	bCIyry,
-    BCIzrz:	bCIzrz,
-    BCSLRym:	bCSLRym,
-    BCrgov:	bCrgov,
-    BClimit:	bClimit,
-
-    TCIpMidIx:	tCIpMidIx,
-    TCIpMidIy:	tCIpMidIy,
-    TCIpMidIz:	tCIpMidIz,
-    TCIpMidrx:	tCIpMidrx,
-    TCIpMidry:	tCIpMidry,
-    TCIpMidrz:	tCIpMidrz,
-    TCIpMidIxrx:	tCIpMidIxrx,
-    TCIpMidIyry:	tCIpMidIyry,
-    TCIpMidIzrz:	tCIpMidIzrz,
-    TCIpMidSLRym:	tCIpMidSLRym,
-    TCIpMidrgov:	tCIpMidrgov,
-    TCIpMidlimit:	tCIpMidlimit,
-    TCIpPointIx:	tCIpPointIx,
-    TCIpPointIy:	tCIpPointIy,
-    TCIpPointIz:	tCIpPointIz,
-    TCIpPointrx:	tCIpPointrx,
-    TCIpPointry:	tCIpPointry,
-    TCIpPointrz:	tCIpPointrz,
-    TCIpPointIxrx:	tCIpPointIxrx,
-    TCIpPointIyry:	tCIpPointIyry,
-    TCIpPointIzrz:	tCIpPointIzrz,
-    TCIpPointSLRym:	tCIpPointSLRym,
-    TCIpPointrgov:	tCIpPointrgov,
-    TCIpPointlimit:	tCIpPointlimit,
-    TCEp1MidIx:	tCEp1MidIx,
-    TCEp1MidIy:	tCEp1MidIy,
-    TCEp1MidIz:	tCEp1MidIz,
-    TCEp1Midrx:	tCEp1Midrx,
-    TCEp1Midry:	tCEp1Midry,
-    TCEp1Midrz:	tCEp1Midrz,
-    TCEp1MidIxrx:	tCEp1MidIxrx,
-    TCEp1MidIyry:	tCEp1MidIyry,
-    TCEp1MidIzrz:	tCEp1MidIzrz,
-    TCEp1MidSLRym:	tCEp1MidSLRym,
-    TCEp1Midrgov:	tCEp1Midrgov,
-    TCEp1Midlimit:	tCEp1Midlimit,
-    TCEp1PointIx:	tCEp1PointIx,
-    TCEp1PointIy:	tCEp1PointIy,
-    TCEp1PointIz:	tCEp1PointIz,
-    TCEp1Pointrx:	tCEp1Pointrx,
-    TCEp1Pointry:	tCEp1Pointry,
-    TCEp1Pointrz:	tCEp1Pointrz,
-    TCEp1PointIxrx:	tCEp1PointIxrx,
-    TCEp1PointIyry:	tCEp1PointIyry,
-    TCEp1PointIzrz:	tCEp1PointIzrz,
-    TCEp1PointSLRym:	tCEp1PointSLRym,
-    TCEp1Pointrgov:	tCEp1Pointrgov,
-    TCEp1Pointlimit:	tCEp1Pointlimit,
-    TCEp2MidIx:	tCEp2MidIx,
-    TCEp2MidIy:	tCEp2MidIy,
-    TCEp2MidIz:	tCEp2MidIz,
-    TCEp2Midrx:	tCEp2Midrx,
-    TCEp2Midry:	tCEp2Midry,
-    TCEp2Midrz:	tCEp2Midrz,
-    TCEp2MidIxrx:	tCEp2MidIxrx,
-    TCEp2MidIyry:	tCEp2MidIyry,
-    TCEp2MidIzrz:	tCEp2MidIzrz,
-    TCEp2MidSLRym:	tCEp2MidSLRym,
-    TCEp2Midrgov:	tCEp2Midrgov,
-    TCEp2Midlimit:	tCEp2Midlimit,
-    TCEp2PointIx:	tCEp2PointIx,
-    TCEp2PointIy:	tCEp2PointIy,
-    TCEp2PointIz:	tCEp2PointIz,
-    TCEp2Pointrx:	tCEp2Pointrx,
-    TCEp2Pointry:	tCEp2Pointry,
-    TCEp2Pointrz:	tCEp2Pointrz,
-    TCEp2PointIxrx:	tCEp2PointIxrx,
-    TCEp2PointIyry:	tCEp2PointIyry,
-    TCEp2PointIzrz:	tCEp2PointIzrz,
-    TCEp2PointSLRym:	tCEp2PointSLRym,
-    TCEp2Pointrgov:	tCEp2Pointrgov,
-    TCEp2Pointlimit:	tCEp2Pointlimit,
-    }
+func newCheckSlendernes()CheckSlendernes{
+return CheckSlendernes{}
 }
 func newTableCheck() TableCheck{
     return TableCheck {
 	CheckSlenderness: []CheckSlendernes{
-	    newCheckSlendernes(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+	    newCheckSlendernes(),
 	},
     }
 }
+
 // Efective Slenderness ratio
 type EfectiveSlendernes struct {
     BCklrx float64
     BCklry float64
-
     BCklrz float64
-
     BCklsrz float64
     BCKLrx float64
     BCSlendklrx float64
@@ -714,7 +685,6 @@ type EfectiveSlendernes struct {
 
     TCIpMidklrx float64
     TCIpMidklry float64
-    
     TCIpMidklrz float64
     TCIpMidklsrz float64
     TCIpMidKLrx float64
@@ -789,102 +759,17 @@ type EfectiveSlenderness = []EfectiveSlendernes
 type TableEfective struct {
     EfectiveSlenderness EfectiveSlenderness
 }
-func newEfectiveSlendernes( bCklrx, bCklry, bCklrz, bCklsrz, bCKLrx, bCSlendklrx, bCSlendklry, bCSlendklrz, bCSlendklsrz, bCSLRgov, bCFeKlrx, tCIpMidklrx, tCIpMidklry, tCIpMidklrz, tCIpMidklsrz, tCIpMidKLrx, tCIpMidSlendklrx, tCIpMidSlendklry, tCIpMidSlendklrz, tCIpMidSlendklsrz, tCIpMidSLRgov, tCIpMidFeKlrx, tCIpPointklrx, tCIpPointklry, tCIpPointklrz, tCIpPointklsrz, tCIpPointKLrx, tCIpPointSlendklrx, tCIpPointSlendklry, tCIpPointSlendklrz, tCIpPointSlendklsrz, tCIpPointSLRgov, tCIpPointFeKlrx, tCEp1Midklrx, tCEp1Midklry, tCEp1Midklrz, tCEp1Midklsrz, tCEp1MidKLrx, tCEp1MidSlendklrx, tCEp1MidSlendklry, tCEp1MidSlendklrz, tCEp1MidSlendklsrz, tCEp1MidSLRgov, tCEp1MidFeKlrx, tCEp1Pointklrx, tCEp1Pointklry, tCEp1Pointklrz, tCEp1Pointklsrz, tCEp1PointKLrx, tCEp1PointSlendklrx, tCEp1PointSlendklry, tCEp1PointSlendklrz, tCEp1PointSlendklsrz, tCEp1PointSLRgov, tCEp1PointFeKlrx, tCEp2Midklrx, tCEp2Midklry, tCEp2Midklrz, tCEp2Midklsrz, tCEp2MidKLrx, tCEp2MidSlendklrx, tCEp2MidSlendklry, tCEp2MidSlendklrz, tCEp2MidSlendklsrz, tCEp2MidSLRgov, tCEp2MidFeKlrx, tCEp2Pointklrx, tCEp2Pointklry, tCEp2Pointklrz, tCEp2Pointklsrz, tCEp2PointKLrx, tCEp2PointSlendklrx, tCEp2PointSlendklry, tCEp2PointSlendklrz, tCEp2PointSlendklsrz, tCEp2PointSLRgov, tCEp2PointFeKlrx float64) EfectiveSlendernes{
-	return EfectiveSlendernes{
-	    BCklrx:                bCklrx,
-	    BCklry:                bCklry,
-	    BCklrz:                bCklrz,
-	    BCklsrz:               bCklsrz,
-	    BCKLrx:                bCKLrx,
-	    BCSlendklrx:           bCSlendklrx,
-	    BCSlendklry:           bCSlendklry,
-	    BCSlendklrz:           bCSlendklrz,
-	    BCSlendklsrz:          bCSlendklsrz,
-	    BCSLRgov:              bCSLRgov,
-	    BCFeKlrx:              bCFeKlrx,
-	    
-	    TCIpMidklrx:           tCIpMidklrx,
-	    TCIpMidklry:           tCIpMidklry,
-	    TCIpMidklrz:           tCIpMidklrz,
-	    TCIpMidklsrz:          tCIpMidklsrz,
-	    TCIpMidKLrx:           tCIpMidKLrx,
-
-	    TCIpMidSlendklrx:      tCIpMidSlendklrx,
-
-	    TCIpMidSlendklry:      tCIpMidSlendklry,
-	    TCIpMidSlendklrz:      tCIpMidSlendklrz,
-	    TCIpMidSlendklsrz:     tCIpMidSlendklsrz,
-	    TCIpMidSLRgov:         tCIpMidSLRgov,
-	    TCIpMidFeKlrx:         tCIpMidFeKlrx,
-
-	    TCIpPointklrx:         tCIpPointklrx,
-	    TCIpPointklry:         tCIpPointklry,
-	    TCIpPointklrz:         tCIpPointklrz,
-	    TCIpPointklsrz:        tCIpPointklsrz,
-	    TCIpPointKLrx:         tCIpPointKLrx,
-	    TCIpPointSlendklrx:    tCIpPointSlendklrx,
-	    TCIpPointSlendklry:    tCIpPointSlendklry,
-	    TCIpPointSlendklrz:    tCIpPointSlendklrz,
-	    TCIpPointSlendklsrz:   tCIpPointSlendklsrz,
-	    TCIpPointSLRgov:       tCIpPointSLRgov,
-	    TCIpPointFeKlrx:       tCIpPointFeKlrx,
-
-	    TCEp1Midklrx:          tCEp1Midklrx,
-	    TCEp1Midklry:          tCEp1Midklry,
-	    TCEp1Midklrz:          tCEp1Midklrz,
-	    TCEp1Midklsrz:         tCEp1Midklsrz,
-	    TCEp1MidKLrx:          tCEp1MidKLrx,
-	    TCEp1MidSlendklrx:     tCEp1MidSlendklrx,
-	    TCEp1MidSlendklry:     tCEp1MidSlendklry,
-	    TCEp1MidSlendklrz:     tCEp1MidSlendklrz,
-	    TCEp1MidSlendklsrz:    tCEp1MidSlendklsrz,
-	    TCEp1MidSLRgov:        tCEp1MidSLRgov,
-	    TCEp1MidFeKlrx:        tCEp1MidFeKlrx,
-
-	    TCEp1Pointklrx:        tCEp1Pointklrx,
-	    TCEp1Pointklry:        tCEp1Pointklry,
-	    TCEp1Pointklrz:        tCEp1Pointklrz,
-	    TCEp1Pointklsrz:       tCEp1Pointklsrz,
-	    TCEp1PointKLrx:        tCEp1PointKLrx,
-	    TCEp1PointSlendklrx:   tCEp1PointSlendklrx,
-	    TCEp1PointSlendklry:   tCEp1PointSlendklry,
-	    TCEp1PointSlendklrz:   tCEp1PointSlendklrz,
-	    TCEp1PointSlendklsrz:  tCEp1PointSlendklsrz,
-	    TCEp1PointSLRgov:      tCEp1PointSLRgov,
-	    TCEp1PointFeKlrx:      tCEp1PointFeKlrx,
-
-	    TCEp2Midklrx:          tCEp2Midklrx,
-	    TCEp2Midklry:          tCEp2Midklry,
-	    TCEp2Midklrz:          tCEp2Midklrz,
-	    TCEp2Midklsrz:         tCEp2Midklsrz,
-	    TCEp2MidKLrx:          tCEp2MidKLrx,
-	    TCEp2MidSlendklrx:     tCEp2MidSlendklrx,
-	    TCEp2MidSlendklry:     tCEp2MidSlendklry,
-	    TCEp2MidSlendklrz:     tCEp2MidSlendklrz,
-	    TCEp2MidSlendklsrz:    tCEp2MidSlendklsrz,
-	    TCEp2MidSLRgov:        tCEp2MidSLRgov,
-	    TCEp2MidFeKlrx:        tCEp2MidFeKlrx,
-
-	    TCEp2Pointklrx:        tCEp2Pointklrx,
-	    TCEp2Pointklry:        tCEp2Pointklry,
-	    TCEp2Pointklrz:        tCEp2Pointklrz,
-	    TCEp2Pointklsrz:       tCEp2Pointklsrz,
-	    TCEp2PointKLrx:        tCEp2PointKLrx,
-	    TCEp2PointSlendklrx:   tCEp2PointSlendklrx,
-	    TCEp2PointSlendklry:   tCEp2PointSlendklry,
-	    TCEp2PointSlendklrz:   tCEp2PointSlendklrz,
-	    TCEp2PointSlendklsrz:  tCEp2PointSlendklsrz,
-	    TCEp2PointSLRgov:      tCEp2PointSLRgov,
-	    TCEp2PointFeKlrx:      tCEp2PointFeKlrx,      
-	}
+func newEfectiveSlendernes() EfectiveSlendernes{
+	return EfectiveSlendernes{}
 }
 func newTableEfective() TableEfective{
     return TableEfective {
 	EfectiveSlenderness: []EfectiveSlendernes{
-	    newEfectiveSlendernes(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+	    newEfectiveSlendernes(),
 	},
     }
 }
+
 // Design Stress
 type Design struct{
     BCFt float64
@@ -971,6 +856,23 @@ type Design struct{
     TCEp2Pointcm float64
     TCEp2PointFb float64
 }
+type Designs = []Design
+type TableDesign struct {
+    Designs Designs
+}
+
+func newDesign() Design{
+	return Design{}
+}
+
+func newTableDesign() TableDesign{
+    return TableDesign {
+	Designs: []Design{
+	    newDesign(),
+	},
+    }
+}
+
 // Check of relatin capabilities vs solicitations
 type CapSol struct {
     BCPut float64
@@ -1045,24 +947,54 @@ type CapSol struct {
     TCEp2Pointcheck float64
 }
 
+type CapSols = []CapSol
+type TableCap struct {
+    CapSols CapSols
+}
+
+func newCapSol() CapSol{
+	return CapSol{}
+}
+
+func newTableCap() TableCap{
+    return TableCap {
+	CapSols: []CapSol{
+	    newCapSol(),
+	},
+    }
+}
 type ShearCap struct {
     Vep float64
     Pu_Ep float64
     Fn float64
     Fv float64
-
     Botfv float64
     Botfa float64
     Botfvmod float64
     BotFv float64
     Botcheck float64
-
     Topfv float64
     Topfa float64
     Topfvmod float64
     TopFv float64
     Topcheck float64
 }
+type ShearCaps = []ShearCap
+type TableShear struct {
+    ShearCaps ShearCaps
+}
+
+func newShearCap()ShearCap{
+	return ShearCap{}
+}
+func newTableShear() TableShear{
+    return TableShear {
+	ShearCaps: []ShearCap{
+	    newShearCap(),
+	},
+    }
+}
+
 // Design of Web
 type DOWSlendRat struct {
     InputName string
@@ -1081,6 +1013,21 @@ type DOWSlendRat struct {
     Limit float64
     Check float64
 }
+type DOWSlendRats = []DOWSlendRat
+type TableDOWSlend struct {
+    DOWSlendRats DOWSlendRats
+}
+
+func newDOWSlendRat() DOWSlendRat{
+	return DOWSlendRat{}
+}
+func newTableDOWSlend() TableDOWSlend{
+    return TableDOWSlend{
+	DOWSlendRats: []DOWSlendRat{
+	    newDOWSlendRat(), 
+	},
+    }
+}
 
 type DOWWeb struct {
     InputName string
@@ -1097,6 +1044,21 @@ type DOWWeb struct {
     DesignFTens float64
     DesignFComp float64
 }
+type DOWWebs = []DOWWeb
+type TableDOWWeb struct {
+    DOWWebs DOWWebs
+}
+
+func newDOWWeb()DOWWeb{
+    return DOWWeb {}
+}
+func newTableDOWWeb() TableDOWWeb{
+    return TableDOWWeb{
+	DOWWebs: []DOWWeb{
+	    newDOWWeb(), 
+	},
+    }
+}
 
 type DOWEfective struct {
     InputName string
@@ -1110,6 +1072,21 @@ type DOWEfective struct {
     SlendKlrz float64
     SlendKlsrz float64
     SLRgov float64
+}
+type DOWEfectives =[]DOWEfective
+type TableDOWEfective struct {
+    DOWEfectives DOWEfectives
+}
+
+func newDOWEfective()DOWEfective{
+    return DOWEfective{}
+}
+func newTableDOWEfective() TableDOWEfective{
+    return TableDOWEfective{
+	DOWEfectives: []DOWEfective{
+	    newDOWEfective(), 
+	},
+    }
 }
 
 type DOWDesign struct {
@@ -1130,6 +1107,22 @@ type DOWDesign struct {
     CompRat float64
     CompAllow float64
 }
+type DOWDesigns = []DOWDesign
+type TableDOWDesign struct {
+    DOWDesigns DOWDesigns
+}
+
+func newDOWDesign()DOWDesign{
+    return DOWDesign{}
+}
+func newTableDOWDesign() TableDOWDesign{
+    return TableDOWDesign{
+	DOWDesigns: []DOWDesign{
+	    newDOWDesign(), 
+	},
+    }
+}
+
 type DOWForce struct {
     Rmax float64
     VSheard float64
@@ -1138,12 +1131,44 @@ type DOWForce struct {
     Delta float64
     Alpha float64
 }
+type DOWForces = []DOWForce
+type TableDOWForce struct {
+    DOWForces DOWForces
+}
+
+func newDOWForce()DOWForce{
+    return DOWForce{}
+}
+func newTableDOWForce() TableDOWForce{
+    return TableDOWForce{
+	DOWForces: []DOWForce{
+	    newDOWForce(), 
+	},
+    }
+}
+
 // Moment of Inertia
 type Moment struct {
     Ijoist float64
     Ireq360 float64
     Ireq240 float64
 }
+type Moments = []Moment
+type TableMoment struct {
+    Moments Moments
+}
+
+func newMoment()Moment{
+    return Moment{}
+}
+func newTableMoment() TableMoment{
+    return TableMoment{
+	Moments: []Moment{
+	    newMoment(), 
+	},
+    }
+}
+
 // Lateral Stability of Joist during erection
 type Lateral struct {
     P float64
@@ -1166,6 +1191,23 @@ type Lateral struct {
     Wactual float64
     WuMin float64
 }
+type Laterals = []Lateral
+type TableLateral struct {
+    Laterals Laterals
+}
+
+func newLateral()Lateral{
+    return Lateral{
+    }
+}
+func newTableLateral() TableLateral{
+    return TableLateral{
+	Laterals: []Lateral{
+	    newLateral(), 
+	},
+    }
+}
+
 // Design of Weld
 type DesignWeld struct {
     Resistance float64
@@ -1176,6 +1218,22 @@ type DesignWeld struct {
     WeldL float64
     Force float64
     Lw float64
+}
+type DesignWelds = []DesignWeld
+type TableDesignWeld struct {
+    DesignWelds DesignWelds
+}
+
+func newDesignWeld() DesignWeld{
+    return DesignWeld{
+    }
+}
+func newTableDesignWeld() TableDesignWeld{
+    return TableDesignWeld{
+	DesignWelds: []DesignWeld{
+	    newDesignWeld(), 
+	},
+    }
 }
 
 type DesignWeldCon struct {
@@ -1190,573 +1248,26 @@ type DesignWeldCon struct {
     Lwmin float64
     Lw float64
 }
-
-type Properties = []Propertie
-
-
-type AnglProps = []AnglProp
-type BridgingProps = []BridgingProp
-type MemberInputs = []MemberInput
-type AnalysisResults = []AnalysisResult
-
-
-
-type Designs = []Design
-type CapSols = []CapSol
-type ShearCaps = []ShearCap
-type DOWSlendRats = []DOWSlendRat
-type DOWWebs = []DOWWeb
-type DOWEfectives =[]DOWEfective
-type DOWDesigns = []DOWDesign
-type DOWForces = []DOWForce
-type Moments = []Moment
-type Laterals = []Lateral
-type DesignWelds = []DesignWeld
 type DesignWeldCons = []DesignWeldCon
-
-type Geometry struct{
-    Properties Properties
-}
-
-
-type ResMater struct {
-    AnglProps AnglProps
-}
-type ResBrid struct {
-    BridgingProps BridgingProps
-}
-type WebMember struct {
-    MemberInputs MemberInputs
-}
-type TableAnalysis struct {
-    AnalysisResults AnalysisResults
-}
-type TableDesign struct {
-    Designs Designs
-}
-type TableCap struct {
-    CapSols CapSols
-}
-type TableShear struct {
-    ShearCaps ShearCaps
-}
-type TableDOWSlend struct {
-    DOWSlendRats DOWSlendRats
-}
-type TableDOWWeb struct {
-    DOWWebs DOWWebs
-}
-type TableDOWEfective struct {
-    DOWEfectives DOWEfectives
-}
-type TableDOWDesign struct {
-    DOWDesigns DOWDesigns
-}
-type TableDOWForce struct {
-    DOWForces DOWForces
-}
-type TableMoment struct {
-    Moments Moments
-}
-type TableLateral struct {
-    Laterals Laterals
-}
-type TableDesignWeld struct {
-    DesignWelds DesignWelds
-}
 type TableDesignWeldCon struct {
     DesignWeldCons DesignWeldCons
 }
-func newDesignWeldCon(
-    InputName,
-    ElemName,
-    Conclusion string,
-    Ftens,
-    FComp,
-    F50,
-    FGov,
-    Tw,
-    Lwmin,
-    Lw float64)DesignWeldCon{
+
+func newDesignWeldCon()DesignWeldCon{
     return DesignWeldCon{
-	InputName:  InputName,
-	ElemName:   ElemName,
-	Conclusion: Conclusion,
-	Ftens:      Ftens,
-	FComp:      FComp,
-	F50:        F50,
-	FGov:       FGov,
-	Tw:         Tw,
-	Lwmin:      Lwmin,
-	Lw:         Lw,        
     }
 }
-func newDesignWeld(
-    Resistance,
-    Tensile,
-    Nominal,
-    Angle,
-    Fillet,
-    WeldL,
-    Force,
-    Lw float64)DesignWeld{
-    return DesignWeld{
-	Resistance: Resistance, 
-	Tensile:    Tensile,
-	Nominal:    Nominal,
-	Angle:      Angle,
-	Fillet:     Fillet,
-	WeldL:      WeldL,
-	Force:      Force,
-	Lw:         Lw,         
+func newTableDesignWeldCon() TableDesignWeldCon{
+    return TableDesignWeldCon{
+	DesignWeldCons: []DesignWeldCon{
+	    newDesignWeldCon(), 
+	},
     }
 }
-func newLateral(
-    p,
-    k,
-    g,
-    j,
-    y,
-    iytc,
-    iybc,
-    iy,
-    ix,
-    y0,
-    cw,
-    betax,
-    ae,
-    a,
-    b,
-    c,
-    w,
-    wactual,
-    wuMin float64)Lateral{
-    return Lateral{
-	P:        p,      
-	K:        k,
-	G:        g,
-	J:        j,
-	Y:        y,
-	Iytc:     iytc,
-	Iybc:     iybc,
-	Iy:       iy,
-	Ix:       ix,
-	Y0:       y0,
-	Cw:       cw,
-	Betax:    betax,
-	ae:       ae,
-	a:        a,
-	b:        b,
-	c:        c,
-	W:        w,
-	Wactual:  wactual,
-	WuMin:    wuMin,  
-    }
-}
-func newMoment(
-    ijoist,
-    ireq360,
-    ireq240 float64)Moment{
-    return Moment{
-	Ijoist:  ijoist,  
-	Ireq360: ireq360,
-	Ireq240: ireq240,
-    }
-}
-func newDOWForce(
-    rmax,
-    vSheard,
-    beta,
-    gamma,
-    delta,
-    alpha float64)DOWForce{
-    return DOWForce{
-	Rmax:     rmax,   
-	VSheard:  vSheard,
-	Beta:     beta,
-	Gamma:    gamma,
-	Delta:    delta,
-	Alpha:    alpha,  
-    }
-}
-func newDOWDesign(
-    inputName,
-    elemName string,
-    tenFt,
-    tenPut,
-    tenPuSol,
-    tenRat,
-    tenAllow,
-    compbt,
-    compQ,
-    compFe,
-    compFcr,
-    compFc,
-    compPuc,
-    compPuSol,
-    compRat,
-    compAllow float64)DOWDesign{
-    return DOWDesign{
-	InputName:   inputName,
-	ElemName:    elemName,
-	TenFt:       tenFt,    
-	TenPut:      tenPut,
-	TenPuSol:    tenPuSol,
-	TenRat:      tenRat,
-	TenAllow:    tenAllow,
-	Compbt:      compbt,
-	CompQ:       compQ,
-	CompFe:      compFe,
-	CompFcr:     compFcr,
-	CompFc:      compFc,
-	CompPuc:     compPuc,
-	CompPuSol:   compPuSol,
-	CompRat:     compRat,
-	CompAllow:   compAllow,
-    }
-}
-func newDOWEfective(
-    inputName,
-    elemName string,
-    klrx,
-    klry,
-    klrz,
-    klsrz,
-    slendKlrx,
-    slendKlry,
-    slendKlrz,
-    slendKlsrz,
-    sLRgov float64)DOWEfective{
-    return DOWEfective{
-	InputName:   inputName,
-	ElemName:    elemName,
-	Klrx:       klrx,      
-	Klry:       klry,
-	Klrz:       klrz,
-	Klsrz:      klsrz,
-	SlendKlrx:  slendKlrx,
-	SlendKlry:  slendKlry,
-	SlendKlrz:  slendKlrz,
-	SlendKlsrz: slendKlsrz,
-	SLRgov:     sLRgov,    
-    }
-}
-func newDOWWeb(
-    inputName,
-    elemName string,
-    xPE,
-    xPC,
-    eQV1,
-    eQV2,
-    vmin,
-    ftMin,
-    fcMin,
-    liftFTens,
-    liftFComp,
-    designFTens,
-    designFComp float64)DOWWeb{
-    return DOWWeb {
-	InputName:   inputName,
-	ElemName:    elemName,
-	XPE:         xPE,
-	XPC:         xPC,
-	EQV1:        eQV1,
-	EQV2:        eQV2,
-	Vmin:        vmin,
-	FtMin:       ftMin,
-	FcMin:       fcMin,
-	LiftFTens:   liftFTens,
-	LiftFComp:   liftFComp,
-	DesignFTens: designFTens,
-	DesignFComp: designFComp,
-    }
-}
-func newDOWSlendRat(
-    inputName,
-    elemName string,
-    iX,
-    iY,
-    iZ,
-    rx,
-    ry,
-    rz,
-    ixrx,
-    iyry,
-    izrz,
-    sLRym,
-    lrgov,
-    limit,
-    check float64) DOWSlendRat{
-	return DOWSlendRat{
-	    InputName:  inputName,
-	    ElemName:   elemName,
-	    IX:         iX,
-	    IY:         iY,
-	    IZ:         iZ,
-	    Rx:         rx,
-	    Ry:         ry,
-	    Rz:         rz,
-	    Ixrx:       ixrx,
-	    Iyry:       iyry,
-	    Izrz:       izrz,
-	    SLRym:      sLRym,
-	    Lrgov:      lrgov,
-	    Limit:      limit,
-	    Check:      check,    
-	}
-}
-func newShearCap(
-    vep,
-    pu_Ep,
-    fn,
-    fv,
-    botfv,
-    botfa,
-    botfvmod,
-    botFv,
-    botcheck,
-    topfv,
-    topfa,
-    topfvmod,
-    topFv,
-    topcheck float64)ShearCap{
-	return ShearCap{
-	    Vep:       vep,
-	    Pu_Ep:     pu_Ep,
-	    Fn:        fn,
-	    Fv:        fv,
-	    Botfv:     botfv,
-	    Botfa:     botfa,
-	    Botfvmod:  botfvmod,
-	    BotFv:     botFv,
-	    Botcheck:  botcheck,
-	    Topfv:     topfv,
-	    Topfa:     topfa,
-	    Topfvmod:  topfvmod,
-	    TopFv:     topFv,
-	    Topcheck:  topcheck,
-	}
-}
-func newCapSol( bCPut, bCPusol, bCTenRat, bCTenAllow, bCFau, bCFbu, bCFauFc, bCAxRatio, bCAxAllow, bCcheck, tCIpMidPut, tCIpMidPusol, tCIpMidTenRat, tCIpMidTenAllow, tCIpMidFau, tCIpMidFbu, tCIpMidFauFc, tCIpMidAxRatio, tCIpMidAxAllow, tCIpMidcheck, tCIpPointPut, tCIpPointPusol, tCIpPointTenRat, tCIpPointTenAllow, tCIpPointFau, tCIpPointFbu, tCIpPointFauFc, tCIpPointAxRatio, tCIpPointAxAllow, tCIpPointcheck, tCEp1MidPut, tCEp1MidPusol, tCEp1MidTenRat, tCEp1MidTenAllow, tCEp1MidFau, tCEp1MidFbu, tCEp1MidFauFc, tCEp1MidAxRatio, tCEp1MidAxAllow, tCEp1Midcheck, tCEp1PointPut, tCEp1PointPusol, tCEp1PointTenRat, tCEp1PointTenAllow, tCEp1PointFau, tCEp1PointFbu, tCEp1PointFauFc, tCEp1PointAxRatio, tCEp1PointAxAllow, tCEp1Pointcheck, tCEp2MidPut, tCEp2MidPusol, tCEp2MidTenRat, tCEp2MidTenAllow, tCEp2MidFau, tCEp2MidFbu, tCEp2MidFauFc, tCEp2MidAxRatio, tCEp2MidAxAllow, tCEp2Midcheck, tCEp2PointPut, tCEp2PointPusol, tCEp2PointTenRat, tCEp2PointTenAllow, tCEp2PointFau, tCEp2PointFbu, tCEp2PointFauFc, tCEp2PointAxRatio, tCEp2PointAxAllow, tCEp2Pointcheck float64) CapSol{
-	return CapSol{
-	    BCPut:                bCPut,             
-	    BCPusol:              bCPusol,
-	    BCTenRat:             bCTenRat,
-	    BCTenAllow:           bCTenAllow,
-	    BCFau:                bCFau,
-	    BCFbu:                bCFbu,
-	    BCFauFc:              bCFauFc,
-	    BCAxRatio:            bCAxRatio,
-	    BCAxAllow:            bCAxAllow,
-	    BCcheck:              bCcheck,
-	    TCIpMidPut:           tCIpMidPut,
-	    TCIpMidPusol:         tCIpMidPusol,
-	    TCIpMidTenRat:        tCIpMidTenRat,
-	    TCIpMidTenAllow:      tCIpMidTenAllow,
-	    TCIpMidFau:           tCIpMidFau,
-	    TCIpMidFbu:           tCIpMidFbu,
-	    TCIpMidFauFc:         tCIpMidFauFc,
-	    TCIpMidAxRatio:       tCIpMidAxRatio,
-	    TCIpMidAxAllow:       tCIpMidAxAllow,
-	    TCIpMidcheck:         tCIpMidcheck,
-	    TCIpPointPut:         tCIpPointPut,
-	    TCIpPointPusol:       tCIpPointPusol,
-	    TCIpPointTenRat:      tCIpPointTenRat,
-	    TCIpPointTenAllow:    tCIpPointTenAllow,
-	    TCIpPointFau:         tCIpPointFau,
-	    TCIpPointFbu:         tCIpPointFbu,
-	    TCIpPointFauFc:       tCIpPointFauFc,
-	    TCIpPointAxRatio:     tCIpPointAxRatio,
-	    TCIpPointAxAllow:     tCIpPointAxAllow,
-	    TCIpPointcheck:       tCIpPointcheck,
-	    TCEp1MidPut:          tCEp1MidPut,
-	    TCEp1MidPusol:        tCEp1MidPusol,
-	    TCEp1MidTenRat:       tCEp1MidTenRat,
-	    TCEp1MidTenAllow:     tCEp1MidTenAllow,
-	    TCEp1MidFau:          tCEp1MidFau,
-	    TCEp1MidFbu:          tCEp1MidFbu,
-	    TCEp1MidFauFc:        tCEp1MidFauFc,
-	    TCEp1MidAxRatio:      tCEp1MidAxRatio,
-	    TCEp1MidAxAllow:      tCEp1MidAxAllow,
-	    TCEp1Midcheck:        tCEp1Midcheck,
-	    TCEp1PointPut:        tCEp1PointPut,
-	    TCEp1PointPusol:      tCEp1PointPusol,
-	    TCEp1PointTenRat:     tCEp1PointTenRat,
-	    TCEp1PointTenAllow:   tCEp1PointTenAllow,
-	    TCEp1PointFau:        tCEp1PointFau,
-	    TCEp1PointFbu:        tCEp1PointFbu,
-	    TCEp1PointFauFc:      tCEp1PointFauFc,
-	    TCEp1PointAxRatio:    tCEp1PointAxRatio,
-	    TCEp1PointAxAllow:    tCEp1PointAxAllow,
-	    TCEp1Pointcheck:      tCEp1Pointcheck,
-	    TCEp2MidPut:          tCEp2MidPut,
-	    TCEp2MidPusol:        tCEp2MidPusol,
-	    TCEp2MidTenRat:       tCEp2MidTenRat,
-	    TCEp2MidTenAllow:     tCEp2MidTenAllow,
-	    TCEp2MidFau:          tCEp2MidFau,
-	    TCEp2MidFbu:          tCEp2MidFbu,
-	    TCEp2MidFauFc:        tCEp2MidFauFc,
-	    TCEp2MidAxRatio:      tCEp2MidAxRatio,
-	    TCEp2MidAxAllow:      tCEp2MidAxAllow,
-	    TCEp2Midcheck:        tCEp2Midcheck,
-	    TCEp2PointPut:        tCEp2PointPut,
-	    TCEp2PointPusol:      tCEp2PointPusol,
-	    TCEp2PointTenRat:     tCEp2PointTenRat,
-	    TCEp2PointTenAllow:   tCEp2PointTenAllow,
-	    TCEp2PointFau:        tCEp2PointFau,
-	    TCEp2PointFbu:        tCEp2PointFbu,
-	    TCEp2PointFauFc:      tCEp2PointFauFc,
-	    TCEp2PointAxRatio:    tCEp2PointAxRatio,
-	    TCEp2PointAxAllow:    tCEp2PointAxAllow,
-	    TCEp2Pointcheck:      tCEp2Pointcheck,   
-	}
-}
-
-func newPropertie(tt, jt, df, sp, fe, se, ip, lb, de string) Propertie {
-    deflexion,_ := strconv.ParseFloat(df, 64)
-    span,_ := strconv.ParseFloat(sp, 64)
-    fepl,_ := strconv.ParseFloat(fe, 64)
-    sepl,_ := strconv.ParseFloat(se, 64)
-    ipl,_ := strconv.ParseFloat(ip, 64)
-    epbc,_ := strconv.ParseFloat(lb, 64)
-    depth,_ := strconv.ParseFloat(de, 64)
-
-    return Propertie {
-	TrussType:	tt,
-	JoistType:	jt,
-	deflexion:	deflexion,
-	span:		span,
-	fepl:		fepl,
-	sepl:		sepl,
-	ipl:		ipl,
-	epbc:		epbc,
-	depth:		depth,
-    }
-} 
 
 func roundFloat(val float64, precision uint) float64 {
     ratio := math.Pow(10, float64(precision))
     return math.Round(val * ratio) / ratio
-}
-func newAnglProp (st, at, rxt, rzt, yt, ixt, iyt, bt, tt, qt, sb, ab, rxb, rzb, yb, ixb, iyb, bb, tb, qb string) AnglProp{
-    areaTop,_ := strconv.ParseFloat(at, 32)
-    areaTop = roundFloat(areaTop, 4)
-    rxTop,_ := strconv.ParseFloat(rxt, 32)
-    rxTop = roundFloat(rxTop, 4)
-    rzTop,_ := strconv.ParseFloat(rzt, 32)
-    rzTop = roundFloat(rzTop, 4)
-    // ryTop,_ := strconv.ParseFloat(ryt, 32)
-    yTop,_ := strconv.ParseFloat(yt, 32)
-    yTop = roundFloat(yTop, 4)
-    ixTop,_ := strconv.ParseFloat(ixt, 32)
-    ixTop = roundFloat(ixTop, 4)
-    iyTop,_ := strconv.ParseFloat(iyt, 32)
-    iyTop = roundFloat(iyTop, 4)
-    bTop,_ := strconv.ParseFloat(bt, 32)
-    bTop = roundFloat(bTop, 4)
-    tTop,_ := strconv.ParseFloat(tt, 32)
-    tTop = roundFloat(tTop, 4)
-    qTop,_ := strconv.ParseFloat(qt, 32)
-    qTop = roundFloat(qTop, 4)
-    areaBot,_ := strconv.ParseFloat(ab, 32)
-    areaBot = roundFloat(areaBot, 4)
-    rxBot,_ := strconv.ParseFloat(rxb, 32)
-    rxBot = roundFloat(rxBot, 4)
-    rzBot,_ := strconv.ParseFloat(rzb, 32)
-    rzBot = roundFloat(rzBot, 4)
-    // ryBot,_ := strconv.ParseFloat(ryb, 32)
-    yBot,_ := strconv.ParseFloat(yb, 32)
-    yBot = roundFloat(yBot, 4)
-    ixBot,_ := strconv.ParseFloat(ixb, 32)
-    ixBot = roundFloat(ixBot, 4)
-    iyBot,_ := strconv.ParseFloat(iyb, 32)
-    iyBot = roundFloat(iyBot, 4)
-    bBot,_ := strconv.ParseFloat(bb, 32)
-    bBot = roundFloat(bBot, 4)
-    tBot,_ := strconv.ParseFloat(tb, 32)
-    tBot = roundFloat(tBot, 4)
-    qBot,_ := strconv.ParseFloat(qb, 32)
-    qBot = roundFloat(qBot, 4)
-
-    ryTop := math.Sqrt(iyTop / areaTop)
-    ryTop = roundFloat(ryTop, 4)
-    ryBot := math.Sqrt(iyBot / areaBot)
-    ryBot = roundFloat(ryBot, 4)
-
-    return AnglProp{
-	SecTop:		st,
-	AreaTop:	areaTop,
-	RxTop:		rxTop,
-	RzTop:		rzTop,
-	RyTop:		ryTop,
-	YTop:		yTop,
-	IxTop:		ixTop,
-	IyTop:		iyTop,
-	BTop:		bTop,
-	TTop:		tTop,
-	QTop:		qTop,
-	SecBot:		sb,
-	AreaBot:	areaBot,
-	RxBot:		rxBot,
-	RzBot:		rzBot,
-	RyBot:		ryBot,
-	YBot:		yBot,
-	IxBot:		ixBot,
-	IyBot:		iyBot,
-	BBot:		bBot,
-	TBot:		tBot,
-	QBot:		qBot,
-    }
-}
-func newBridgingProp (brid1, brid2 string) BridgingProp {
-    bridging1,_ := strconv.ParseFloat(brid1, 64)
-    bridging2,_ := strconv.ParseFloat(brid2, 64)
-    return BridgingProp{
-	Brdgng1: bridging1,
-	Brdgng2: bridging2,
-    }
-}
-func newMemberInput(
-    numInput, 
-    elemName, 
-    part, 
-    mark, 
-    crimped, 
-    secction, 
-    midPanel string, a, q, s, 
-    t,
-    rxdouble, 
-    rydouble,
-    rzdouble,
-    rxcrimped, 
-    rycrimped, 
-    rxuncrimped,
-    ryuncrimped float64) MemberInput {
-    return MemberInput{
-	InputName: numInput,
-	ElemName: elemName,
-	Part: part,
-	Mark: mark,
-	Crimped: crimped,
-	Secction: secction,
-	MidPanel: midPanel,
-	A: a,
-	Q: q,
-	S: s,
-	T: t,
-	rxDouble: rxdouble,
-	ryDouble: rydouble,
-	rzDouble: rzdouble,
-
-	rxCrimped: rxcrimped,
-	ryCrimped: rycrimped,
-	rxUncrimped: rxuncrimped,
-	ryUncrimped: ryuncrimped,
-    }
-}
-
-func newAnalysisResult ( botChrdTnsForce, botChrdTnsFt, botChrdCmpForce, botChrdMomDwnMu, botChrdMomDwnFb, botChrdMomUpMu, botChrdMomUpfb, topChrdTnsForceMid, topChrdTnsFtMid, topChrdCmpForceMid, topChrdTnsFcMid, topChrdMomDwnMuMid, topChrdMomDwnFbMid, topChrdMomUpMuMid, topChrdMomUpfbMid, topChrdTnsForcePoint, topChrdTnsFtPoint, topChrdCmpForcePoint, topChrdTnsFcPoint, topChrdMomDwnMuPoint, topChrdMomDwnFbPoint, topChrdMomUpMuPoint, topChrdMomUpfbPoint, topChrdEP1TnsForceMid, topChrdEP1TnsFtMid, topChrdEP1CmpForceMid, topChrdEP1TnsFcMid, topChrdEP1MomDwnMuMid, topChrdEP1MomDwnFbMid, topChrdEP1MomUpMuMid, topChrdEP1MomUpfbMid, topChrdEP1TnsForcePoint, topChrdEP1TnsFtPoint, topChrdEP1CmpForcePoint, topChrdEP1TnsFcPoint, topChrdEP1MomDwnMuPoint, topChrdEP1MomDwnFbPoint, topChrdEP1MomUpMuPoint, topChrdEP1MomUpfbPoint, topChrdEP2TnsForceMid, topChrdEP2TnsFtMid, topChrdEP2CmpForceMid, topChrdEP2TnsFcMid, topChrdEP2MomDwnMuMid, topChrdEP2MomDwnFbMid, topChrdEP2MomUpMuMid, topChrdEP2MomUpfbMid, topChrdEP2TnsForcePoint, topChrdEP2TnsFtPoint, topChrdEP2CmpForcePoint, topChrdEP2TnsFcPoint, topChrdEP2MomDwnMuPoint, topChrdEP2MomDwnFbPoint, topChrdEP2MomUpMuPoint, topChrdEP2MomUpfbPoint float64) AnalysisResult {
-    return AnalysisResult { BotChrdTnsForce:         botChrdTnsForce, BotChrdTnsFt:            botChrdTnsFt, BotChrdCmpForce:         botChrdCmpForce, BotChrdMomDwnMu:         botChrdMomDwnMu, BotChrdMomDwnFb:         botChrdMomDwnFb, BotChrdMomUpMu:          botChrdMomUpMu, BotChrdMomUpfb:          botChrdMomUpfb, TopChrdTnsForceMid:      topChrdTnsForceMid, TopChrdTnsFtMid:         topChrdTnsFtMid, TopChrdCmpForceMid:      topChrdCmpForceMid, TopChrdTnsFcMid:         topChrdTnsFcMid, TopChrdMomDwnMuMid:      topChrdMomDwnMuMid, TopChrdMomDwnFbMid:      topChrdMomDwnFbMid, TopChrdMomUpMuMid:       topChrdMomUpMuMid, TopChrdMomUpfbMid:       topChrdMomUpfbMid, TopChrdTnsForcePoint:    topChrdTnsForcePoint, TopChrdTnsFtPoint:       topChrdTnsFtPoint, TopChrdCmpForcePoint:    topChrdCmpForcePoint, TopChrdTnsFcPoint:       topChrdTnsFcPoint, TopChrdMomDwnMuPoint:    topChrdMomDwnMuPoint, TopChrdMomDwnFbPoint:    topChrdMomDwnFbPoint, TopChrdMomUpMuPoint:     topChrdMomUpMuPoint, TopChrdMomUpfbPoint:     topChrdMomUpfbPoint, TopChrdEP1TnsForceMid:   topChrdEP1TnsForceMid, TopChrdEP1TnsFtMid:      topChrdEP1TnsFtMid, TopChrdEP1CmpForceMid:   topChrdEP1CmpForceMid, TopChrdEP1TnsFcMid:      topChrdEP1TnsFcMid, TopChrdEP1MomDwnMuMid:   topChrdEP1MomDwnMuMid, TopChrdEP1MomDwnFbMid:   topChrdEP1MomDwnFbMid, TopChrdEP1MomUpMuMid:    topChrdEP1MomUpMuMid, TopChrdEP1MomUpfbMid:    topChrdEP1MomUpfbMid, TopChrdEP1TnsForcePoint: topChrdEP1TnsForcePoint, TopChrdEP1TnsFtPoint:    topChrdEP1TnsFtPoint, TopChrdEP1CmpForcePoint: topChrdEP1CmpForcePoint, TopChrdEP1TnsFcPoint:    topChrdEP1TnsFcPoint, TopChrdEP1MomDwnMuPoint: topChrdEP1MomDwnMuPoint, TopChrdEP1MomDwnFbPoint: topChrdEP1MomDwnFbPoint, TopChrdEP1MomUpMuPoint:  topChrdEP1MomUpMuPoint, TopChrdEP1MomUpfbPoint:  topChrdEP1MomUpfbPoint, TopChrdEP2TnsForceMid:   topChrdEP2TnsForceMid, TopChrdEP2TnsFtMid:      topChrdEP2TnsFtMid, TopChrdEP2CmpForceMid:   topChrdEP2CmpForceMid, TopChrdEP2TnsFcMid:      topChrdEP2TnsFcMid, TopChrdEP2MomDwnMuMid:   topChrdEP2MomDwnMuMid, TopChrdEP2MomDwnFbMid:   topChrdEP2MomDwnFbMid, TopChrdEP2MomUpMuMid:    topChrdEP2MomUpMuMid, TopChrdEP2MomUpfbMid:    topChrdEP2MomUpfbMid, TopChrdEP2TnsForcePoint: topChrdEP2TnsForcePoint, TopChrdEP2TnsFtPoint:    topChrdEP2TnsFtPoint, TopChrdEP2CmpForcePoint: topChrdEP2CmpForcePoint, TopChrdEP2TnsFcPoint:    topChrdEP2TnsFcPoint, TopChrdEP2MomDwnMuPoint: topChrdEP2MomDwnMuPoint, TopChrdEP2MomDwnFbPoint: topChrdEP2MomDwnFbPoint, TopChrdEP2MomUpMuPoint:  topChrdEP2MomUpMuPoint, TopChrdEP2MomUpfbPoint:  topChrdEP2MomUpfbPoint, }
 }
 
 type Page struct {
@@ -1769,123 +1280,10 @@ type Page struct {
     TableResistance TableResistance
     TableCheck TableCheck
     TableEfective TableEfective
+    TableDesign TableDesign
     TableResForce TableResForce
 }
 
-func newGeometry() Geometry {
-    return Geometry{
-	Properties: []Propertie{
-	     newPropertie("warren", " roof", "240", "49.21", "27.28", "26", "24", "41.1", "28"),
-	},
-    }
-}
-func newResMater() ResMater{
-    return ResMater{
-	AnglProps: []AnglProp{
-	    newAnglProp("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""),
-	},
-    }
-}
-func newResBrid() ResBrid{
-    return ResBrid{
-	BridgingProps: []BridgingProp{
-	    newBridgingProp("", ""),
-	},
-    }
-}
-func newWebMember() WebMember{
-    return WebMember{
-	MemberInputs: []MemberInput{
-	    newMemberInput("", "", "", "", "", "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-	},
-    }
-}
-func newTableAnalysis() TableAnalysis {
-    return TableAnalysis {
-	AnalysisResults: []AnalysisResult{
-	    newAnalysisResult(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
- 	},
-    }
-}
-
-func newTableCap() TableCap{
-    return TableCap {
-	CapSols: []CapSol{
-	    newCapSol(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-	},
-    }
-}
-func newTableShear() TableShear{
-    return TableShear {
-	ShearCaps: []ShearCap{
-	    newShearCap(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-	},
-    }
-}
-func newTableDOWSlend() TableDOWSlend{
-    return TableDOWSlend{
-	DOWSlendRats: []DOWSlendRat{
-	    newDOWSlendRat("", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), 
-	},
-    }
-}
-func newTableDOWWeb() TableDOWWeb{
-    return TableDOWWeb{
-	DOWWebs: []DOWWeb{
-	    newDOWWeb("", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), 
-	},
-    }
-}
-
-func newTableDOWEfective() TableDOWEfective{
-    return TableDOWEfective{
-	DOWEfectives: []DOWEfective{
-	    newDOWEfective("", "", 0, 0, 0, 0, 0, 0, 0, 0, 0), 
-	},
-    }
-}
-func newTableDOWDesign() TableDOWDesign{
-    return TableDOWDesign{
-	DOWDesigns: []DOWDesign{
-	    newDOWDesign("", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), 
-	},
-    }
-}
-func newTableDOWForce() TableDOWForce{
-    return TableDOWForce{
-	DOWForces: []DOWForce{
-	    newDOWForce(0, 0, 0, 0, 0, 0), 
-	},
-    }
-}
-func newTableMoment() TableMoment{
-    return TableMoment{
-	Moments: []Moment{
-	    newMoment(0, 0, 0), 
-	},
-    }
-}
-func newTableLateral() TableLateral{
-    return TableLateral{
-	Laterals: []Lateral{
-	    newLateral(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), 
-	},
-    }
-}
-func newTableDesignWeld() TableDesignWeld{
-    return TableDesignWeld{
-	DesignWelds: []DesignWeld{
-	    newDesignWeld( 0, 0, 0, 0, 0, 0, 0, 0), 
-	},
-    }
-}
-func newTableDesignWeldCon() TableDesignWeldCon{
-    return TableDesignWeldCon{
-	DesignWeldCons: []DesignWeldCon{
-	    newDesignWeldCon("", "", "", 0, 0, 0, 0, 0, 0, 0), 
-	},
-    }
-}
 func newPage() Page {
     return Page {
 	Geometry: newGeometry(),
@@ -1897,6 +1295,7 @@ func newPage() Page {
 	TableResistance: newTableResistance(),
 	TableCheck: newTableCheck(),
 	TableEfective: newTableEfective(),
+	TableDesign: newTableDesign(),
 	TableResForce: newTableResForce(),
     }
 }
@@ -2252,7 +1651,7 @@ func main() {
 	halfTs := ts/2
 
 	totalAngles := halfTod +1 + halfTs
-	obj := newMemberInput("", "", "", "", "", "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+	obj := newMemberInput()
 
 	tas := int(totalAngles)
 	hts := int(halfTod)
