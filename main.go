@@ -425,7 +425,7 @@ type CheckSlendernes struct {
     BCSLRym float64
     BCrgov float64
     BClimit float64
-    // BCcheck bool
+    BCcheck string
 
     TCIpMidIx float64
     TCIpMidIy float64
@@ -433,13 +433,13 @@ type CheckSlendernes struct {
     TCIpMidrx float64
     TCIpMidry float64
     TCIpMidrz float64
-
     TCIpMidIxrx float64
     TCIpMidIyry float64
     TCIpMidIzrz float64
     TCIpMidSLRym float64
     TCIpMidrgov float64
     TCIpMidlimit float64
+    TCIpMidcheck string
     
     TCIpPointIx float64
     TCIpPointIy float64
@@ -453,6 +453,7 @@ type CheckSlendernes struct {
     TCIpPointSLRym float64
     TCIpPointrgov float64
     TCIpPointlimit float64
+    TCIpPointcheck string
 
     TCEp1MidIx float64
     TCEp1MidIy float64
@@ -466,6 +467,8 @@ type CheckSlendernes struct {
     TCEp1MidSLRym float64
     TCEp1Midrgov float64
     TCEp1Midlimit float64
+    TCEp1Midcheck string
+
     TCEp1PointIx float64
     TCEp1PointIy float64
     TCEp1PointIz float64
@@ -478,6 +481,8 @@ type CheckSlendernes struct {
     TCEp1PointSLRym float64
     TCEp1Pointrgov float64
     TCEp1Pointlimit float64
+    TCEp1Pointcheck string
+
     TCEp2MidIx float64
     TCEp2MidIy float64
     TCEp2MidIz float64
@@ -490,6 +495,8 @@ type CheckSlendernes struct {
     TCEp2MidSLRym float64
     TCEp2Midrgov float64
     TCEp2Midlimit float64
+    TCEp2Midcheck string
+
     TCEp2PointIx float64
     TCEp2PointIy float64
     TCEp2PointIz float64
@@ -502,13 +509,184 @@ type CheckSlendernes struct {
     TCEp2PointSLRym float64
     TCEp2Pointrgov float64
     TCEp2Pointlimit float64
+    TCEp2Pointcheck string
 }
 type CheckSlenderness = []CheckSlendernes
 type TableCheck struct {
     CheckSlenderness CheckSlenderness
 }
-func newCheckSlendernes( bCIx,  bCIy,   bCIz,   bCrx,   bCry,   bCrz,   bCIxrx,   bCIyry,   bCIzrz,   bCSLRym,   bCrgov,   bClimit,   tCIpMidIx,   tCIpMidIy,   tCIpMidIz,   tCIpMidrx,   tCIpMidry,   tCIpMidrz,   tCIpMidIxrx,   tCIpMidIyry,   tCIpMidIzrz,   tCIpMidSLRym,   tCIpMidrgov,   tCIpMidlimit,   tCIpPointIx,   tCIpPointIy,   tCIpPointIz,   tCIpPointrx,   tCIpPointry,   tCIpPointrz,   tCIpPointIxrx,   tCIpPointIyry,   tCIpPointIzrz,   tCIpPointSLRym,   tCIpPointrgov,   tCIpPointlimit,   tCEp1MidIx,   tCEp1MidIy,   tCEp1MidIz,   tCEp1Midrx,   tCEp1Midry,   tCEp1Midrz,   tCEp1MidIxrx,   tCEp1MidIyry,   tCEp1MidIzrz,   tCEp1MidSLRym,   tCEp1Midrgov,   tCEp1Midlimit,   tCEp1PointIx,   tCEp1PointIy,   tCEp1PointIz,   tCEp1Pointrx,   tCEp1Pointry,   tCEp1Pointrz,   tCEp1PointIxrx,   tCEp1PointIyry,   tCEp1PointIzrz,   tCEp1PointSLRym,   tCEp1Pointrgov,   tCEp1Pointlimit,   tCEp2MidIx,   tCEp2MidIy,   tCEp2MidIz,   tCEp2Midrx,   tCEp2Midry,   tCEp2Midrz,   tCEp2MidIxrx,   tCEp2MidIyry,   tCEp2MidIzrz,   tCEp2MidSLRym,   tCEp2Midrgov,   tCEp2Midlimit,   tCEp2PointIx,   tCEp2PointIy,   tCEp2PointIz,   tCEp2Pointrx,   tCEp2Pointry,   tCEp2Pointrz,   tCEp2PointIxrx,   tCEp2PointIyry,   tCEp2PointIzrz,   tCEp2PointSLRym,   tCEp2Pointrgov, tCEp2Pointlimit float64)CheckSlendernes{
-    return CheckSlendernes{ BCIx:             bCIx, BCIy:             bCIy, BCIz:             bCIz, BCrx:             bCrx, BCry:             bCry,   BCrz:             bCrz,   BCIxrx:           bCIxrx, BCIyry:           bCIyry, BCIzrz:           bCIzrz,  BCSLRym:          bCSLRym,   BCrgov:           bCrgov,   BClimit:          bClimit, TCIpMidIx:        tCIpMidIx, TCIpMidIy:        tCIpMidIy,   TCIpMidIz:        tCIpMidIz,   TCIpMidrx:        tCIpMidrx,   TCIpMidry:        tCIpMidry,   TCIpMidrz:        tCIpMidrz,   TCIpMidIxrx:      tCIpMidIxrx,   TCIpMidIyry:      tCIpMidIyry,   TCIpMidIzrz:      tCIpMidIzrz,   TCIpMidSLRym:     tCIpMidSLRym,   TCIpMidrgov:      tCIpMidrgov,   TCIpMidlimit:     tCIpMidlimit,   TCIpPointIx:      tCIpPointIx,   TCIpPointIy:      tCIpPointIy,   TCIpPointIz:      tCIpPointIz,   TCIpPointrx:      tCIpPointrx,   TCIpPointry:      tCIpPointry,   TCIpPointrz:      tCIpPointrz,   TCIpPointIxrx:    tCIpPointIxrx,  TCIpPointIyry:    tCIpPointIyry,  TCIpPointIzrz:    tCIpPointIzrz,  TCIpPointSLRym:   tCIpPointSLRym, TCIpPointrgov:    tCIpPointrgov,  TCIpPointlimit:   tCIpPointlimit, TCEp1MidIx:       tCEp1MidIx,   TCEp1MidIy:       tCEp1MidIy,   TCEp1MidIz:       tCEp1MidIz,   TCEp1Midrx:       tCEp1Midrx,   TCEp1Midry:       tCEp1Midry,   TCEp1Midrz:       tCEp1Midrz,   TCEp1MidIxrx:     tCEp1MidIxrx,   TCEp1MidIyry:     tCEp1MidIyry,   TCEp1MidIzrz:     tCEp1MidIzrz,   TCEp1MidSLRym:    tCEp1MidSLRym,  TCEp1Midrgov:     tCEp1Midrgov,   TCEp1Midlimit:    tCEp1Midlimit,  TCEp1PointIx:     tCEp1PointIx,   TCEp1PointIy:     tCEp1PointIy,   TCEp1PointIz:     tCEp1PointIz,   TCEp1Pointrx:     tCEp1Pointrx,   TCEp1Pointry:     tCEp1Pointry,   TCEp1Pointrz:     tCEp1Pointrz,   TCEp1PointIxrx:   tCEp1PointIxrx, TCEp1PointIyry:   tCEp1PointIyry, TCEp1PointIzrz:   tCEp1PointIzrz, TCEp1PointSLRym:  tCEp1PointSLRym, TCEp1Pointrgov:   tCEp1Pointrgov, TCEp1Pointlimit:  tCEp1Pointlimit, TCEp2MidIx:       tCEp2MidIx,   TCEp2MidIy:       tCEp2MidIy,   TCEp2MidIz:       tCEp2MidIz,   TCEp2Midrx:       tCEp2Midrx,   TCEp2Midry:       tCEp2Midry,   TCEp2Midrz:       tCEp2Midrz,   TCEp2MidIxrx:     tCEp2MidIxrx,   TCEp2MidIyry:     tCEp2MidIyry,   TCEp2MidIzrz:     tCEp2MidIzrz,   TCEp2MidSLRym:    tCEp2MidSLRym,  TCEp2Midrgov:     tCEp2Midrgov,   TCEp2Midlimit:    tCEp2Midlimit,  TCEp2PointIx:     tCEp2PointIx,   TCEp2PointIy:     tCEp2PointIy,   TCEp2PointIz:     tCEp2PointIz,   TCEp2Pointrx:     tCEp2Pointrx,   TCEp2Pointry:     tCEp2Pointry,   TCEp2Pointrz:     tCEp2Pointrz,   TCEp2PointIxrx:   tCEp2PointIxrx, TCEp2PointIyry:   tCEp2PointIyry, TCEp2PointIzrz:   tCEp2PointIzrz, TCEp2PointSLRym:  tCEp2PointSLRym, TCEp2Pointrgov:   tCEp2Pointrgov, TCEp2Pointlimit:  tCEp2Pointlimit, 
+func newCheckSlendernes(
+    bCIx,
+    bCIy,
+    bCIz,
+    bCrx,
+    bCry,
+    bCrz,
+    bCIxrx,
+    bCIyry,
+    bCIzrz,
+    bCSLRym,
+    bCrgov,
+    bClimit,
+
+    tCIpMidIx,
+    tCIpMidIy,
+    tCIpMidIz,
+    tCIpMidrx,
+    tCIpMidry,
+    tCIpMidrz,
+    tCIpMidIxrx,
+    tCIpMidIyry,
+    tCIpMidIzrz,
+    tCIpMidSLRym,
+    tCIpMidrgov,
+    tCIpMidlimit,
+    tCIpPointIx,
+    tCIpPointIy,
+    tCIpPointIz,
+    tCIpPointrx,
+    tCIpPointry,
+    tCIpPointrz,
+    tCIpPointIxrx,
+    tCIpPointIyry,
+    tCIpPointIzrz,
+    tCIpPointSLRym,
+    tCIpPointrgov,
+    tCIpPointlimit,
+    tCEp1MidIx,
+    tCEp1MidIy,
+    tCEp1MidIz,
+    tCEp1Midrx,
+    tCEp1Midry,
+    tCEp1Midrz,
+    tCEp1MidIxrx,
+    tCEp1MidIyry,
+    tCEp1MidIzrz,
+    tCEp1MidSLRym,
+    tCEp1Midrgov,
+    tCEp1Midlimit,
+    tCEp1PointIx,
+    tCEp1PointIy,
+    tCEp1PointIz,
+    tCEp1Pointrx,
+    tCEp1Pointry,
+    tCEp1Pointrz,
+    tCEp1PointIxrx,
+    tCEp1PointIyry,
+    tCEp1PointIzrz,
+    tCEp1PointSLRym,
+    tCEp1Pointrgov,
+    tCEp1Pointlimit,
+    tCEp2MidIx,
+    tCEp2MidIy,
+    tCEp2MidIz,
+    tCEp2Midrx,
+    tCEp2Midry,
+    tCEp2Midrz,
+    tCEp2MidIxrx,
+    tCEp2MidIyry,
+    tCEp2MidIzrz,
+    tCEp2MidSLRym,
+    tCEp2Midrgov,
+    tCEp2Midlimit,
+    tCEp2PointIx,
+    tCEp2PointIy,
+    tCEp2PointIz,
+    tCEp2Pointrx,
+    tCEp2Pointry,
+    tCEp2Pointrz,
+    tCEp2PointIxrx,
+    tCEp2PointIyry,
+    tCEp2PointIzrz,
+    tCEp2PointSLRym,
+    tCEp2Pointrgov,
+    tCEp2Pointlimit float64)CheckSlendernes{
+return CheckSlendernes{
+    BCIx:	bCIx,
+    BCIy:	bCIy,
+    BCIz:	bCIz,
+    BCrx:	bCrx,
+    BCry:	bCry,
+    BCrz:	bCrz,
+    BCIxrx:	bCIxrx,
+    BCIyry:	bCIyry,
+    BCIzrz:	bCIzrz,
+    BCSLRym:	bCSLRym,
+    BCrgov:	bCrgov,
+    BClimit:	bClimit,
+
+    TCIpMidIx:	tCIpMidIx,
+    TCIpMidIy:	tCIpMidIy,
+    TCIpMidIz:	tCIpMidIz,
+    TCIpMidrx:	tCIpMidrx,
+    TCIpMidry:	tCIpMidry,
+    TCIpMidrz:	tCIpMidrz,
+    TCIpMidIxrx:	tCIpMidIxrx,
+    TCIpMidIyry:	tCIpMidIyry,
+    TCIpMidIzrz:	tCIpMidIzrz,
+    TCIpMidSLRym:	tCIpMidSLRym,
+    TCIpMidrgov:	tCIpMidrgov,
+    TCIpMidlimit:	tCIpMidlimit,
+    TCIpPointIx:	tCIpPointIx,
+    TCIpPointIy:	tCIpPointIy,
+    TCIpPointIz:	tCIpPointIz,
+    TCIpPointrx:	tCIpPointrx,
+    TCIpPointry:	tCIpPointry,
+    TCIpPointrz:	tCIpPointrz,
+    TCIpPointIxrx:	tCIpPointIxrx,
+    TCIpPointIyry:	tCIpPointIyry,
+    TCIpPointIzrz:	tCIpPointIzrz,
+    TCIpPointSLRym:	tCIpPointSLRym,
+    TCIpPointrgov:	tCIpPointrgov,
+    TCIpPointlimit:	tCIpPointlimit,
+    TCEp1MidIx:	tCEp1MidIx,
+    TCEp1MidIy:	tCEp1MidIy,
+    TCEp1MidIz:	tCEp1MidIz,
+    TCEp1Midrx:	tCEp1Midrx,
+    TCEp1Midry:	tCEp1Midry,
+    TCEp1Midrz:	tCEp1Midrz,
+    TCEp1MidIxrx:	tCEp1MidIxrx,
+    TCEp1MidIyry:	tCEp1MidIyry,
+    TCEp1MidIzrz:	tCEp1MidIzrz,
+    TCEp1MidSLRym:	tCEp1MidSLRym,
+    TCEp1Midrgov:	tCEp1Midrgov,
+    TCEp1Midlimit:	tCEp1Midlimit,
+    TCEp1PointIx:	tCEp1PointIx,
+    TCEp1PointIy:	tCEp1PointIy,
+    TCEp1PointIz:	tCEp1PointIz,
+    TCEp1Pointrx:	tCEp1Pointrx,
+    TCEp1Pointry:	tCEp1Pointry,
+    TCEp1Pointrz:	tCEp1Pointrz,
+    TCEp1PointIxrx:	tCEp1PointIxrx,
+    TCEp1PointIyry:	tCEp1PointIyry,
+    TCEp1PointIzrz:	tCEp1PointIzrz,
+    TCEp1PointSLRym:	tCEp1PointSLRym,
+    TCEp1Pointrgov:	tCEp1Pointrgov,
+    TCEp1Pointlimit:	tCEp1Pointlimit,
+    TCEp2MidIx:	tCEp2MidIx,
+    TCEp2MidIy:	tCEp2MidIy,
+    TCEp2MidIz:	tCEp2MidIz,
+    TCEp2Midrx:	tCEp2Midrx,
+    TCEp2Midry:	tCEp2Midry,
+    TCEp2Midrz:	tCEp2Midrz,
+    TCEp2MidIxrx:	tCEp2MidIxrx,
+    TCEp2MidIyry:	tCEp2MidIyry,
+    TCEp2MidIzrz:	tCEp2MidIzrz,
+    TCEp2MidSLRym:	tCEp2MidSLRym,
+    TCEp2Midrgov:	tCEp2Midrgov,
+    TCEp2Midlimit:	tCEp2Midlimit,
+    TCEp2PointIx:	tCEp2PointIx,
+    TCEp2PointIy:	tCEp2PointIy,
+    TCEp2PointIz:	tCEp2PointIz,
+    TCEp2Pointrx:	tCEp2Pointrx,
+    TCEp2Pointry:	tCEp2Pointry,
+    TCEp2Pointrz:	tCEp2Pointrz,
+    TCEp2PointIxrx:	tCEp2PointIxrx,
+    TCEp2PointIyry:	tCEp2PointIyry,
+    TCEp2PointIzrz:	tCEp2PointIzrz,
+    TCEp2PointSLRym:	tCEp2PointSLRym,
+    TCEp2Pointrgov:	tCEp2Pointrgov,
+    TCEp2Pointlimit:	tCEp2Pointlimit,
     }
 }
 func newTableCheck() TableCheck{
@@ -1744,6 +1922,13 @@ func largeThree(num1, num2, num3 float64) float64 {
     }
     return larger
 }
+func checkerOK(rgov, limit *float64) string{
+    if *rgov < *limit {
+	return "OK"
+    } else {
+	return "NOT OK"
+    }
+}
 func slendernesRadio(page *Page) {
     geom := &page.Geometry.Properties[0]
     resProp := &page.ResGeom.ResProps[0]
@@ -1761,11 +1946,7 @@ func slendernesRadio(page *Page) {
     check.BCIzrz = roundFloat(check.BCIz / check.BCrz, 4)
     check.BCrgov = largeThree(check.BCIxrx, check.BCIyry, check.BCIzrz)
     check.BClimit = 240
-
-    /*
-    check.TCIpMidIx = geom.ipl*2
-    check.TCIpMidIz = check.TCIpMidIx
-    */
+    check.BCcheck = checkerOK(&check.BCrgov, &check.BClimit)
     
     check.TCIpMidIx = geom.ipl
     check.TCIpMidIy = math.Floor(resProp.Lbe2)
@@ -1778,10 +1959,11 @@ func slendernesRadio(page *Page) {
     check.TCIpMidIzrz = roundFloat(check.TCIpMidIz / check.TCIpMidrz, 4)
     check.TCIpMidrgov = larger(check.TCIpMidIxrx, check.TCIpMidIyry, check.TCIpMidIzrz)
     check.TCIpMidlimit = 90
+    check.TCIpMidcheck = checkerOK(&check.TCIpMidrgov, &check.TCIpMidlimit)
 
-    check.TCIpPointIx = 24
-    check.TCIpPointIy = 36 
-    check.TCIpPointIz = 12 
+    check.TCIpPointIx = geom.ipl
+    check.TCIpPointIy = math.Floor(resProp.Lbe2)
+    check.TCIpPointIz = geom.ipl/2
     check.TCIpPointrx = bot.RxTop
     check.TCIpPointry = bot.RyTop
     check.TCIpPointrz = bot.RzTop
@@ -1790,11 +1972,12 @@ func slendernesRadio(page *Page) {
     check.TCIpPointIzrz = roundFloat(check.TCIpPointIz / check.TCIpPointrz, 4)
     check.TCIpPointrgov = larger(check.TCIpPointIxrx, check.TCIpPointIyry, check.TCIpPointIzrz)
     check.TCIpPointlimit = 90
+    check.TCIpPointcheck = checkerOK(&check.TCIpPointrgov, &check.TCIpPointlimit)
 
 
-    check.TCEp1MidIx = 27.26
-    check.TCEp1MidIy = 36
-    check.TCEp1MidIz = 27.26
+    check.TCEp1MidIx = geom.fepl
+    check.TCEp1MidIy = math.Floor(resProp.Lbe2)
+    check.TCEp1MidIz = geom.fepl
     check.TCEp1Midrx = bot.RxTop
     check.TCEp1Midry = bot.RyTop
     check.TCEp1Midrz = bot.RzTop
@@ -1803,10 +1986,11 @@ func slendernesRadio(page *Page) {
     check.TCEp1MidIzrz = roundFloat(check.TCEp1MidIz / check.TCEp1Midrz, 4)
     check.TCEp1Midrgov = larger(check.TCEp1MidIxrx, check.TCEp1MidIyry, check.TCEp1MidIzrz)
     check.TCEp1Midlimit = 120
+    check.TCEp1Midcheck = checkerOK(&check.TCEp1Midrgov, &check.TCEp1Midlimit)
 
-    check.TCEp1PointIx = 27.26
-    check.TCEp1PointIy = 36
-    check.TCEp1PointIz = 27.26
+    check.TCEp1PointIx = geom.fepl
+    check.TCEp1PointIy = math.Floor(resProp.Lbe2)
+    check.TCEp1PointIz = geom.fepl
     check.TCEp1Pointrx = bot.RxTop
     check.TCEp1Pointry = bot.RyTop
     check.TCEp1Pointrz = bot.RzTop
@@ -1815,10 +1999,11 @@ func slendernesRadio(page *Page) {
     check.TCEp1PointIzrz = roundFloat(check.TCEp1PointIz / check.TCEp1Pointrz, 4)
     check.TCEp1Pointrgov = larger(check.TCEp1PointIxrx, check.TCEp1PointIyry, check.TCEp1PointIzrz)
     check.TCEp1Pointlimit = 120
+    check.TCEp1Pointcheck = checkerOK(&check.TCEp1Pointrgov, &check.TCEp1Pointlimit)
 
-    check.TCEp2MidIx = 26
-    check.TCEp2MidIy = 36
-    check.TCEp2MidIz = 26
+    check.TCEp2MidIx = geom.ipl
+    check.TCEp2MidIy = math.Floor(resProp.Lbe2)
+    check.TCEp2MidIz = geom.ipl
     check.TCEp2Midrx = bot.RxTop
     check.TCEp2Midry = bot.RyTop
     check.TCEp2Midrz = bot.RzTop
@@ -1827,10 +2012,11 @@ func slendernesRadio(page *Page) {
     check.TCEp2MidIzrz = roundFloat(check.TCEp2MidIz / check.TCEp2Midrz, 4)
     check.TCEp2Midrgov = larger(check.TCEp2MidIxrx, check.TCEp2MidIyry, check.TCEp2MidIzrz)
     check.TCEp2Midlimit = 120
+    check.TCEp2Midcheck = checkerOK(&check.TCEp2Midrgov, &check.TCEp2Midlimit)
 
-    check.TCEp2PointIx = 26
-    check.TCEp2PointIy = 36
-    check.TCEp2PointIz = 26
+    check.TCEp2PointIx = geom.ipl
+    check.TCEp2PointIy = math.Floor(resProp.Lbe2)
+    check.TCEp2PointIz = geom.ipl
     check.TCEp2Pointrx = bot.RxTop
     check.TCEp2Pointry = bot.RyTop
     check.TCEp2Pointrz = bot.RzTop
@@ -1839,6 +2025,7 @@ func slendernesRadio(page *Page) {
     check.TCEp2PointIzrz = roundFloat(check.TCEp2PointIz / check.TCEp2Pointrz, 4)
     check.TCEp2Pointrgov = larger(check.TCEp2PointIxrx, check.TCEp2PointIyry, check.TCEp2PointIzrz)
     check.TCEp2Pointlimit = 120
+    check.TCEp2Pointcheck = checkerOK(&check.TCEp2Pointrgov, &check.TCEp2Pointlimit)
 }
 func deCalculation(page *Page) {
     d := &page.Geometry.Properties[0].depth
