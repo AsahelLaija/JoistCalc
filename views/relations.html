@@ -1,5 +1,5 @@
 {{ block "relations" . }}
-{{ $CheckSlend := index .TableCheck.CheckSlenderness 0 }}
+{{ $CapSol := index .TableCap.CapSols 0 }}
 <h2>Check of relation capabilites vs solicitations</h2>
 <table>
     <thead>
@@ -19,108 +19,94 @@
     <tbody>
 	<tr>
 	    <th>Bottom Chord (max)</th>
-	    <td> {{ $CheckSlend.BCIx }} </td>
-	    <td> {{ $CheckSlend.BCIy }} </td>
-	    <td> {{ $CheckSlend.BCIz }} </td>
-	    <td> {{ $CheckSlend.BCrx }} </td>
-	    <td> {{ $CheckSlend.BCry }} </td>
-	    <td> {{ $CheckSlend.BCrz }} </td>
-	    <td> {{ $CheckSlend.BCIxrx }} </td>
-	    <td> {{ $CheckSlend.BCIyry }} </td>
-	    <td> {{ $CheckSlend.BCIzrz }} </td>
-	    <td> {{ $CheckSlend.BCSLRym }} </td>
-	    <td> {{ $CheckSlend.BCrgov }} </td>
-	    <td> {{ $CheckSlend.BClimit }} </td>
+	    <td>{{$CapSol.BCPut}}</td>
+	    <td>{{$CapSol.BCPusol}}</td>
+	    <td>{{$CapSol.BCTenRat}}</td>
+	    <td>{{$CapSol.BCTenAllow}}</td>
+	    <td>{{$CapSol.BCFau}}</td>
+	    <td>{{$CapSol.BCFbu}}</td>
+	    <td>{{$CapSol.BCFauFc}}</td>
+	    <td>{{$CapSol.BCAxRatio}}</td>
+	    <td>{{$CapSol.BCAxAllow}}</td>
+	    <td>{{$CapSol.BCcheck}}</td>
 	</tr>
 	<tr>
 	    <th>T.C. (Ip) mid-panel</th>
-	    <td> {{ $CheckSlend.TCIpMidIx }} </td>
-	    <td> {{ $CheckSlend.TCIpMidIy }} </td>
-	    <td> {{ $CheckSlend.TCIpMidIz }} </td>
-	    <td> {{ $CheckSlend.TCIpMidrx }} </td>
-	    <td> {{ $CheckSlend.TCIpMidry }} </td>
-	    <td> {{ $CheckSlend.TCIpMidrz }} </td>
-	    <td> {{ $CheckSlend.TCIpMidIxrx }} </td>
-	    <td> {{ $CheckSlend.TCIpMidIyry }} </td>
-	    <td> {{ $CheckSlend.TCIpMidIzrz }} </td>
-	    <td> {{ $CheckSlend.TCIpMidSLRym }} </td>
-	    <td> {{ $CheckSlend.TCIpMidrgov }} </td>
-	    <td> {{ $CheckSlend.TCIpMidlimit }} </td>
+	    <td>{{$CapSol.TCIpMidPut}}</td>
+	    <td>{{$CapSol.TCIpMidPusol}}</td>
+	    <td>{{$CapSol.TCIpMidTenRat}}</td>
+	    <td>{{$CapSol.TCIpMidTenAllow}}</td>
+	    <td>{{$CapSol.TCIpMidFau}}</td>
+	    <td>{{$CapSol.TCIpMidFbu}}</td>
+	    <td>{{$CapSol.TCIpMidFauFc}}</td>
+	    <td>{{$CapSol.TCIpMidAxRatio}}</td>
+	    <td>{{$CapSol.TCIpMidAxAllow}}</td>
+	    <td>{{$CapSol.TCIpMidcheck}}</td>
 	</tr>
 	<tr>
 	    <th>T.C. (Ip) point-panel</th>
-	    <td> {{ $CheckSlend.TCIpPointIx }} </td>
-	    <td> {{ $CheckSlend.TCIpPointIy }} </td>
-	    <td> {{ $CheckSlend.TCIpPointIz }} </td>
-	    <td> {{ $CheckSlend.TCIpPointrx }} </td>
-	    <td> {{ $CheckSlend.TCIpPointry }} </td>
-	    <td> {{ $CheckSlend.TCIpPointrz }} </td>
-	    <td> {{ $CheckSlend.TCIpPointIxrx }} </td>
-	    <td> {{ $CheckSlend.TCIpPointIyry }} </td>
-	    <td> {{ $CheckSlend.TCIpPointIzrz }} </td>
-	    <td> {{ $CheckSlend.TCIpPointSLRym }} </td>
-	    <td> {{ $CheckSlend.TCIpPointrgov }} </td>
-	    <td> {{ $CheckSlend.TCIpPointlimit }} </td>
+	    <td>{{$CapSol.TCIpPointPut}}</td>
+	    <td>{{$CapSol.TCIpPointPusol}}</td>
+	    <td>{{$CapSol.TCIpPointTenRat}}</td>
+	    <td>{{$CapSol.TCIpPointTenAllow}}</td>
+	    <td>{{$CapSol.TCIpPointFau}}</td>
+	    <td>{{$CapSol.TCIpPointFbu}}</td>
+	    <td>{{$CapSol.TCIpPointFauFc}}</td>
+	    <td>{{$CapSol.TCIpPointAxRatio}}</td>
+	    <td>{{$CapSol.TCIpPointAxAllow}}</td>
+	    <td>{{$CapSol.TCIpPointcheck}}</td>
 	</tr>
 	<tr>
 	    <th>T.C. (Ep1) mid-panel </th>
-	    <td> {{ $CheckSlend.TCEp1MidIx }} </td>
-	    <td> {{ $CheckSlend.TCEp1MidIy }} </td>
-	    <td> {{ $CheckSlend.TCEp1MidIz }} </td>
-	    <td> {{ $CheckSlend.TCEp1Midrx }} </td>
-	    <td> {{ $CheckSlend.TCEp1Midry }} </td>
-	    <td> {{ $CheckSlend.TCEp1Midrz }} </td>
-	    <td> {{ $CheckSlend.TCEp1MidIxrx }} </td>
-	    <td> {{ $CheckSlend.TCEp1MidIyry }} </td>
-	    <td> {{ $CheckSlend.TCEp1MidIzrz }} </td>
-	    <td> {{ $CheckSlend.TCEp1MidSLRym }} </td>
-	    <td> {{ $CheckSlend.TCEp1Midrgov }} </td>
-	    <td> {{ $CheckSlend.TCEp1Midlimit }} </td>
+	    <td>{{$CapSol.TCEp1MidPut}}</td>
+	    <td>{{$CapSol.TCEp1MidPusol}}</td>
+	    <td>{{$CapSol.TCEp1MidTenRat}}</td>
+	    <td>{{$CapSol.TCEp1MidTenAllow}}</td>
+	    <td>{{$CapSol.TCEp1MidFau}}</td>
+	    <td>{{$CapSol.TCEp1MidFbu}}</td>
+	    <td>{{$CapSol.TCEp1MidFauFc}}</td>
+	    <td>{{$CapSol.TCEp1MidAxRatio}}</td>
+	    <td>{{$CapSol.TCEp1MidAxAllow}}</td>
+	    <td>{{$CapSol.TCEp1Midcheck}}</td>
 	</tr>
 	<tr>
 	    <th>T.C. (Ep1) point-panel</th>
-	    <td> {{ $CheckSlend.TCEp1PointIx }} </td>
-	    <td> {{ $CheckSlend.TCEp1PointIy }} </td>
-	    <td> {{ $CheckSlend.TCEp1PointIz }} </td>
-	    <td> {{ $CheckSlend.TCEp1Pointrx }} </td>
-	    <td> {{ $CheckSlend.TCEp1Pointry }} </td>
-	    <td> {{ $CheckSlend.TCEp1Pointrz }} </td>
-	    <td> {{ $CheckSlend.TCEp1PointIxrx }} </td>
-	    <td> {{ $CheckSlend.TCEp1PointIyry }} </td>
-	    <td> {{ $CheckSlend.TCEp1PointIzrz }} </td>
-	    <td> {{ $CheckSlend.TCEp1PointSLRym }} </td>
-	    <td> {{ $CheckSlend.TCEp1Pointrgov }} </td>
-	    <td> {{ $CheckSlend.TCEp1Pointlimit }} </td>
+	    <td>{{$CapSol.TCEp1PointPut}}</td>
+	    <td>{{$CapSol.TCEp1PointPusol}}</td>
+	    <td>{{$CapSol.TCEp1PointTenRat}}</td>
+	    <td>{{$CapSol.TCEp1PointTenAllow}}</td>
+	    <td>{{$CapSol.TCEp1PointFau}}</td>
+	    <td>{{$CapSol.TCEp1PointFbu}}</td>
+	    <td>{{$CapSol.TCEp1PointFauFc}}</td>
+	    <td>{{$CapSol.TCEp1PointAxRatio}}</td>
+	    <td>{{$CapSol.TCEp1PointAxAllow}}</td>
+	    <td>{{$CapSol.TCEp1Pointcheck}}</td>
 	</tr>
 	<tr>
 	    <th>T.C. (Ep2) mid-panel </th>
-	    <td> {{ $CheckSlend.TCEp2MidIx }} </td>
-	    <td> {{ $CheckSlend.TCEp2MidIy }} </td>
-	    <td> {{ $CheckSlend.TCEp2MidIz }} </td>
-	    <td> {{ $CheckSlend.TCEp2Midrx }} </td>
-	    <td> {{ $CheckSlend.TCEp2Midry }} </td>
-	    <td> {{ $CheckSlend.TCEp2Midrz }} </td>
-	    <td> {{ $CheckSlend.TCEp2MidIxrx }} </td>
-	    <td> {{ $CheckSlend.TCEp2MidIyry }} </td>
-	    <td> {{ $CheckSlend.TCEp2MidIzrz }} </td>
-	    <td> {{ $CheckSlend.TCEp2MidSLRym }} </td>
-	    <td> {{ $CheckSlend.TCEp2Midrgov }} </td>
-	    <td> {{ $CheckSlend.TCEp2Midlimit }} </td>
+	    <td>{{$CapSol.TCEp2MidPut}}</td>
+	    <td>{{$CapSol.TCEp2MidPusol}}</td>
+	    <td>{{$CapSol.TCEp2MidTenRat}}</td>
+	    <td>{{$CapSol.TCEp2MidTenAllow}}</td>
+	    <td>{{$CapSol.TCEp2MidFau}}</td>
+	    <td>{{$CapSol.TCEp2MidFbu}}</td>
+	    <td>{{$CapSol.TCEp2MidFauFc}}</td>
+	    <td>{{$CapSol.TCEp2MidAxRatio}}</td>
+	    <td>{{$CapSol.TCEp2MidAxAllow}}</td>
+	    <td>{{$CapSol.TCEp2Midcheck}}</td>
 	</tr>
 	<tr>
 	    <th>T.C. (Ep2) point-panel</th>
-	    <td> {{ $CheckSlend.TCEp2PointIx }} </td>
-	    <td> {{ $CheckSlend.TCEp2PointIy }} </td>
-	    <td> {{ $CheckSlend.TCEp2PointIz }} </td>
-	    <td> {{ $CheckSlend.TCEp2Pointrx }} </td>
-	    <td> {{ $CheckSlend.TCEp2Pointry }} </td>
-	    <td> {{ $CheckSlend.TCEp2Pointrz }} </td>
-	    <td> {{ $CheckSlend.TCEp2PointIxrx }} </td>
-	    <td> {{ $CheckSlend.TCEp2PointIyry }} </td>
-	    <td> {{ $CheckSlend.TCEp2PointIzrz }} </td>
-	    <td> {{ $CheckSlend.TCEp2PointSLRym }} </td>
-	    <td> {{ $CheckSlend.TCEp2Pointrgov }} </td>
-	    <td> {{ $CheckSlend.TCEp2Pointlimit }} </td>
+	    <td>{{$CapSol.TCEp2PointPut}}</td>
+	    <td>{{$CapSol.TCEp2PointPusol}}</td>
+	    <td>{{$CapSol.TCEp2PointTenRat}}</td>
+	    <td>{{$CapSol.TCEp2PointTenAllow}}</td>
+	    <td>{{$CapSol.TCEp2PointFau}}</td>
+	    <td>{{$CapSol.TCEp2PointFbu}}</td>
+	    <td>{{$CapSol.TCEp2PointFauFc}}</td>
+	    <td>{{$CapSol.TCEp2PointAxRatio}}</td>
+	    <td>{{$CapSol.TCEp2PointAxAllow}}</td>
+	    <td>{{$CapSol.TCEp2Pointcheck}}</td>
 	</tr>
     </tbody>
 </table>

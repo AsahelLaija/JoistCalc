@@ -1,5 +1,5 @@
 {{ block "design" . }}
-{{ $CheckSlend := index .TableCheck.CheckSlenderness 0 }}
+{{ $Design := index .TableDesign.Designs 0 }}
 <h2>Design Stress</h2>
 <table>
     <thead>
@@ -21,108 +21,101 @@
     <tbody>
 	<tr>
 	    <th>Bottom Chord (max)</th>
-	    <td> {{ $CheckSlend.BCIx }} </td>
-	    <td> {{ $CheckSlend.BCIy }} </td>
-	    <td> {{ $CheckSlend.BCIz }} </td>
-	    <td> {{ $CheckSlend.BCrx }} </td>
-	    <td> {{ $CheckSlend.BCry }} </td>
-	    <td> {{ $CheckSlend.BCrz }} </td>
-	    <td> {{ $CheckSlend.BCIxrx }} </td>
-	    <td> {{ $CheckSlend.BCIyry }} </td>
-	    <td> {{ $CheckSlend.BCIzrz }} </td>
-	    <td> {{ $CheckSlend.BCSLRym }} </td>
-	    <td> {{ $CheckSlend.BCrgov }} </td>
-	    <td> {{ $CheckSlend.BClimit }} </td>
+	    <td>{{ $Design.BCFt }}</td>
+	    <td>{{ $Design.BCPut }}</td>
+	    <td>{{ $Design.BCbt }}</td>
+	    <td>{{ $Design.BCQ }}</td>
+	    <td>{{ $Design.BCFetc }}</td>
+	    <td>{{ $Design.BCFex }}</td>
+	    <td>{{ $Design.BCFcr }}</td>
+	    <td>{{ $Design.BCFc }}</td>
+	    <td>{{ $Design.BCPuc }}</td>
+	    <td>{{ $Design.BCcm }}</td>
+	    <td>{{ $Design.BCFb }}</td>
 	</tr>
 	<tr>
 	    <th>T.C. (Ip) mid-panel</th>
-	    <td> {{ $CheckSlend.TCIpMidIx }} </td>
-	    <td> {{ $CheckSlend.TCIpMidIy }} </td>
-	    <td> {{ $CheckSlend.TCIpMidIz }} </td>
-	    <td> {{ $CheckSlend.TCIpMidrx }} </td>
-	    <td> {{ $CheckSlend.TCIpMidry }} </td>
-	    <td> {{ $CheckSlend.TCIpMidrz }} </td>
-	    <td> {{ $CheckSlend.TCIpMidIxrx }} </td>
-	    <td> {{ $CheckSlend.TCIpMidIyry }} </td>
-	    <td> {{ $CheckSlend.TCIpMidIzrz }} </td>
-	    <td> {{ $CheckSlend.TCIpMidSLRym }} </td>
-	    <td> {{ $CheckSlend.TCIpMidrgov }} </td>
-	    <td> {{ $CheckSlend.TCIpMidlimit }} </td>
+	    <td>{{ $Design.TCIpMidFt }}</td>
+	    <td>{{ $Design.TCIpMidPut }}</td>
+	    <td>{{ $Design.TCIpMidbt }}</td>
+	    <td>{{ $Design.TCIpMidQ }}</td>
+	    <td>{{ $Design.TCIpMidFetc }}</td>
+	    <td>{{ $Design.TCIpMidFex }}</td>
+	    <td>{{ $Design.TCIpMidFcr }}</td>
+	    <td>{{ $Design.TCIpMidFc }}</td>
+	    <td>{{ $Design.TCIpMidPuc }}</td>
+	    <td>{{ $Design.TCIpMidcm }}</td>
+	    <td>{{ $Design.TCIpMidFb }}</td>
 	</tr>
 	<tr>
 	    <th>T.C. (Ip) point-panel</th>
-	    <td> {{ $CheckSlend.TCIpPointIx }} </td>
-	    <td> {{ $CheckSlend.TCIpPointIy }} </td>
-	    <td> {{ $CheckSlend.TCIpPointIz }} </td>
-	    <td> {{ $CheckSlend.TCIpPointrx }} </td>
-	    <td> {{ $CheckSlend.TCIpPointry }} </td>
-	    <td> {{ $CheckSlend.TCIpPointrz }} </td>
-	    <td> {{ $CheckSlend.TCIpPointIxrx }} </td>
-	    <td> {{ $CheckSlend.TCIpPointIyry }} </td>
-	    <td> {{ $CheckSlend.TCIpPointIzrz }} </td>
-	    <td> {{ $CheckSlend.TCIpPointSLRym }} </td>
-	    <td> {{ $CheckSlend.TCIpPointrgov }} </td>
-	    <td> {{ $CheckSlend.TCIpPointlimit }} </td>
+	    <td>{{ $Design.TCIpPointFt }}</td>
+	    <td>{{ $Design.TCIpPointPut }}</td>
+	    <td>{{ $Design.TCIpPointbt }}</td>
+	    <td>{{ $Design.TCIpPointQ }}</td>
+	    <td>{{ $Design.TCIpPointFetc }}</td>
+	    <td>{{ $Design.TCIpPointFex }}</td>
+	    <td>{{ $Design.TCIpPointFcr }}</td>
+	    <td>{{ $Design.TCIpPointFc }}</td>
+	    <td>{{ $Design.TCIpPointPuc }}</td>
+	    <td>{{ $Design.TCIpPointcm }}</td>
+	    <td>{{ $Design.TCIpPointFb }}</td>
 	</tr>
 	<tr>
 	    <th>T.C. (Ep1) mid-panel </th>
-	    <td> {{ $CheckSlend.TCEp1MidIx }} </td>
-	    <td> {{ $CheckSlend.TCEp1MidIy }} </td>
-	    <td> {{ $CheckSlend.TCEp1MidIz }} </td>
-	    <td> {{ $CheckSlend.TCEp1Midrx }} </td>
-	    <td> {{ $CheckSlend.TCEp1Midry }} </td>
-	    <td> {{ $CheckSlend.TCEp1Midrz }} </td>
-	    <td> {{ $CheckSlend.TCEp1MidIxrx }} </td>
-	    <td> {{ $CheckSlend.TCEp1MidIyry }} </td>
-	    <td> {{ $CheckSlend.TCEp1MidIzrz }} </td>
-	    <td> {{ $CheckSlend.TCEp1MidSLRym }} </td>
-	    <td> {{ $CheckSlend.TCEp1Midrgov }} </td>
-	    <td> {{ $CheckSlend.TCEp1Midlimit }} </td>
+	    <td>{{ $Design.TCEp1MidFt }}</td>
+	    <td>{{ $Design.TCEp1MidPut }}</td>
+	    <td>{{ $Design.TCEp1Midbt }}</td>
+	    <td>{{ $Design.TCEp1MidQ }}</td>
+	    <td>{{ $Design.TCEp1MidFetc }}</td>
+	    <td>{{ $Design.TCEp1MidFex }}</td>
+	    <td>{{ $Design.TCEp1MidFcr }}</td>
+	    <td>{{ $Design.TCEp1MidFc }}</td>
+	    <td>{{ $Design.TCEp1MidPuc }}</td>
+	    <td>{{ $Design.TCEp1Midcm }}</td>
+	    <td>{{ $Design.TCEp1MidFb }}</td>
 	</tr>
 	<tr>
 	    <th>T.C. (Ep1) point-panel</th>
-	    <td> {{ $CheckSlend.TCEp1PointIx }} </td>
-	    <td> {{ $CheckSlend.TCEp1PointIy }} </td>
-	    <td> {{ $CheckSlend.TCEp1PointIz }} </td>
-	    <td> {{ $CheckSlend.TCEp1Pointrx }} </td>
-	    <td> {{ $CheckSlend.TCEp1Pointry }} </td>
-	    <td> {{ $CheckSlend.TCEp1Pointrz }} </td>
-	    <td> {{ $CheckSlend.TCEp1PointIxrx }} </td>
-	    <td> {{ $CheckSlend.TCEp1PointIyry }} </td>
-	    <td> {{ $CheckSlend.TCEp1PointIzrz }} </td>
-	    <td> {{ $CheckSlend.TCEp1PointSLRym }} </td>
-	    <td> {{ $CheckSlend.TCEp1Pointrgov }} </td>
-	    <td> {{ $CheckSlend.TCEp1Pointlimit }} </td>
+	    <td>{{ $Design.TCEp1PointFt }}</td>
+	    <td>{{ $Design.TCEp1PointPut }}</td>
+	    <td>{{ $Design.TCEp1Pointbt }}</td>
+	    <td>{{ $Design.TCEp1PointQ }}</td>
+	    <td>{{ $Design.TCEp1PointFetc }}</td>
+	    <td>{{ $Design.TCEp1PointFex }}</td>
+	    <td>{{ $Design.TCEp1PointFcr }}</td>
+	    <td>{{ $Design.TCEp1PointFc }}</td>
+	    <td>{{ $Design.TCEp1PointPuc }}</td>
+	    <td>{{ $Design.TCEp1Pointcm }}</td>
+	    <td>{{ $Design.TCEp1PointFb }}</td>
 	</tr>
 	<tr>
 	    <th>T.C. (Ep2) mid-panel </th>
-	    <td> {{ $CheckSlend.TCEp2MidIx }} </td>
-	    <td> {{ $CheckSlend.TCEp2MidIy }} </td>
-	    <td> {{ $CheckSlend.TCEp2MidIz }} </td>
-	    <td> {{ $CheckSlend.TCEp2Midrx }} </td>
-	    <td> {{ $CheckSlend.TCEp2Midry }} </td>
-	    <td> {{ $CheckSlend.TCEp2Midrz }} </td>
-	    <td> {{ $CheckSlend.TCEp2MidIxrx }} </td>
-	    <td> {{ $CheckSlend.TCEp2MidIyry }} </td>
-	    <td> {{ $CheckSlend.TCEp2MidIzrz }} </td>
-	    <td> {{ $CheckSlend.TCEp2MidSLRym }} </td>
-	    <td> {{ $CheckSlend.TCEp2Midrgov }} </td>
-	    <td> {{ $CheckSlend.TCEp2Midlimit }} </td>
+	    <td>{{ $Design.TCEp2MidFt }}</td>
+	    <td>{{ $Design.TCEp2MidPut }}</td>
+	    <td>{{ $Design.TCEp2Midbt }}</td>
+	    <td>{{ $Design.TCEp2MidQ }}</td>
+	    <td>{{ $Design.TCEp2MidFetc }}</td>
+	    <td>{{ $Design.TCEp2MidFex }}</td>
+	    <td>{{ $Design.TCEp2MidFcr }}</td>
+	    <td>{{ $Design.TCEp2MidFc }}</td>
+	    <td>{{ $Design.TCEp2MidPuc }}</td>
+	    <td>{{ $Design.TCEp2Midcm }}</td>
+	    <td>{{ $Design.TCEp2MidFb }}</td>
 	</tr>
 	<tr>
 	    <th>T.C. (Ep2) point-panel</th>
-	    <td> {{ $CheckSlend.TCEp2PointIx }} </td>
-	    <td> {{ $CheckSlend.TCEp2PointIy }} </td>
-	    <td> {{ $CheckSlend.TCEp2PointIz }} </td>
-	    <td> {{ $CheckSlend.TCEp2Pointrx }} </td>
-	    <td> {{ $CheckSlend.TCEp2Pointry }} </td>
-	    <td> {{ $CheckSlend.TCEp2Pointrz }} </td>
-	    <td> {{ $CheckSlend.TCEp2PointIxrx }} </td>
-	    <td> {{ $CheckSlend.TCEp2PointIyry }} </td>
-	    <td> {{ $CheckSlend.TCEp2PointIzrz }} </td>
-	    <td> {{ $CheckSlend.TCEp2PointSLRym }} </td>
-	    <td> {{ $CheckSlend.TCEp2Pointrgov }} </td>
-	    <td> {{ $CheckSlend.TCEp2Pointlimit }} </td>
+	    <td>{{ $Design.TCEp2PointFt }}</td>
+	    <td>{{ $Design.TCEp2PointPut }}</td>
+	    <td>{{ $Design.TCEp2Pointbt }}</td>
+	    <td>{{ $Design.TCEp2PointQ }}</td>
+	    <td>{{ $Design.TCEp2PointFetc }}</td>
+	    <td>{{ $Design.TCEp2PointFex }}</td>
+	    <td>{{ $Design.TCEp2PointFcr }}</td>
+	    <td>{{ $Design.TCEp2PointFc }}</td>
+	    <td>{{ $Design.TCEp2PointPuc }}</td>
+	    <td>{{ $Design.TCEp2Pointcm }}</td>
+	    <td>{{ $Design.TCEp2PointFb }}</td>
 	</tr>
     </tbody>
 </table>

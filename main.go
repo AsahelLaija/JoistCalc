@@ -953,7 +953,7 @@ type TableCap struct {
 }
 
 func newCapSol() CapSol{
-	return CapSol{}
+    return CapSol{}
 }
 
 func newTableCap() TableCap{
@@ -1282,6 +1282,9 @@ type Page struct {
     TableEfective TableEfective
     TableDesign TableDesign
     TableResForce TableResForce
+
+    TableCap TableCap
+    TableShear TableShear
 }
 
 func newPage() Page {
@@ -1297,6 +1300,9 @@ func newPage() Page {
 	TableEfective: newTableEfective(),
 	TableDesign: newTableDesign(),
 	TableResForce: newTableResForce(),
+
+	TableCap: newTableCap(),
+	TableShear: newTableShear(),
     }
 }
 
