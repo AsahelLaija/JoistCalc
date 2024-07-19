@@ -1,0 +1,36 @@
+{{ block "DOWForces" . }}
+{{ $DOWForce := index .TableDOWForce.DOWForces 0 }}
+<h3>Web member</h3>
+<table>
+    <tr>
+        <td>Rmax</td>
+	<td>FORMULA</td>
+	<td>{{ $DOWForce.Rmax }}</td>
+    </tr>
+    <tr>
+        <td>Vmin</td>
+        <td>FORMULA</td>
+	<td>{{ $DOWForce.Vmin }}</td>
+    </tr>
+    <tr>
+        <td>&beta;</td>
+        <td>FORMULA</td>
+	<td>{{ $DOWForce.Beta }}</td>
+    </tr>
+    <tr>
+        <td>&gamma;</td>
+        <td>FORMULA</td>
+	<td>{{ $DOWForce.Gamma }}</td>
+    </tr>
+    <tr>
+        <td>&delta;</td>
+        <td>FORMULA</td>
+	<td>{{ $DOWForce.Delta }}</td>
+    </tr>
+    <tr>
+        <td>&alpha;</td>
+	<td>FORMULA</td>
+        <td>{{ $DOWForce.Alpha }}</td>
+    </tr>
+</table>
+{{ end }}

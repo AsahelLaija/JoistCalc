@@ -1,0 +1,27 @@
+{{ block "Moments" . }}
+{{ $Moment := index .TableMoment.Moments 0 }}
+<table>
+    <tr>
+        <td>Ijoist</td>
+	<td>FORMULA</td>
+	<td>{{ $Moment.Ijoist }}</td>
+    </tr>
+    <tr>
+        <td>Ireq</td>
+        <td>FORMULA</td>
+	<td>{{ $Moment.Ireq360 }}</td>
+    </tr>
+    <tr>
+        <td>Ireq</td>
+        <td>FORMULA</td>
+	<td>{{ $Moment.Ireq240 }}</td>
+    </tr>
+    <tr>
+	<td>{{ $Moment.Ireq240 }}</td>
+        <td>{{ $Moment.Ijoist }}</td>
+	<td> < </td>
+	<td>{{ $Moment.Check }}</td>
+    </tr>
+</table>
+
+{{ end }}

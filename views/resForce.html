@@ -1,0 +1,48 @@
+{{ block "resForce" . }}
+{{ $ResForce := index .TableResForce.ResForces 0 }}
+<h3>Design Loads</h3>
+<table>
+    <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td>puntual</td>
+    </tr>
+    <tr>
+        <td>design load Wu(Kip/in)</td>
+	<td>{{ $ResForce.KipUdlWu }}</td>
+        <td></td>
+	<td>0</td>
+    </tr>
+    <tr>
+	<td>Live load WLL(Kip/in)</td>
+	<td>{{ $ResForce.KipLlWLL }}</td>
+    </tr>
+    <tr>
+	<td>Net suction LRFD(Kip/in)</td>
+	<td>0</td>
+    </tr>
+    <tr>
+	<td>Net suction ASD(Kip/in)</td>
+	<td>0</td>
+    </tr>
+    <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+	<th>Suction</th>
+    </tr>
+    <tr>
+        <td>Maximum design Moment</td>
+	<td>FORMULA</td>
+	<td>{{ $ResForce.MaxDsgnMoment }}</td>
+	<td>o</td>
+    </tr>
+    <tr>
+        <td>Chord force in center panel</td>
+        <td>FORMULA</td>
+	<td>{{ $ResForce.ChordForce }}</td>
+        <td>0</td> 
+    </tr>
+</table>
+{{ end }}

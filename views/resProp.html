@@ -1,0 +1,60 @@
+{{ block "resProp" . }}
+{{ $ResProp := index .ResGeom.ResProps 0 }}
+<!-- Geomery output -->
+<table>
+    <tbody>
+	<tr>
+	    <td>bottom chord to bottom panel</td>
+	    <td>
+		<p>
+		{{ $ResProp.Lbe2 }}
+		</p>
+	    </td>
+	</tr>
+	<tr>
+	    <td>Design length</td>
+	    <td>
+		<p>
+		{{ $ResProp.DLength }}
+		</p>
+	    </td>
+	</tr>
+	<tr>
+	    <td>Total interior Panels</td>
+	    <td>
+		<p>
+		{{ $ResProp.Tip }}
+		</p>
+	    </td>
+	</tr>
+	<tr>
+	    <td>Total Diagonals</td>
+	    <td>
+		<p>
+		{{ $ResProp.Tod }}
+		</p>
+	    </td>
+	</tr>
+	<tr>
+	    <td>Total struts</td>
+	    <td>
+		<p>
+		{{ $ResProp.Ts }}
+		</p>
+	    </td>
+	</tr>
+	<tr>
+	    <td>Effective Depth</td>
+	    <td>
+		<p>
+		{{ $ResProp.Ed }}
+		</p>
+	    </td>
+	</tr>
+    </tbody>
+</table>
+<!-- <p>The span of a joist shall not exceed 24 time the depth</p> -->
+<!-- <p>Span/Depth Ratio = {{ $ResProp.Dmin }} less than depth joist =  </p> -->
+
+<!-- Geomery output -->
+{{ end }}

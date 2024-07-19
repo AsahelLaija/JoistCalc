@@ -1,0 +1,51 @@
+{{ block "DesignWeldCons" . }}
+<table>
+    <thead>
+	<tr>
+	    <th>Element</th>
+	    <th>F tens</th>
+	    <th>F comp</th>
+	    <th>F_50%</th>
+	    <th>F gov</th>
+	    <th>tw</th>
+	    <th>Lw min</th>
+	    <th>Lw</th>
+	    <th>Conclusion</th>
+	</tr>
+    </thead>
+    {{ range .TableDesignWeldCon.DesignWeldCons }}
+	{{ template "TableDesignWeldCon" . }}
+    {{ end }}
+</table>
+{{ end }}
+{{ block "TableDesignWeldCon" . }}
+<tr>
+    <td>
+	<p>{{ .ElemName }}</p>
+    </td>
+    <td>
+	<p>{{ .Ftens }}</p>
+    </td>
+    <td>
+	<p>{{ .FComp }}</p>
+    </td>
+    <td>
+	<p>{{ .F50 }}</p>
+    </td>
+    <td>
+	<p>{{ .FGov }}</p>
+    </td>
+    <td>
+	<p>{{ .Tw }}</p>
+    </td>
+    <td>
+	<p>{{ .Lwmin }}</p>
+    </td>
+    <td>
+	<p>{{ .Lw }}</p>
+    </td>
+    <td>
+	<p>{{ .Conclusion }}</p>
+    </td>
+</tr>
+{{ end }}

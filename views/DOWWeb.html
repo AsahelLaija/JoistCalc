@@ -1,0 +1,65 @@
+{{ block "DOWWeb" . }}
+<table>
+    <thead>
+	<tr>
+	    <th>Element</th>
+	    <th>Xpe</th>
+	    <th>Xpc</th>
+	    <th>EQ.V1</th>
+	    <th>EQ.V2</th>
+	    <th>Vmin</th>
+	    <th>Ft min</th>
+	    <th>Fc min</th>
+	    <th>F tens</th>
+	    <th>F comp</th>
+	    <th>F tens</th>
+	    <th>F comp</th>
+	</tr>
+	
+    </thead>
+    {{ range .TableDOWWeb.DOWWebs }}
+	{{ template "TableDOWWeb" . }}
+    {{ end }}
+</table>
+{{ end }}
+{{ block "TableDOWWeb" . }}
+<tr>
+    <td>
+	<p>{{ .ElemName }}</p>
+    </td>
+    <td>
+	<p>{{ .XPE }}</p>
+    </td>
+    <td>
+	<p>{{ .XPC }}</p>
+    </td>
+    <td>
+	<p>{{ .EQV1 }}</p>
+    </td>
+    <td>
+	<p>{{ .EQV1 }}</p>
+    </td>
+    <td>
+	<p>{{ .Vmin }}</p>
+    </td>
+    <td>
+	<p>{{ .FtMin }}</p>
+    </td>
+    <td>
+	<p>{{ .FcMin }}</p>
+    </td>
+
+    <td>
+	<p>{{ .LiftFTens }}</p>
+    </td>
+    <td>
+	<p>{{ .LiftFComp }}</p>
+    </td>
+    <td>
+	<p>{{ .DesignFTens }}</p>
+    </td>
+    <td>
+	<p>{{ .DesignFComp }}</p>
+    </td>
+</tr>
+{{ end }}

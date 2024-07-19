@@ -1,0 +1,78 @@
+{{ block "DOWDesign" . }}
+<h3>Design of Web</h3>
+<table>
+    <thead>
+	<tr>
+	    <th>Element</th>
+	    <th>Ft</th>
+	    <th>Put</th>
+	    <th>Pu Sol</th>
+	    <th>ratio</th>
+	    <th>allowab</th>
+	    <th>b/t</th>
+	    <th>Q</th>
+	    <th>F'e</th>
+	    <th>Fcr</th>
+	    <th>Fc</th>
+	    <th>Puc</th>
+	    <th>Pu sol</th>
+	    <th>ratio</th>
+	    <th>allowab</th>
+	</tr>
+    </thead>
+    {{ range .TableDOWDesign.DOWDesigns }}
+	{{ template "TableDOWDesign" . }}
+    {{ end }}
+</table>
+{{ end }}
+
+{{ block "TableDOWDesign" .}}
+	    <tr>
+		<!-- Header is <th>Element</th> -->
+	        <td>
+		    <p>{{ .ElemName }}</p>
+		</td>
+		<td>
+		    <p>{{ .TenFt }}</p>
+		</td>
+		<td>
+		    <p>{{ .TenPut }}</p>
+		</td>
+		<td>
+		    <p>{{ .TenPuSol }}</p>
+		</td>
+		<td>
+		    <p>{{ .TenRat }}</p>
+		</td>
+		<td>
+		    <p>{{ .TenAllow }}</p>
+		</td>
+		<td>
+		    <p>{{ .Compbt }}</p>
+		</td>
+		<td>
+		    <p>{{ .CompQ }}</p>
+		</td>
+		<td>
+		    <p>{{ .CompFe }}</p>
+		</td>
+		<td>
+		    <p>{{ .CompFcr }}</p>
+		</td>
+		<td>
+		    <p>{{ .CompFc }}</p>
+		</td>
+		<td>
+		    <p>{{ .CompPuc }}</p>
+		</td>
+		<td>
+		    <p>{{ .CompPuSol }}</p>
+		</td>
+		<td>
+		    <p>{{ .CompRat }}</p>
+		</td>
+		<td>
+		    <p>{{ .CompAllow }}</p>
+		</td>
+	    </tr>
+{{ end }}

@@ -1,0 +1,37 @@
+{{ block "DesignWelds" . }}
+{{ $DesignWeld := index .TableDesignWeld.DesignWelds 0 }}
+<table>
+    <tr>
+	<td>Resistance &straightphi;w</td>
+	<td>{{ $DesignWeld.Resistance }}</td>
+    </tr>
+    <tr>
+	<td>Tensile stregth of E70XX electrodes: Fexx</td>
+	<td>{{ $DesignWeld.Tensile }}</td>
+    </tr>
+    <tr>
+        <td>Nominal Shear Strenth of Weld: Fnw=0.6Fexx</td>
+	<td>{{ $DesignWeld.Nominal }}</td>
+    </tr>
+    <tr>
+        <td>Angle type filler:</td>
+	<td>{{ $DesignWeld.Angle }}</td>
+    </tr>
+    <tr>
+        <td>Fillet weld:</td>
+	<td>{{ $DesignWeld.Fillet }}</td>
+    </tr>
+    <tr>
+        <td>Min. Weld Length:</td>
+	<td>{{ $DesignWeld.WeldL }}</td>
+    </tr>
+    <tr>
+        <td>Force to be resisted</td>
+	<td>{{ $DesignWeld.Force }}</td>
+    </tr>
+    <tr>
+        <td>Reguired fillet weld length</td>
+	<td>{{ $DesignWeld.Lw }}</td>
+    </tr>
+</table>
+{{ end }}

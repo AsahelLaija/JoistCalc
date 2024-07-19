@@ -1,0 +1,106 @@
+{{ block "Lateral" . }}
+{{ $Lateral := index .TableLateral.Laterals 0 }}
+<table>
+    <tr>
+        <td>P</td>
+        <td>FORMULA</td>
+	<td>{{ $Lateral.P }}</td>
+    </tr>
+    <tr>
+        <td>K</td>
+        <td></td>
+	<td>{{ $Lateral.K }}</td>
+    </tr>
+    <tr>
+	<td>G</td>
+        <td></td>
+	<td>{{ $Lateral.G }}</td>
+    </tr>
+    <tr>
+        <td>J</td>
+        <td>FORMULA</td>
+	<td>{{ $Lateral.J }}</td>
+    </tr>
+    <tr>
+        <td>Y</td>
+        <td>FORMULA</td>
+	<td>{{ $Lateral.Y }}</td>
+    </tr>
+    <tr>
+        <td>Iytc</td>
+        <td>FORMULA</td>
+        <td>{{ $Lateral.Iytc }}</td>
+    </tr>
+    <tr>
+        <td>Iybc</td>
+        <td>FORMULA</td>
+	<td>{{ $Lateral.Iybc }}</td>
+    </tr>
+    <tr>
+        <td>Iy</td>
+        <td>Formula</td>
+	<td>{{ $Lateral.Iy }}</td>
+    </tr>
+    <tr>
+        <td>Ix</td>
+        <td>FORMULA</td>
+	<td>{{ $Lateral.Ix }}</td>
+    </tr>
+    <tr>
+        <td>Y0</td>
+        <td>FORMULA</td>
+	<td>{{ $Lateral.Y0 }}</td>
+    </tr>
+    <tr>
+        <td>Cw</td>
+        <td>FORMULA</td>
+	<td>{{ $Lateral.Cw }}</td>
+    </tr>
+    <tr>
+        <td>&beta;x</td>
+        <td>FORMULA</td>
+	<td>{{ $Lateral.Betax }}</td>
+    </tr>
+    <tr>
+        <td>ae</td>
+        <td>FORMULA</td>
+	<td>{{ $Lateral.Ae }}</td>
+    </tr>
+    <tr>
+        <td>a</td>
+        <td>FORMULA</td>
+	<td>{{ $Lateral.A }}</td>
+    </tr>
+    <tr>
+        <td>b</td>
+        <td>FORMULA</td>
+	<td>{{ $Lateral.B }}</td>
+    </tr>
+    <tr>
+        <td>c</td>
+        <td>FORMULA</td>
+	<td>{{ $Lateral.C }}</td>
+
+    <tr>
+        <td>W</td>
+        <td>FORMULA</td>
+	<td>{{ $Lateral.W1 }}</td>
+	<td>{{ $Lateral.W2 }}</td>
+    </tr>
+    <tr>
+        <td>WuMinkoof</td>
+        <td>FORMULA</td>
+	<td>{{ $Lateral.WuMin }}</td>
+    </tr>
+    <tr>
+        <td>Wactual</td>
+        <td>FORMULA</td>
+	<td>{{ $Lateral.Wactual }}</td>
+    </tr>
+    <tr>
+        <td>Wmax</td>
+        <td>FORMULA</td>
+	<td>{{ $Lateral.Wmax }}</td>
+    </tr>
+</table>
+{{ end }}

@@ -1,0 +1,74 @@
+{{ block "DOWSlendRat" . }}
+<h3>Design of Web</h3>
+<table>
+    <thead>
+	<tr>
+	    <th>Element</th>
+	    <th>Ix</th>
+	    <th>Iy</th>
+	    <th>Iz</th>
+	    <th>rx</th>
+	    <th>ry</th>
+	    <th>rz</th>
+	    <th>Ix/ry</th>
+	    <th>Iy/ry</th>
+	    <th>Iz/rz</th>
+	    <th>SLRym</th>
+	    <th>I/r gov</th>
+	    <th>limit</th>
+	    <th>check</th>
+	</tr>
+    </tr>
+    {{ range .TableDOWSlend.DOWSlendRats }}
+	{{ template "TableDOWSlendRat" . }}
+    {{ end }}
+</table>
+{{ end }}
+
+{{ block "TableDOWSlendRat" .}}
+	    <tr>
+		<!-- Header is <th>Element</th> -->
+	        <td>
+		    <p>{{ .ElemName }}</p>
+		</td>
+		<td>
+		    <p>{{ .IX }}</p>
+		</td>
+		<td>
+		    <p>{{ .IY }}</p>
+		</td>
+		<td>
+		    <p>{{ .IZ }}</p>
+		</td>
+		<td>
+		    <p>{{ .Rx }}</p>
+		</td>
+		<td>
+		    <p>{{ .Ry }}</p>
+		</td>
+		<td>
+		    <p>{{ .Rz }}</p>
+		</td>
+		<td>
+		    <p>{{ .Ixrx }}</p>
+		</td>
+		<td>
+		    <p>{{ .Iyry }}</p>
+		</td>
+		<td>
+		    <p>{{ .Izrz }}</p>
+		</td>
+		<td>
+		    <p>{{ .SLRym }}</p>
+		</td>
+		<td>
+		    <p>{{ .Lrgov }}</p>
+		</td>
+		<td>
+		    <p>{{ .Limit }}</p>
+		</td>
+		<td>
+		    <p>{{ .Check }}</p>
+		</td>
+	    </tr>
+{{ end }}

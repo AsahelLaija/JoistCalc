@@ -1,0 +1,56 @@
+{{ block "DOWEfective" . }}
+<table>
+    <thead>
+	<tr>
+	    <th>Element</th>
+	    <th>kl/rx</th>
+	    <th>kl/ry</th>
+	    <th>kl/rz</th>
+	    <th>kls/rz</th>
+	    <th>kl/rx</th>
+	    <th>kl/ry</th>
+	    <th>kl/rz</th>
+	    <th>kls/rz</th>
+	    <th>SLR gov</th>
+	</tr>
+	
+    </thead>
+    {{ range .TableDOWEfective.DOWEfectives }}
+	{{ template "TableDOWEfective" . }}
+    {{ end }}
+</table>
+{{ end }}
+{{ block "TableDOWEfective" . }}
+<tr>
+    <td>
+	<p>{{ .ElemName }}</p>
+    </td>
+    <td>
+	<p>{{ .Klrx }}</p>
+    </td>
+    <td>
+	<p>{{ .Klry }}</p>
+    </td>
+    <td>
+	<p>{{ .Klrz }}</p>
+    </td>
+    <td>
+	<p>{{ .Klsrz }}</p>
+    </td>
+    <td>
+	<p>{{ .SlendKlrx }}</p>
+    </td>
+    <td>
+	<p>{{ .SlendKlry }}</p>
+    </td>
+    <td>
+	<p>{{ .SlendKlrz }}</p>
+    </td>
+    <td>
+	<p>{{ .SlendKlsrz }}</p>
+    </td>
+    <td>
+	<p>{{ .SLRgov }}</p>
+    </td>
+</tr>
+{{ end }}
