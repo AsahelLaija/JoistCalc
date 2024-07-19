@@ -5,9 +5,13 @@
 {{ block "res" . }}
 
 {{ $ResisTable := index .TableResistance.ResistanceFactors 0 }}
+<h3>Geometry response</h3>
+<div>
 {{ template "resProp" . }}
 {{ template "angleProp" . }}
+</div>
 
+{{ template "DOWForces" . }}
 
 <div>
     {{ template "webMem" . }}
@@ -63,6 +67,9 @@
 {{ template "design" . }}
 {{ template "relations" . }}
 {{ template "shearCap" . }}
+{{ template "Moments" . }}
+{{ template "Lateral" . }}
+{{ template "DesignWelds" . }}
 
 {{ end }}
 
@@ -84,6 +91,11 @@
 	    {{ end }}
 	</table>
     <button type="submit">submit</button>
+    {{ template "DOWSlendRat" . }}
+    {{ template "DOWWeb" . }}
+    {{ template "DOWDesign" . }}
+    {{ template "DOWEfective" . }}
+    {{ template "DesignWeldCons" . }}
     </form>
 {{ end }}
 
@@ -100,7 +112,7 @@
 		</td>
 		<!-- Header is <th>Mark</th> -->
 		<td>
-		    <input value="{{ .Mark }}"type="number" name="mark{{ .InputName }}">
+		    <input value="1"type="number" name="mark{{ .InputName }}">
 		</td>
 		<!-- Header is <th>Crimped</th> -->
 		<td>

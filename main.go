@@ -55,6 +55,80 @@ func doubleAngle(area, ix, y string, sbca float64) (string, string, string) {
     iyDAngle := strconv.FormatFloat(iyFlt, 'g', -1, 64)
     return areaDAngle, ixDAngle, iyDAngle
 }
+func RoundTo(n float64, decimals uint32) float64 {
+  return math.Round(n*math.Pow(10, float64(decimals))) / math.Pow(10, float64(decimals))
+}
+func anglePropsDOWSlend( mark, i int, crimped string, page *Page ) {
+    DOWSlendRats := page.TableDOWSlend.DOWSlendRats
+    ElemName := page.WebMember.MemberInputs[i].ElemName
+
+    file, err := os.Open("Propiedades.csv")
+    if err != nil {
+	fmt.Println("Error: ", err)
+    }
+    defer file.Close()
+    reader := csv.NewReader(file)
+    record, err := reader.ReadAll()
+    if err != nil {
+	fmt.Println("Error: ", err)
+    }
+    if crimped == "yes" {
+	// if is crimped the rx is rz
+	RX,_ := strconv.ParseFloat(record[mark][8], 64)
+	DOWSlendRats[i].Rx = RoundTo(RX, 4)
+
+	// if is crimped the ry is rw
+	RY,_ := strconv.ParseFloat(record[mark][9], 64)
+	DOWSlendRats[i].Ry = RoundTo(RY, 4)
+    }
+    de := page.ResGeom.ResProps[0].Ed
+    beta := page.TableDOWForce.DOWForces[0].Beta
+    gamma := page.TableDOWForce.DOWForces[0].Gamma
+    delta := page.TableDOWForce.DOWForces[0].Delta
+    alpha := page.TableDOWForce.DOWForces[0].Alpha
+    var Ix float64
+    if ElemName == "sv" {
+	gammaRadian := gamma / (180/math.Pi)
+	Ix = de / math.Sin(gammaRadian)
+	DOWSlendRats[i].IX = RoundTo(Ix, 4)
+	DOWSlendRats[i].IY = RoundTo(Ix, 4)
+	DOWSlendRats[i].IZ = RoundTo(Ix, 4)
+    }else if ElemName == "w2" {
+	betaRadian := beta / (180/math.Pi)
+	Ix = de / math.Sin(betaRadian)
+	DOWSlendRats[i].IX = RoundTo(Ix, 4)
+	DOWSlendRats[i].IY = RoundTo(Ix, 4)
+	DOWSlendRats[i].IZ = RoundTo(Ix, 4)
+    }else if ElemName == "w3" {
+	deltaRadian := delta / (180/math.Pi)
+	Ix = de / math.Sin(deltaRadian)
+	DOWSlendRats[i].IX = RoundTo(Ix, 4)
+	DOWSlendRats[i].IY = RoundTo(Ix, 4)
+	DOWSlendRats[i].IZ = RoundTo(Ix, 4)
+    }else if ElemName[0] == 'v' {
+	DOWSlendRats[i].IX = RoundTo(de, 4)
+	DOWSlendRats[i].IY = RoundTo(de, 4)
+	DOWSlendRats[i].IZ = RoundTo(de, 4)
+	DOWSlendRats[i].Limit = 200
+    }else{
+	alphaRadian := alpha / (180/math.Pi)
+	Ix = de / math.Sin(alphaRadian)
+	DOWSlendRats[i].IX = RoundTo(Ix, 4)
+	DOWSlendRats[i].IY = RoundTo(Ix, 4)
+	DOWSlendRats[i].IZ = RoundTo(Ix, 4)
+    }
+
+    DOWSlendRats[i].Ixrx = RoundTo(DOWSlendRats[i].IX / DOWSlendRats[i].Rx, 4)
+    DOWSlendRats[i].Iyry = RoundTo(DOWSlendRats[i].IY / DOWSlendRats[i].Ry, 4)
+    DOWSlendRats[i].Lrgov = larger(DOWSlendRats[i].Ixrx, DOWSlendRats[i].Iyry)
+    if DOWSlendRats[i].Lrgov < DOWSlendRats[i].Limit {
+	DOWSlendRats[i].Check = "OK"
+    } else {
+	DOWSlendRats[i].Check = "NOT OK"
+    }
+
+    // fmt.Printf("\nElemName:\t%v\nde:\t%v\nbeta:\t%v\nIx%v\n",ElemName , de, beta, Ix)
+}
 func getAnglProps(noAngleTop, noAngleBot, sbca float64) AnglProp{
     /* TOOD: 
 	    make function to get angle info
@@ -1011,7 +1085,7 @@ type DOWSlendRat struct {
     SLRym float64
     Lrgov float64
     Limit float64
-    Check float64
+    Check string
 }
 type DOWSlendRats = []DOWSlendRat
 type TableDOWSlend struct {
@@ -1025,6 +1099,40 @@ func newTableDOWSlend() TableDOWSlend{
     return TableDOWSlend{
 	DOWSlendRats: []DOWSlendRat{
 	    newDOWSlendRat(), 
+	},
+    }
+}
+
+type DOWDesign struct {
+    InputName string
+    ElemName string
+    TenFt float64
+    TenPut float64
+    TenPuSol float64
+    TenRat float64
+    TenAllow string
+    Compbt float64
+    CompQ float64
+    CompFe float64
+    CompFcr float64
+    CompFc float64
+    CompPuc float64
+    CompPuSol float64
+    CompRat float64
+    CompAllow string
+}
+type DOWDesigns = []DOWDesign
+type TableDOWDesign struct {
+    DOWDesigns DOWDesigns
+}
+
+func newDOWDesign()DOWDesign{
+    return DOWDesign{}
+}
+func newTableDOWDesign() TableDOWDesign{
+    return TableDOWDesign{
+	DOWDesigns: []DOWDesign{
+	    newDOWDesign(), 
 	},
     }
 }
@@ -1089,43 +1197,10 @@ func newTableDOWEfective() TableDOWEfective{
     }
 }
 
-type DOWDesign struct {
-    InputName string
-    ElemName string
-    TenFt float64
-    TenPut float64
-    TenPuSol float64
-    TenRat float64
-    TenAllow float64
-    Compbt float64
-    CompQ float64
-    CompFe float64
-    CompFcr float64
-    CompFc float64
-    CompPuc float64
-    CompPuSol float64
-    CompRat float64
-    CompAllow float64
-}
-type DOWDesigns = []DOWDesign
-type TableDOWDesign struct {
-    DOWDesigns DOWDesigns
-}
-
-func newDOWDesign()DOWDesign{
-    return DOWDesign{}
-}
-func newTableDOWDesign() TableDOWDesign{
-    return TableDOWDesign{
-	DOWDesigns: []DOWDesign{
-	    newDOWDesign(), 
-	},
-    }
-}
-
+// forces and stresses in Web member
 type DOWForce struct {
     Rmax float64
-    VSheard float64
+    Vmin float64
     Beta float64
     Gamma float64
     Delta float64
@@ -1152,6 +1227,7 @@ type Moment struct {
     Ijoist float64
     Ireq360 float64
     Ireq240 float64
+    Check string
 }
 type Moments = []Moment
 type TableMoment struct {
@@ -1183,13 +1259,15 @@ type Lateral struct {
     Y0 float64
     Cw float64
     Betax float64
-    ae float64
-    a float64
-    b float64
-    c float64
-    W float64
-    Wactual float64
+    Ae float64
+    A float64
+    B float64
+    C float64
+    W1 float64
+    W2 float64
     WuMin float64
+    Wactual float64
+    Wmax float64
 }
 type Laterals = []Lateral
 type TableLateral struct {
@@ -1213,7 +1291,7 @@ type DesignWeld struct {
     Resistance float64
     Tensile float64
     Nominal float64
-    Angle float64
+    Angle string
     Fillet float64
     WeldL float64
     Force float64
@@ -1285,6 +1363,15 @@ type Page struct {
 
     TableCap TableCap
     TableShear TableShear
+    TableDOWSlend TableDOWSlend
+    TableDOWDesign TableDOWDesign
+    TableMoment TableMoment
+    TableDOWForce TableDOWForce
+    TableDOWWeb TableDOWWeb
+    TableDOWEfective TableDOWEfective
+    TableLateral TableLateral
+    TableDesignWeld TableDesignWeld
+    TableDesignWeldCon TableDesignWeldCon
 }
 
 func newPage() Page {
@@ -1303,6 +1390,15 @@ func newPage() Page {
 
 	TableCap: newTableCap(),
 	TableShear: newTableShear(),
+	TableDOWSlend: newTableDOWSlend(),
+	TableDOWDesign: newTableDOWDesign(),
+	TableMoment: newTableMoment(),
+	TableDOWForce: newTableDOWForce(),
+	TableDOWWeb: newTableDOWWeb(),
+	TableDOWEfective: newTableDOWEfective(),
+	TableLateral: newTableLateral(),
+	TableDesignWeld: newTableDesignWeld(),
+	TableDesignWeldCon: newTableDesignWeldCon(),
     }
 }
 
@@ -1478,7 +1574,8 @@ func efectiveSlend(page *Page) {
 	EfectiveSlend.TCEp2Midklrx = 1.0
 	EfectiveSlend.TCEp2Midklry = 0.94
 	EfectiveSlend.TCEp2Midklrz = 0
-	EfectiveSlend.TCEp2Midklsrz = 1 } else {
+	EfectiveSlend.TCEp2Midklsrz = 1
+    } else {
 	EfectiveSlend.TCEp2Midklrx = 0
 	EfectiveSlend.TCEp2Midklry = 0
 	EfectiveSlend.TCEp2Midklrz = 1
@@ -1521,6 +1618,24 @@ func designLoads(page *Page) {
     page.TableResForce.ResForces[0].MaxDsgnMoment = Msji
     page.TableResForce.ResForces[0].ChordForce = Pchord
 }
+func webMemberAngles(page *Page) {
+    de := &page.ResGeom.ResProps[0].Ed
+    lbe := &page.Geometry.Properties[0].epbc
+    lpe1 := &page.Geometry.Properties[0].fepl
+    lpe2 := &page.Geometry.Properties[0].sepl
+    lip := &page.Geometry.Properties[0].ipl
+    
+    beta := math.Atan(*de / *lbe) * (180 / math.Pi)
+    gamma := math.Atan(*de / (*lbe - *lpe1)) * (180 / math.Pi)
+    delta := math.Atan(*de / (*lpe1 + *lpe2 - *lbe)) * (180 / math.Pi)
+    alpha := math.Atan(*de / *lip) * (180 / math.Pi)
+
+    page.TableDOWForce.DOWForces[0].Beta = beta
+    page.TableDOWForce.DOWForces[0].Gamma = gamma
+    page.TableDOWForce.DOWForces[0].Delta = delta
+    page.TableDOWForce.DOWForces[0].Alpha = alpha
+
+}
 func main() {
     t := &Template{
 	templates: template.Must(template.ParseGlob("views/*.html")),
@@ -1540,12 +1655,22 @@ func main() {
 		Refresh response data to zero
 	*/
     })
+
     /*		Styles		*/
     e.GET("/styles", func(c echo.Context) error {
 	return c.File("static/styles.css")
     })
+    e.GET("/icon", func(c echo.Context) error {
+	return c.File("static/favicon.ico")
+    })
+
     e.POST("/sendform", func(c echo.Context) error {
 	page.WebMember.MemberInputs = page.WebMember.MemberInputs[:0]
+	page.TableDOWSlend.DOWSlendRats = page.TableDOWSlend.DOWSlendRats[:0]
+	page.TableDOWDesign.DOWDesigns = page.TableDOWDesign.DOWDesigns[:0]
+	page.TableDOWWeb.DOWWebs = page.TableDOWWeb.DOWWebs[:0]
+	page.TableDOWEfective.DOWEfectives = page.TableDOWEfective.DOWEfectives[:0]
+	page.TableDesignWeldCon.DesignWeldCons = page.TableDesignWeldCon.DesignWeldCons[:0]
 	// Geometry input table
 	trussType := c.FormValue("trussType")
 	joistType := c.FormValue("joistType")
@@ -1657,26 +1782,60 @@ func main() {
 	halfTs := ts/2
 
 	totalAngles := halfTod +1 + halfTs
-	obj := newMemberInput()
+
+	elementSec := newMemberInput()
+	elementSlend := newDOWSlendRat()
+	elementDesign := newDOWDesign()
+	elementWeb := newDOWWeb()
+	elementEfective := newDOWEfective()
+	elementDesignWeldCon := newDesignWeldCon()
 
 	tas := int(totalAngles)
 	hts := int(halfTod)
 
 	for i := 1; i < tas; i++{
-	    obj.InputName = fmt.Sprintf("%v", i)
+	    elementSec.InputName = fmt.Sprintf("%v", i)
+	    elementSlend.InputName = fmt.Sprintf("%v", i)
+	    elementDesign.InputName = fmt.Sprintf("%v", i)
+	    elementWeb.InputName = fmt.Sprintf("%v", i)
+	    elementEfective.InputName = fmt.Sprintf("%v", i)
+	    elementDesignWeldCon.InputName = fmt.Sprintf("%v", i)
 	    if i == 1{
-		obj.ElemName = "sv"
+		elementSec.ElemName = "sv"
+		elementSlend.ElemName = "sv"
+		elementDesign.ElemName = "sv"
+		elementWeb.ElemName = "sv"
+		elementEfective.ElemName = "sv"
+		elementDesignWeldCon.ElemName = "sv"
 	    } else if i <= hts+1 && i != 1{
-		obj.ElemName = fmt.Sprintf("w%v", i)
+		elementSec.ElemName = fmt.Sprintf("w%v", i)
+		elementSlend.ElemName = fmt.Sprintf("w%v", i)
+		elementDesign.ElemName = fmt.Sprintf("w%v", i)
+		elementWeb.ElemName = fmt.Sprintf("w%v", i)
+		elementEfective.ElemName = fmt.Sprintf("w%v", i)
+		elementDesignWeldCon.ElemName = fmt.Sprintf("w%v", i)
 	    } else {
-		obj.ElemName = fmt.Sprintf("v%v", i - (hts+1))
+		elementSec.ElemName = fmt.Sprintf("v%v", i - (hts+1))
+		elementSlend.ElemName = fmt.Sprintf("v%v", i - (hts+1))
+		elementDesign.ElemName = fmt.Sprintf("v%v", i - (hts+1))
+		elementWeb.ElemName = fmt.Sprintf("v%v", i - (hts+1))
+		elementEfective.ElemName = fmt.Sprintf("v%v", i - (hts+1))
+		elementDesignWeldCon.ElemName = fmt.Sprintf("v%v", i - (hts+1))
 	    }
-	    page.WebMember.MemberInputs = append(page.WebMember.MemberInputs, obj)
+	    page.WebMember.MemberInputs = append(page.WebMember.MemberInputs, elementSec)
+	    page.TableDOWSlend.DOWSlendRats = append(page.TableDOWSlend.DOWSlendRats, elementSlend)
+	    page.TableDOWDesign.DOWDesigns = append(page.TableDOWDesign.DOWDesigns, elementDesign)
+	    page.TableDOWWeb.DOWWebs = append(page.TableDOWWeb.DOWWebs, elementWeb)
+	    page.TableDOWEfective.DOWEfectives = append(page.TableDOWEfective.DOWEfectives, elementEfective)
+	    page.TableDesignWeldCon.DesignWeldCons = append(page.TableDesignWeldCon.DesignWeldCons, elementDesignWeldCon)
 	}
+
+
 	slendernesRadio(&page)
 	efectiveSlend(&page)
 	deCalculation(&page)
 	designLoads(&page)
+	webMemberAngles(&page)
 
 	//fmt.Println()
 	//fmt.Printf("%+v", page)
@@ -1685,8 +1844,10 @@ func main() {
     })
 
     e.POST("/member", func(c echo.Context) error {
+	MemberInputs := page.WebMember.MemberInputs
+	//angleProps()
 	/* TOOD: 
-		make function to get angle info
+		make function to get angle props
 	*/
 	// read csv file 
 
@@ -1701,23 +1862,26 @@ func main() {
 	    fmt.Println("Error: ", err)
 	}
 
-	membersTable := len(page.WebMember.MemberInputs)
-	for i := 0; i < membersTable; i++ {
+	for i := 0; i < len(page.WebMember.MemberInputs); i++ {
 	    si := strconv.Itoa(i + 1)
 
 	    part := "part" + si
 	    mark := "mark" + si
 	    crimped := "crimped" + si
 
-	    page.WebMember.MemberInputs[i].Part = c.FormValue(part)
-	    page.WebMember.MemberInputs[i].Mark = c.FormValue(mark)
-	    page.WebMember.MemberInputs[i].Crimped = c.FormValue(crimped)
+	    MemberInputs[i].Part = c.FormValue(part)
+	    MemberInputs[i].Mark = c.FormValue(mark)
+	    MemberInputs[i].Crimped = c.FormValue(crimped)
 
-	    mmark,_ := strconv.Atoi(page.WebMember.MemberInputs[i].Mark)
-	    page.WebMember.MemberInputs[i].Secction = record[mmark][2]
+	    // page.TableDOWSlend.DOWSlendRats[i].IX = 30.35
+
+	    mmark,_ := strconv.Atoi(MemberInputs[i].Mark)
+	    MemberInputs[i].Secction = record[mmark][2]
 	    //fmt.Println(page.WebMember.MemberInputs[i])
+	    anglePropsDOWSlend(mmark, i, MemberInputs[i].Crimped, &page)
+	    fmt.Println(part)
 	}
-	fmt.Println(page.WebMember.MemberInputs)
+	// fmt.Println(page.WebMember.MemberInputs)
 	return c.Render(http.StatusOK, "webMem", page )
     })
     e.Logger.Fatal(e.Start(":8080"))
