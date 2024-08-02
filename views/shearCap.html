@@ -1,22 +1,48 @@
 {{ block "shearCap" . }}
+{{ $ShearCap := index .TableShear.ShearCaps 0 }}
 <h3>Check modified shear capacity</h3>
 <div>
     <table>
         <tr>
             <td>Shear Force in End Panel</td>
-            <td>Axial Force in chords</td>
-	    <td>Modified Shear Stress</td>
-	    <td>
-		<span>Nominal Shear capacity: <br>
-		    Fn=0.6*Fy= 
-		    <br>
-		    Fv=0Fn=
-		</span>
-	    </td>
+	    <td>{{ $ShearCap.Vep }} kips</td>
         </tr>
+	<tr>
+            <td>Axial Force in chords</td>
+	    <td>{{ $ShearCap.Pu_Ep }} kips</td>
+	</tr>
+    </table>
+</div>
+<h4>Nominal Shear capacity (Fn): </h4>
+<div>
+    <table>
+        <tr>
+            <td>Fn=0.6*Fy=</td>
+	    <td>{{ $ShearCap.Fn }}</td>
+        </tr>
+	<tr>
+	    <td>Fv=0Fn=</td>
+	    <td>{{ $ShearCap.Fv }}</td>
+	</tr>
     </table>
 </div>
 
+<div>
+    <table>
+        <tr>
+            <td>Shear Stress:</td>
+	    <td>FORMULA</td>
+        </tr>
+        <tr>
+            <td>Axial Stress:</td>
+	    <td>FORMULA</td>
+        </tr>
+	<tr>
+	    <td>Modified Shear Stress:</td>
+	    <td>FORMULA</td>
+	</tr>
+    </table>
+</div>
 <div>
     <table>
 	<thead>
@@ -30,17 +56,19 @@
 	    <tbody>
 	        <tr>
 	            <td>Bottom Chord</td>
-	            <td></td>
-	            <td></td>
-	            <td></td>
-	            <td></td>
+		    <td>{{ $ShearCap.Botfv }}</td>
+		    <td>{{ $ShearCap.Botfa }}</td>
+		    <td>{{ $ShearCap.Botfvmod }}</td>
+		    <td>{{ $ShearCap.Fv }}</td>
+		    <td>{{ $ShearCap.Botcheck }}</td>
 	        </tr>
 	        <tr>
 	            <td>Top Chord</td>
-	            <td></td>
-	            <td></td>
-	            <td></td>
-	            <td></td>
+		    <td>{{ $ShearCap.Topfv }}</td>
+		    <td>{{ $ShearCap.Topfa }}</td>
+		    <td>{{ $ShearCap.Topfvmod }}</td>
+		    <td>{{ $ShearCap.Fv }}</td>
+		    <td>{{ $ShearCap.Topcheck }}</td>
 	        </tr>
 	    </tbody>
     </table>

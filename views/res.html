@@ -5,11 +5,16 @@
 {{ block "res" . }}
 
 {{ $ResisTable := index .TableResistance.ResistanceFactors 0 }}
+
+{{ template "shearCap" . }}
+
+{{ template "relations" . }}
 <h3>Geometry response</h3>
 <div>
 {{ template "resProp" . }}
 {{ template "angleProp" . }}
 </div>
+
 
 {{ template "DOWForces" . }}
 
@@ -61,13 +66,16 @@
 </form>
 
 {{ template "resForce" . }}
+
 {{ template "analysisResult" . }}
+
 {{ template "checkSlendernes" . }}
 {{ template "efectiveSlendernes" . }}
 {{ template "design" . }}
-{{ template "relations" . }}
-{{ template "shearCap" . }}
+
+
 {{ template "Moments" . }}
+
 {{ template "Lateral" . }}
 {{ template "DesignWelds" . }}
 
@@ -92,8 +100,8 @@
 	</table>
     <button type="submit">submit</button>
     {{ template "DOWSlendRat" . }}
-    {{ template "DOWWeb" . }}
     {{ template "DOWDesign" . }}
+    {{ template "DOWWeb" . }}
     {{ template "DOWEfective" . }}
     {{ template "DesignWeldCons" . }}
     </form>
@@ -112,7 +120,7 @@
 		</td>
 		<!-- Header is <th>Mark</th> -->
 		<td>
-		    <input value="1"type="number" name="mark{{ .InputName }}">
+		    <input value="{{ .Mark }}"type="number" name="mark{{ .InputName }}">
 		</td>
 		<!-- Header is <th>Crimped</th> -->
 		<td>
@@ -127,7 +135,7 @@
 		</td>
 		<!-- Header is <th>mid-panell fill</th> -->
 		<td>
-		    <select id="" name="crimped{{ .InputName }}">
+		    <select id="" name="fill{{ .InputName }}">
 		        <option value="yes">yes</option>
 		        <option value="no">no</option>
 		    </select>

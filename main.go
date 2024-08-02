@@ -93,29 +93,37 @@ func anglePropsDOWSlend( mark, i int, crimped string, page *Page ) {
 	DOWSlendRats[i].IX = RoundTo(Ix, 4)
 	DOWSlendRats[i].IY = RoundTo(Ix, 4)
 	DOWSlendRats[i].IZ = RoundTo(Ix, 4)
-    }else if ElemName == "w2" {
+	DOWSlendRats[i].Limit = 200
+    } else if ElemName == "w2" {
 	betaRadian := beta / (180/math.Pi)
 	Ix = de / math.Sin(betaRadian)
 	DOWSlendRats[i].IX = RoundTo(Ix, 4)
 	DOWSlendRats[i].IY = RoundTo(Ix, 4)
 	DOWSlendRats[i].IZ = RoundTo(Ix, 4)
-    }else if ElemName == "w3" {
+	DOWSlendRats[i].Limit = 240
+    } else if ElemName == "w3" {
 	deltaRadian := delta / (180/math.Pi)
 	Ix = de / math.Sin(deltaRadian)
 	DOWSlendRats[i].IX = RoundTo(Ix, 4)
 	DOWSlendRats[i].IY = RoundTo(Ix, 4)
 	DOWSlendRats[i].IZ = RoundTo(Ix, 4)
-    }else if ElemName[0] == 'v' {
-	DOWSlendRats[i].IX = RoundTo(de, 4)
-	DOWSlendRats[i].IY = RoundTo(de, 4)
+	DOWSlendRats[i].Limit = 200 
+    } else if ElemName[0] == 'v' { 
+	DOWSlendRats[i].IX = RoundTo(de, 4) 
+	DOWSlendRats[i].IY = RoundTo(de, 4) 
 	DOWSlendRats[i].IZ = RoundTo(de, 4)
 	DOWSlendRats[i].Limit = 200
-    }else{
+    } else{
 	alphaRadian := alpha / (180/math.Pi)
 	Ix = de / math.Sin(alphaRadian)
 	DOWSlendRats[i].IX = RoundTo(Ix, 4)
 	DOWSlendRats[i].IY = RoundTo(Ix, 4)
 	DOWSlendRats[i].IZ = RoundTo(Ix, 4)
+	if 1 == i % 2 {
+	    DOWSlendRats[i].Limit = 240
+	} else {
+	    DOWSlendRats[i].Limit = 200
+	}
     }
 
     DOWSlendRats[i].Ixrx = RoundTo(DOWSlendRats[i].IX / DOWSlendRats[i].Rx, 4)
@@ -126,9 +134,228 @@ func anglePropsDOWSlend( mark, i int, crimped string, page *Page ) {
     } else {
 	DOWSlendRats[i].Check = "NOT OK"
     }
-
-    // fmt.Printf("\nElemName:\t%v\nde:\t%v\nbeta:\t%v\nIx%v\n",ElemName , de, beta, Ix)
 }
+
+func designWeb(mark, i int, page *Page) {
+    DOWWeb := page.TableDOWWeb.DOWWebs
+    MemberInputs := page.WebMember.MemberInputs
+    lbe := page.Geometry.Properties[0].epbc 
+    lbe2 := page.ResGeom.ResProps[0].Lbe2
+
+    lep1 := page.Geometry.Properties[0].fepl 
+    lep2 := page.Geometry.Properties[0].sepl 
+    lip := page.Geometry.Properties[0].ipl
+
+    W := page.TableResForce.ResForces[0].KipUdlWu 
+
+    de := page.ResGeom.ResProps[0].Ed
+
+    L := page.ResGeom.ResProps[0].DLength
+    R := page.TableDOWForce.DOWForces[0].Rmax
+    betaR := page.TableDOWForce.DOWForces[0].Beta * (math.Pi / 180)
+    alphaR := page.TableDOWForce.DOWForces[0].Alpha * (math.Pi / 180)
+    gammaR := page.TableDOWForce.DOWForces[0].Gamma * (math.Pi / 180)
+    deltaR := page.TableDOWForce.DOWForces[0].Delta * (math.Pi / 180)
+
+    if MemberInputs[i].ElemName == "sv" {
+	part1 := W * ((lep1 + lep2) / 2)
+	part2 := (R - (W * (lep1 /2))) / math.Tan(betaR)
+	vmin := part1  + .005 * part2
+	if vmin < page.TableDOWForce.DOWForces[0].Vmin {
+	    DOWWeb[i].Vmin = RoundTo(page.TableDOWForce.DOWForces[0].Vmin, 4)
+	} else {
+	    DOWWeb[i].Vmin = vmin
+	}
+	DOWWeb[i].FcMin = RoundTo(DOWWeb[i].Vmin / math.Sin(gammaR), 4)
+
+    } else if MemberInputs[i].ElemName == "w2" {
+	DOWWeb[i].XPC = lbe
+	DOWWeb[i].XPE = 0
+	DOWWeb[i].EQV1 = RoundTo(W * ((L / 2) - DOWWeb[i].XPE), 4)
+	vmin := DOWWeb[i].EQV1
+	if vmin < page.TableDOWForce.DOWForces[0].Vmin {
+	    DOWWeb[i].Vmin = RoundTo(page.TableDOWForce.DOWForces[0].Vmin, 4)
+	} else {
+	    DOWWeb[i].Vmin = vmin
+	}
+	DOWWeb[i].FtMin = RoundTo(DOWWeb[i].Vmin / math.Sin(betaR), 4)
+    } else if MemberInputs[i].ElemName == "w3" {
+	DOWWeb[i].XPC = RoundTo(lep1 + lep2, 2)
+	DOWWeb[i].XPE = DOWWeb[i - 1].XPC
+	DOWWeb[i].EQV1 = RoundTo(W * ((L / 2) - DOWWeb[i].XPE), 4)
+	vmin := DOWWeb[i].EQV1
+	if vmin < page.TableDOWForce.DOWForces[0].Vmin {
+	    DOWWeb[i].Vmin = RoundTo(page.TableDOWForce.DOWForces[0].Vmin, 4)
+	} else {
+	    DOWWeb[i].Vmin = vmin
+	}
+	DOWWeb[i].FcMin = RoundTo(DOWWeb[i].Vmin / math.Sin(deltaR), 4)
+    } else if MemberInputs[i].ElemName == "w4" {
+	DOWWeb[i].XPC = lbe + lbe2
+	DOWWeb[i].XPE = DOWWeb[i - 1].XPC
+	DOWWeb[i].EQV1 = RoundTo(W * ((L / 2) - DOWWeb[i].XPE), 4)
+	vmin := DOWWeb[i].EQV1
+	if vmin < page.TableDOWForce.DOWForces[0].Vmin {
+	    DOWWeb[i].Vmin = RoundTo(page.TableDOWForce.DOWForces[0].Vmin, 4)
+	} else {
+	    DOWWeb[i].Vmin = vmin
+	}
+	DOWWeb[i].FtMin = RoundTo(DOWWeb[i].Vmin / math.Sin(alphaR), 4)
+    } else if (MemberInputs[i].ElemName != "w4" && 
+    isDiagonal(MemberInputs[i].ElemName)) {
+
+	DOWWeb[i].XPC = DOWWeb[i - 1].XPC + lip
+
+	DOWWeb[i].XPE = DOWWeb[i - 1].XPC
+
+	DOWWeb[i].EQV1 = RoundTo(W * ((L / 2) - DOWWeb[i].XPE), 4)
+
+	vmin := DOWWeb[i].EQV1
+	if vmin < page.TableDOWForce.DOWForces[0].Vmin {
+	    DOWWeb[i].Vmin = RoundTo(page.TableDOWForce.DOWForces[0].Vmin, 4)
+	} else {
+	    DOWWeb[i].Vmin = vmin
+	}
+	wIndex,_ := strconv.Atoi(MemberInputs[i].ElemName[1:])
+
+	if wIndex >= 5 && wIndex % 2 == 0 {
+	    DOWWeb[i].FtMin = RoundTo(DOWWeb[i].Vmin / math.Sin(alphaR), 4)
+	} else if wIndex % 2 == 1 {
+	    DOWWeb[i].FcMin = RoundTo(DOWWeb[i].Vmin / math.Sin(alphaR), 4)
+	}
+    } else if MemberInputs[i].ElemName[0] == 'v' {
+	diagIndex := MemberInputs[i].ElemName[1] - '0'
+	countLip := float64((diagIndex * 2) - 1)
+	x := lep1 + lep2 + (countLip * lip)
+	compChord := ((W * x) / (2 * de)) * (L - x)
+	p := (lip * W) + (.005 * compChord)
+	fmt.Println(lip, W, countLip, x, compChord)
+	DOWWeb[i].FcMin = RoundTo(p, 2)
+    }
+    DOWWeb[i].DesignFTens = larger(DOWWeb[i].FtMin, DOWWeb[i].LiftFTens)
+    DOWWeb[i].DesignFComp = larger(DOWWeb[i].FcMin, DOWWeb[i].LiftFComp)
+}
+func isDiagonal(elem string) bool {
+    iElem,_ := strconv.Atoi(elem[1:])
+    if (elem[0:1] == "w" && iElem > 3) {
+	return true
+    } else {
+	return false
+    }
+    return false
+}
+
+func designStress(mark, i int, page *Page) {
+    DOWDesigns := page.TableDOWDesign.DOWDesigns
+    MemberInputs := page.WebMember.MemberInputs
+    DOWEfectives := page.TableDOWEfective.DOWEfectives
+    Fy := page.Material.Forces[0].YieldStress
+    E := page.Material.Forces[0].ModElas
+    rs := page.TableResistance.ResistanceFactors[0].TensionValue
+
+    Fy_E := E / Fy
+
+    b := angleProp(mark, 5)
+    bF, _ := strconv.ParseFloat(b, 64)
+    t := angleProp(mark, 4)
+    tF, _ := strconv.ParseFloat(t, 64)
+    btF := bF/tF
+    DOWDesigns[i].Compbt = RoundTo(btF, 4)
+    
+    area := angleProp(mark, 3)
+    areaF, _ := strconv.ParseFloat(area, 64)
+    DOWDesigns[i].A = RoundTo(areaF, 4)
+
+    if (MemberInputs[i].Crimped == "yes" &&
+	MemberInputs[i].ElemName == "w2" ||
+	MemberInputs[i].ElemName == "w3" ||
+	MemberInputs[i].ElemName == "sv" ){
+	    Q := (5.25 / btF) + tF
+	    DOWDesigns[i].CompQ = RoundTo(Q, 4)
+
+    } else if (MemberInputs[i].Crimped == "yes" &&
+	MemberInputs[i].ElemName[0] == 'v' || 
+	isDiagonal(MemberInputs[i].ElemName)){
+	    if btF <= 0.45 * (math.Sqrt(Fy_E)) {
+		DOWDesigns[i].CompQ = 1
+	    } else if (btF >= 0.91 * (math.Sqrt(Fy_E))) {
+		fmt.Println("2 ", MemberInputs[i].ElemName)
+		Q := 0.53 * (E / (Fy * math.Pow(btF, 2)))
+		DOWDesigns[i].CompQ = RoundTo(Q, 4)
+	    } else if (btF <= 0.91 * (math.Sqrt(Fy_E))) {
+
+		fmt.Println("3 ", MemberInputs[i].ElemName, btF, Fy, E)
+		Q := 1.34 - 0.76 * (btF * math.Sqrt(Fy / E))
+		DOWDesigns[i].CompQ = RoundTo(Q, 4)
+
+	    } else {
+		// fmt.Println("tabla ", MemberInputs[i].ElemName)
+		Q := angleProp(mark, 12)
+		QF,_ := strconv.ParseFloat(Q, 64)
+		DOWDesigns[i].CompQ = RoundTo(QF, 4)
+	    }
+    } else if (MemberInputs[i].Crimped == "no" &&
+	MemberInputs[i].ElemName == "w2" ||
+	MemberInputs[i].ElemName == "w3" ||
+	MemberInputs[i].ElemName == "sv" ){
+	    fmt.Println("tabla ", MemberInputs[i].ElemName)
+	    Q := angleProp(mark, 12)
+	    QF,_ := strconv.ParseFloat(Q, 64)
+	    DOWDesigns[i].CompQ = RoundTo(QF, 4)
+    }
+
+    a := math.Sqrt(E / DOWDesigns[i].CompQ * Fy)
+    SLRgov := DOWEfectives[i].SLRgov
+
+    Fe := RoundTo(math.Pow(math.Pi, 2) * E / math.Pow(SLRgov, 2), 4)
+    DOWDesigns[i].CompFe = Fe
+    Qr := DOWDesigns[i].CompQ
+
+    if SLRgov <= a {
+	DOWDesigns[i].CompFcr = RoundTo(Qr * (math.Pow(0.658, (Qr * Fy)/Fe)) * Fy, 4)
+    } else {
+	DOWDesigns[i].CompFcr = RoundTo(0.877 * Fe, 4)
+    }
+
+    DOWDesigns[i].CompFc = RoundTo(DOWDesigns[i].CompFcr * .9, 4)
+    DOWDesigns[i].CompPuc = RoundTo(DOWDesigns[i].CompFcr * areaF, 4)
+
+    DOWDesigns[i].TenFt = Fy * rs
+    DOWDesigns[i].TenPut = RoundTo(DOWDesigns[i].TenFt * areaF, 4)
+}
+
+func efectiveSlendernes(i int, page *Page) {
+    MemberInputs := page.WebMember.MemberInputs
+    DOWEfectives := page.TableDOWEfective.DOWEfectives
+    DOWSlendRats := page.TableDOWSlend.DOWSlendRats
+
+    if MemberInputs[i].Crimped == "yes" {
+	DOWEfectives[i].Klrx = 0.75
+	DOWEfectives[i].Klry = 0.90
+	DOWEfectives[i].Klrz = 0
+	DOWEfectives[i].Klsrz = 0
+    } else if MemberInputs[i].Fill == "yes" {
+	DOWEfectives[i].Klrx = 0.75
+	DOWEfectives[i].Klry = 0.94
+	DOWEfectives[i].Klrz = 0
+	DOWEfectives[i].Klsrz = 1.0
+    } else if MemberInputs[i].Fill == "no" {
+	DOWEfectives[i].Klrx = 0
+	DOWEfectives[i].Klry = 0
+	DOWEfectives[i].Klrz = 0.90
+	DOWEfectives[i].Klsrz = 0
+    }
+    DOWEfectives[i].SlendKlrx = DOWSlendRats[i].Ixrx * DOWEfectives[i].Klrx
+    DOWEfectives[i].SlendKlry = DOWSlendRats[i].Iyry * DOWEfectives[i].Klry
+    DOWEfectives[i].SlendKlrz = DOWSlendRats[i].Izrz * DOWEfectives[i].Klrz
+
+    DOWEfectives[i].SLRgov = larger(
+	DOWEfectives[i].SlendKlrx, 
+	DOWEfectives[i].SlendKlry,
+	DOWEfectives[i].SlendKlrz)
+
+}
+
 func getAnglProps(noAngleTop, noAngleBot, sbca float64) AnglProp{
     /* TOOD: 
 	    make function to get angle info
@@ -254,13 +481,13 @@ func newResGeom() ResGeom {
 /*	Stress		*/
 type Force struct {
     YieldStress, ModElas, SpaceChord, Weight, BSeat, TopChord, BottomChord, Udlw, LlWLL, NsLRFD float64
-    FillTopChord, TopChordEP1, TopChordEP2 bool
+    FillTopChord, FillBotChord, TopChordEP1, TopChordEP2 bool
 }
 type Forces = []Force
 type Material struct {
     Forces Forces
 }
-func newForce(yi, mo, sp, we, bs, to, bo, tf, udlwA, llWLLA, nsLRFDA, tcep1, tcep2 string) Force {
+func newForce(yi, mo, sp, we, bs, to, bo, tf, bf, udlwA, llWLLA, nsLRFDA, tcep1, tcep2 string) Force {
     // Note the capital A means "function argument"
     // Stress
     yieldForce,_ := strconv.ParseFloat(yi, 64)
@@ -278,12 +505,18 @@ func newForce(yi, mo, sp, we, bs, to, bo, tf, udlwA, llWLLA, nsLRFDA, tcep1, tce
     topChord,_ := strconv.ParseFloat(to, 64)
     bottomChord,_ := strconv.ParseFloat(bo, 64)
     var fillTopChord bool
+    var fillBotChord bool
     var topChordEP1 bool
     var topChordEP2 bool
     if tf == "yes" {
 	fillTopChord = true
     } else {
 	fillTopChord = false
+    }
+    if bf == "yes" {
+	fillBotChord = true
+    } else {
+	fillBotChord = false
     }
     if tcep1 == "yes" {
 	topChordEP1 = true
@@ -304,6 +537,7 @@ func newForce(yi, mo, sp, we, bs, to, bo, tf, udlwA, llWLLA, nsLRFDA, tcep1, tce
 	TopChord:	topChord,
 	BottomChord:	bottomChord,
 	FillTopChord:	fillTopChord,
+	FillBotChord:	fillBotChord,
 	TopChordEP1:	topChordEP1,
 	TopChordEP2:	topChordEP2,
 	Udlw:	udlw,
@@ -314,7 +548,7 @@ func newForce(yi, mo, sp, we, bs, to, bo, tf, udlwA, llWLLA, nsLRFDA, tcep1, tce
 func newMaterial() Material{
     return Material{
 	Forces: []Force{
-	    newForce("50000", "29000", "1", "", "", "", "", "", "", "", "", "", ""),
+	    newForce("50000", "29000", "1", "", "", "", "", "", "", "", "", "", "", ""),
 	},
     }
 }
@@ -322,6 +556,7 @@ func newMaterial() Material{
 // 3. Design Loads
 type ResForce struct {
     KipUdlWu float64
+
     KipLlWLL float64
     KipNsLRFD float64
     MaxDsgnMoment float64
@@ -353,8 +588,10 @@ type AnglProp struct {
     YTop,
     IxTop,
     IyTop,
+
     BTop,
     TTop,
+
     QTop,
     AreaBot,
     RxBot,
@@ -363,8 +600,10 @@ type AnglProp struct {
     YBot,
     IxBot,
     IyBot,
+
     BBot,
     TBot,
+
     QBot float64
 }
 type AnglProps = []AnglProp
@@ -478,6 +717,7 @@ type MemberInput struct {
     Part string
     Mark string
     Crimped string
+    Fill string
     // response
     Secction string
     MidPanel string
@@ -513,6 +753,7 @@ type AnalysisResult struct {
     BotChrdTnsForce float64
     BotChrdTnsFt float64
     BotChrdCmpForce float64
+    BotChrdCmpFc float64
     BotChrdMomDwnMu float64
     BotChrdMomDwnFb float64
     BotChrdMomUpMu float64
@@ -521,7 +762,7 @@ type AnalysisResult struct {
     TopChrdTnsForceMid float64
     TopChrdTnsFtMid float64
     TopChrdCmpForceMid float64
-    TopChrdTnsFcMid float64
+    TopChrdCmpFcMid float64
     TopChrdMomDwnMuMid float64
     TopChrdMomDwnFbMid float64
     TopChrdMomUpMuMid float64
@@ -530,7 +771,7 @@ type AnalysisResult struct {
     TopChrdTnsForcePoint float64
     TopChrdTnsFtPoint float64
     TopChrdCmpForcePoint float64
-    TopChrdTnsFcPoint float64
+    TopChrdCmpFcPoint float64
     TopChrdMomDwnMuPoint float64
     TopChrdMomDwnFbPoint float64
     TopChrdMomUpMuPoint float64
@@ -539,7 +780,7 @@ type AnalysisResult struct {
     TopChrdEP1TnsForceMid float64 
     TopChrdEP1TnsFtMid float64    
     TopChrdEP1CmpForceMid float64 
-    TopChrdEP1TnsFcMid float64    
+    TopChrdEP1CmpFcMid float64  
     TopChrdEP1MomDwnMuMid float64 
     TopChrdEP1MomDwnFbMid float64 
     TopChrdEP1MomUpMuMid float64  
@@ -548,7 +789,7 @@ type AnalysisResult struct {
     TopChrdEP1TnsForcePoint float64 
     TopChrdEP1TnsFtPoint float64    
     TopChrdEP1CmpForcePoint float64 
-    TopChrdEP1TnsFcPoint float64    
+    TopChrdEP1CmpFcPoint float64    
     TopChrdEP1MomDwnMuPoint float64 
     TopChrdEP1MomDwnFbPoint float64 
     TopChrdEP1MomUpMuPoint float64  
@@ -557,7 +798,7 @@ type AnalysisResult struct {
     TopChrdEP2TnsForceMid float64 
     TopChrdEP2TnsFtMid float64    
     TopChrdEP2CmpForceMid float64 
-    TopChrdEP2TnsFcMid float64    
+    TopChrdEP2CmpFcMid float64    
     TopChrdEP2MomDwnMuMid float64 
     TopChrdEP2MomDwnFbMid float64 
     TopChrdEP2MomUpMuMid float64  
@@ -566,7 +807,7 @@ type AnalysisResult struct {
     TopChrdEP2TnsForcePoint float64 
     TopChrdEP2TnsFtPoint float64    
     TopChrdEP2CmpForcePoint float64 
-    TopChrdEP2TnsFcPoint float64    
+    TopChrdEP2CmpFcPoint float64    
     TopChrdEP2MomDwnMuPoint float64 
     TopChrdEP2MomDwnFbPoint float64 
     TopChrdEP2MomUpMuPoint float64  
@@ -590,31 +831,7 @@ func newTableAnalysis() TableAnalysis {
 // Resistance Factor
 type ResistanceFactor struct {
     TensionFactor string // value as default is "Phi t"
-    TensionValue float64 // value as default is 0.9 Fy
-    TensionDStress  string// string value as default is 0.9 Fy
-
-    CompressionFactor string // value as default is "Phi c"
-    CompressionValue float64 // value as default is 0.9 Fy
-    CompressionDStress string // string value as default is 0.9 Fy
-
-    BendingFactor string // value as default is "Phi t"
-    BendingValue float64 // value as default is 0.9 Fy
-    BendingDStress string // string value as default is 0.9 Fy
-}
-type ResistanceFactors = []ResistanceFactor
-type TableResistance struct {
-    ResistanceFactors ResistanceFactors
-}
-func newResistanceFactor(
-    tensionFactor, compressionFactor, bendingFactor,
-    tensionDStress, compressionDStress, bendingDStress string,
-    tensionValue, compressionValue, bendingValue float64) ResistanceFactor{
-    return ResistanceFactor{
-	TensionFactor: tensionFactor,
-	TensionValue: tensionValue,
-	TensionDStress: tensionDStress,
-	CompressionFactor: compressionFactor,
-	CompressionValue: compressionValue,
+    TensionValue float64 // val
 	CompressionDStress: compressionDStress,
 	BendingFactor: bendingFactor,
 	BendingValue: bendingValue,
@@ -733,7 +950,7 @@ type TableCheck struct {
     CheckSlenderness CheckSlenderness
 }
 func newCheckSlendernes()CheckSlendernes{
-return CheckSlendernes{}
+    return CheckSlendernes{}
 }
 func newTableCheck() TableCheck{
     return TableCheck {
@@ -751,8 +968,8 @@ type EfectiveSlendernes struct {
     BCklsrz float64
     BCKLrx float64
     BCSlendklrx float64
-    BCSlendklry float64
-    BCSlendklrz float64
+    BCSlendklry float64 
+    BCSlendklrz float64 
     BCSlendklsrz float64
     BCSLRgov float64
     BCFeKlrx float64
@@ -844,7 +1061,7 @@ func newTableEfective() TableEfective{
     }
 }
 
-// Design Stress
+// Design Stress and Check of relation capabilites vs solicitations
 type Design struct{
     BCFt float64
     BCPut float64
@@ -1042,16 +1259,16 @@ type ShearCap struct {
     Pu_Ep float64
     Fn float64
     Fv float64
+
     Botfv float64
     Botfa float64
     Botfvmod float64
-    BotFv float64
-    Botcheck float64
+    Botcheck string
+
     Topfv float64
     Topfa float64
     Topfvmod float64
-    TopFv float64
-    Topcheck float64
+    Topcheck string
 }
 type ShearCaps = []ShearCap
 type TableShear struct {
@@ -1106,6 +1323,7 @@ func newTableDOWSlend() TableDOWSlend{
 type DOWDesign struct {
     InputName string
     ElemName string
+    A float64
     TenFt float64
     TenPut float64
     TenPuSol float64
@@ -1223,6 +1441,24 @@ func newTableDOWForce() TableDOWForce{
 }
 
 // Moment of Inertia
+type M struct {
+    v float64
+}
+type Ms = []M
+type TMs struct {
+    Ms Ms
+}
+func newM() M {
+    return M{}
+}
+func newTMs() TMs{
+    return TMs{
+	Ms: []M{
+	    newM(),
+	},
+    }
+}
+
 type Moment struct {
     Ijoist float64
     Ireq360 float64
@@ -1234,7 +1470,7 @@ type TableMoment struct {
     Moments Moments
 }
 
-func newMoment()Moment{
+func newMoment() Moment{
     return Moment{}
 }
 func newTableMoment() TableMoment{
@@ -1356,7 +1592,9 @@ type Page struct {
     ResBrid ResBrid
     WebMember WebMember
     TableResistance TableResistance
+
     TableCheck TableCheck
+
     TableEfective TableEfective
     TableDesign TableDesign
     TableResForce TableResForce
@@ -1365,13 +1603,18 @@ type Page struct {
     TableShear TableShear
     TableDOWSlend TableDOWSlend
     TableDOWDesign TableDOWDesign
-    TableMoment TableMoment
+
+
     TableDOWForce TableDOWForce
     TableDOWWeb TableDOWWeb
     TableDOWEfective TableDOWEfective
     TableLateral TableLateral
     TableDesignWeld TableDesignWeld
     TableDesignWeldCon TableDesignWeldCon
+
+    TableMoment TableMoment
+    TMs TMs
+    TableAnalysis TableAnalysis
 }
 
 func newPage() Page {
@@ -1387,18 +1630,19 @@ func newPage() Page {
 	TableEfective: newTableEfective(),
 	TableDesign: newTableDesign(),
 	TableResForce: newTableResForce(),
-
 	TableCap: newTableCap(),
 	TableShear: newTableShear(),
 	TableDOWSlend: newTableDOWSlend(),
 	TableDOWDesign: newTableDOWDesign(),
-	TableMoment: newTableMoment(),
 	TableDOWForce: newTableDOWForce(),
 	TableDOWWeb: newTableDOWWeb(),
 	TableDOWEfective: newTableDOWEfective(),
 	TableLateral: newTableLateral(),
 	TableDesignWeld: newTableDesignWeld(),
 	TableDesignWeldCon: newTableDesignWeldCon(),
+	TableMoment: newTableMoment(),
+	TMs: newTMs(),
+	TableAnalysis: newTableAnalysis(),
     }
 }
 
@@ -1430,6 +1674,85 @@ func checkerOK(rgov, limit *float64) string{
 	return "NOT OK"
     }
 }
+func mmm(page *Page) {
+     ms := &page.TMs.Ms[0]
+     ms.v = math.Pi
+}
+
+func analysis(page *Page) {
+
+    W := page.TableResForce.ResForces[0].KipUdlWu 
+    lep1 := page.Geometry.Properties[0].fepl 
+    lep2 := page.Geometry.Properties[0].sepl 
+
+    rmax := page.TableDOWForce.DOWForces[0].Rmax
+    betaR := page.TableDOWForce.DOWForces[0].Beta / (180/math.Pi)
+    gammaR := page.TableDOWForce.DOWForces[0].Gamma / (180/math.Pi)
+
+     
+    forces := &page.TableAnalysis.AnalysisResults[0]    
+    pChord := page.TableResForce.ResForces[0].ChordForce
+    Atc := page.ResMater.AnglProps[0].AreaTop
+
+    FcMin := W * ((lep1 / 2) + (lep2 / 2))
+    minusPanel := math.Cos(gammaR) * FcMin
+
+    forces.TopChrdCmpForceMid = RoundTo(pChord, 4)
+    forces.TopChrdCmpFcMid = RoundTo(forces.TopChrdCmpForceMid / Atc, 4)
+
+    EP1Force := RoundTo(rmax / math.Tan(betaR), 4)
+    forces.TopChrdEP1CmpForceMid = EP1Force
+
+    EP2Force := RoundTo(EP1Force - minusPanel, 4)
+    forces.TopChrdEP2CmpForceMid = EP2Force
+
+    forces.TopChrdEP1CmpFcMid  = RoundTo(EP1Force / Atc, 4)
+    forces.TopChrdEP2CmpFcMid  = RoundTo(EP2Force / Atc, 4)
+} 
+
+func checkShear(page *Page) {
+    shearCap := &page.TableShear.ShearCaps[0]
+    rmax := page.TableDOWForce.DOWForces[0].Rmax
+    W := page.TableResForce.ResForces[0].KipUdlWu 
+    lep1 := page.Geometry.Properties[0].fepl 
+    betaR := page.TableDOWForce.DOWForces[0].Beta / (180/math.Pi)
+    ABot := page.ResMater.AnglProps[0].AreaBot
+    bBot := page.ResMater.AnglProps[0].BBot
+    tBot := page.ResMater.AnglProps[0].TBot
+
+    ATop := page.ResMater.AnglProps[0].AreaTop
+    bTop := page.ResMater.AnglProps[0].BTop
+    tTop := page.ResMater.AnglProps[0].TTop
+
+
+    vep := rmax - ((lep1 * W) / 2)
+    puep := vep / math.Tan(betaR)
+    shearCap.Vep = RoundTo(vep, 4)
+    shearCap.Pu_Ep = RoundTo(puep, 4)
+    Fy := page.Material.Forces[0].YieldStress
+
+    shearCap.Fn = 0.6 * Fy
+    shearCap.Fv = shearCap.Fn
+
+    shearCap.Botfv = RoundTo(vep / (2 * bBot * tBot), 4)
+    shearCap.Botfa = RoundTo(puep / ABot, 4)
+    shearCap.Botfvmod = RoundTo(.5 * math.Sqrt(math.Pow(shearCap.Botfa, 2) + 4 * math.Pow(shearCap.Botfv, 2)), 4)
+    if shearCap.Botfvmod < shearCap.Fv {
+	shearCap.Botcheck = "Ok"
+    } else {
+	shearCap.Botcheck = "Not Ok"
+    }
+
+    shearCap.Topfv = RoundTo(vep / (2 * bTop * tTop), 4)
+    shearCap.Topfa = RoundTo(puep / ATop, 4)
+    shearCap.Topfvmod = RoundTo(.5 * math.Sqrt(math.Pow(shearCap.Topfa, 2) + 4 * math.Pow(shearCap.Topfv, 2)), 4)
+    if shearCap.Topfvmod < shearCap.Fv {
+	shearCap.Topcheck = "Ok"
+    } else {
+	shearCap.Topcheck = "Not Ok"
+    }
+}
+
 func slendernesRadio(page *Page) {
     geom := &page.Geometry.Properties[0]
     resProp := &page.ResGeom.ResProps[0]
@@ -1502,9 +1825,9 @@ func slendernesRadio(page *Page) {
     check.TCEp1Pointlimit = 120
     check.TCEp1Pointcheck = checkerOK(&check.TCEp1Pointrgov, &check.TCEp1Pointlimit)
 
-    check.TCEp2MidIx = geom.ipl
+    check.TCEp2MidIx = geom.sepl
     check.TCEp2MidIy = math.Floor(resProp.Lbe2)
-    check.TCEp2MidIz = geom.ipl
+    check.TCEp2MidIz = geom.sepl
     check.TCEp2Midrx = bot.RxTop
     check.TCEp2Midry = bot.RyTop
     check.TCEp2Midrz = bot.RzTop
@@ -1515,9 +1838,9 @@ func slendernesRadio(page *Page) {
     check.TCEp2Midlimit = 120
     check.TCEp2Midcheck = checkerOK(&check.TCEp2Midrgov, &check.TCEp2Midlimit)
 
-    check.TCEp2PointIx = geom.ipl
+    check.TCEp2PointIx = geom.sepl
     check.TCEp2PointIy = math.Floor(resProp.Lbe2)
-    check.TCEp2PointIz = geom.ipl
+    check.TCEp2PointIz = geom.sepl
     check.TCEp2Pointrx = bot.RxTop
     check.TCEp2Pointry = bot.RyTop
     check.TCEp2Pointrz = bot.RzTop
@@ -1536,10 +1859,38 @@ func deCalculation(page *Page) {
     page.ResGeom.ResProps[0].Ed = de
     // fmt.Println(de)
 }
+func momentOfInertia(page *Page) {
+    Moment := &page.TableMoment.Moments[0]
+    Ixtc := page.ResMater.AnglProps[0].IxTop
+    Ixbc := page.ResMater.AnglProps[0].IxBot
+    Atc := page.ResMater.AnglProps[0].AreaTop
+    Abc := page.ResMater.AnglProps[0].AreaBot
+    de := page.ResGeom.ResProps[0].Ed
+    Wll := page.TableResForce.ResForces[0].KipLlWLL
+    E := page.Material.Forces[0].ModElas
+    // check := &page.TableMoment.Moments[0].check
+    L := page.ResGeom.ResProps[0].DLength
+
+    ijoist := Ixtc + Ixbc + ((Atc * Abc * math.Pow(de, 2)) / (Atc + Abc))
+    ireq360 := 1.15 * 5 * 360 * Wll * math.Pow(L, 3) / (384 * E)
+    ireq240 := ireq360 * 2 / 3
+
+    Moment.Ijoist = RoundTo(ijoist, 2)
+    Moment.Ireq360 = RoundTo(ireq360, 2)
+    Moment.Ireq240 = RoundTo(ireq240, 2)
+
+    if ireq240 < ijoist {
+	Moment.Check = "OK"
+    } else {
+	Moment.Check ="NOT OK"
+    }
+}
 func efectiveSlend(page *Page) {
     // if Top chord (Lip max) mid panel fill yes check criteria B in the table
     EfectiveSlend := &page.TableEfective.EfectiveSlenderness[0]
+
     fillTopChord := &page.Material.Forces[0].FillTopChord
+    fillBotChord := &page.Material.Forces[0].FillBotChord
     TCEP1MP := &page.Material.Forces[0].TopChordEP1
     TCEP2MP := &page.Material.Forces[0].TopChordEP2
     CheckSlend := &page.TableCheck.CheckSlenderness[0]
@@ -1557,6 +1908,17 @@ func efectiveSlend(page *Page) {
 	EfectiveSlend.TCIpMidklry = 0
 	EfectiveSlend.TCIpMidklrz = 0.75
 	EfectiveSlend.TCIpMidklsrz = 0
+    }
+    if *fillBotChord {
+	EfectiveSlend.BCklrx = 0.9
+	EfectiveSlend.BCklry = 0.94
+	EfectiveSlend.BCklrz = 0
+	EfectiveSlend.BCklsrz = 1
+    } else {
+	EfectiveSlend.BCklrx = 0
+	EfectiveSlend.BCklry = 0
+	EfectiveSlend.BCklrz = 1
+	EfectiveSlend.BCklsrz = 0
     }
     // T.C. (Ep1) mid-panel
     if *TCEP1MP{
@@ -1581,14 +1943,22 @@ func efectiveSlend(page *Page) {
 	EfectiveSlend.TCEp2Midklrz = 1
 	EfectiveSlend.TCEp2Midklsrz = 0
     }
+
+    EfectiveSlend.BCSlendklrx = EfectiveSlend.BCklrx * CheckSlend.BCIxrx
+    EfectiveSlend.BCSlendklry = EfectiveSlend.BCklry * CheckSlend.BCIyry
+    EfectiveSlend.BCSlendklrz = EfectiveSlend.BCklrz * CheckSlend.BCIzrz
+    EfectiveSlend.BCSlendklsrz = EfectiveSlend.BCklsrz * CheckSlend.BCIzrz
+
     EfectiveSlend.TCIpMidSlendklrx = EfectiveSlend.TCIpMidklrx * CheckSlend.TCIpMidIxrx
     EfectiveSlend.TCIpMidSlendklry = EfectiveSlend.TCIpMidklry * CheckSlend.TCIpMidIyry
     EfectiveSlend.TCIpMidSlendklrz = EfectiveSlend.TCIpMidklrz * CheckSlend.TCIpMidIzrz
+    EfectiveSlend.TCIpMidSlendklrz = EfectiveSlend.TCIpMidklsrz * CheckSlend.TCIpMidIzrz
 
     // SLR Ggov
-    EfectiveSlend.TCIpMidSLRgov = larger(EfectiveSlend.TCIpMidSlendklrx, EfectiveSlend.TCIpMidSlendklry, EfectiveSlend.TCIpMidSlendklrz)
+    EfectiveSlend.BCSLRgov = larger(EfectiveSlend.BCSlendklrx, EfectiveSlend.BCSlendklry, EfectiveSlend.BCSlendklrz)
 
-    EfectiveSlend.TCEp1MidSlendklrx = EfectiveSlend.TCEp1Midklrx * CheckSlend.TCEp1MidIxrx
+    EfectiveSlend.TCIpMidSLRgov = larger(EfectiveSlend.TCIpMidSlendklrx, EfectiveSlend.TCIpMidSlendklry, EfectiveSlend.TCIpMidSlendklrz) 
+    EfectiveSlend.TCEp1MidSlendklrx = EfectiveSlend.TCEp1Midklrx * CheckSlend.TCEp1MidIxrx 
     EfectiveSlend.TCEp1MidSlendklry = EfectiveSlend.TCEp1Midklry * CheckSlend.TCEp1MidIyry
     EfectiveSlend.TCEp1MidSlendklrz = EfectiveSlend.TCEp1Midklrz * CheckSlend.TCEp1MidIzrz
 
@@ -1599,7 +1969,136 @@ func efectiveSlend(page *Page) {
     EfectiveSlend.TCEp2MidSlendklrz = EfectiveSlend.TCEp2Midklrz * CheckSlend.TCEp2MidIzrz
 
     EfectiveSlend.TCEp2MidSLRgov = larger(EfectiveSlend.TCEp2MidSlendklrx, EfectiveSlend.TCEp2MidSlendklry, EfectiveSlend.TCEp2MidSlendklrz)
+
+
+    // change this values. Probably not constants
+    EfectiveSlend.BCKLrx = 0.75
+    EfectiveSlend.TCIpMidKLrx = 0.75
+    EfectiveSlend.TCIpPointKLrx = 0.75
+    EfectiveSlend.TCEp1MidKLrx = 1
+    EfectiveSlend.TCEp1PointKLrx = 1
+    EfectiveSlend.TCEp2MidKLrx = 1
+    EfectiveSlend.TCEp2PointKLrx = 1
+
+    EfectiveSlend.BCFeKlrx = EfectiveSlend.BCKLrx * CheckSlend.BCIxrx
+    EfectiveSlend.TCIpMidFeKlrx = EfectiveSlend.TCIpMidKLrx * CheckSlend.TCIpMidIxrx
+    EfectiveSlend.TCIpPointFeKlrx = EfectiveSlend.TCIpPointKLrx * CheckSlend.TCIpPointIxrx
+    EfectiveSlend.TCEp1MidFeKlrx = EfectiveSlend.TCEp1MidKLrx * CheckSlend.TCEp1MidIxrx
+    EfectiveSlend.TCEp1PointFeKlrx = EfectiveSlend.TCEp1PointKLrx * CheckSlend.TCEp1PointIxrx
+    EfectiveSlend.TCEp2MidFeKlrx = EfectiveSlend.TCEp2MidKLrx * CheckSlend.TCEp2MidIxrx
+    EfectiveSlend.TCEp2PointFeKlrx = EfectiveSlend.TCEp2PointKLrx * CheckSlend.TCEp2PointIxrx
+ 
 }
+func design (page *Page) {
+    C := page.TableResistance.ResistanceFactors[0].CompressionValue
+    B := page.TableResistance.ResistanceFactors[0].BendingValue
+    Fy := page.Material.Forces[0].YieldStress
+    dStress := &page.TableDesign.Designs[0]
+    Ft := C * Fy
+    Fb := B * Fy
+    E := page.Material.Forces[0].ModElas
+    dStress.BCFt = Ft
+    dStress.BCFb = Fb
+    Abc := page.ResMater.AnglProps[0].AreaBot
+    Atc := page.ResMater.AnglProps[0].AreaTop
+    Btc := page.ResMater.AnglProps[0].BTop
+    Ttc := page.ResMater.AnglProps[0].TTop
+    Qtc := page.ResMater.AnglProps[0].QTop
+    Bbc := page.ResMater.AnglProps[0].BBot
+    Tbc := page.ResMater.AnglProps[0].TBot
+    Qbc := page.ResMater.AnglProps[0].QBot
+    Klrxbc := page.TableEfective.EfectiveSlenderness[0].BCFeKlrx
+
+    Klrxtc := page.TableEfective.EfectiveSlenderness[0].TCIpMidFeKlrx
+    KlrxEp1 := page.TableEfective.EfectiveSlenderness[0].TCEp1MidFeKlrx
+    KlrxEp2 := page.TableEfective.EfectiveSlenderness[0].TCEp2MidFeKlrx
+
+    SLRbc := page.TableEfective.EfectiveSlenderness[0].BCSLRgov
+    SLRtc := page.TableEfective.EfectiveSlenderness[0].TCIpMidSLRgov
+    SLREp1 := page.TableEfective.EfectiveSlenderness[0].TCEp1MidSLRgov
+    SLREp2 := page.TableEfective.EfectiveSlenderness[0].TCEp2MidSLRgov
+
+
+    atc := math.Sqrt(E / Qtc * Fy)
+    abc := math.Sqrt(E / Qbc * Fy)
+
+    dStress.BCPut = Ft * page.ResMater.AnglProps[0].AreaBot
+    dStress.BCbt = RoundTo(Bbc / Tbc, 4)
+    dStress.BCQ = Qbc
+    dStress.BCFex = RoundTo((math.Pow(math.Pi, 2) * E) / math.Pow(Klrxbc, 2), 4)
+    fmt.Println(SLRbc)
+
+    dStress.TCIpMidPut = Ft * page.ResMater.AnglProps[0].AreaTop
+    dStress.TCIpMidbt = RoundTo(Btc / Ttc , 4)
+    dStress.TCIpMidQ = Qtc
+
+    dStress.TCIpMidFex = RoundTo((math.Pow(math.Pi, 2) * E) / math.Pow(Klrxtc, 2), 4)
+    dStress.TCEp1MidFex = RoundTo((math.Pow(math.Pi, 2) * E) / math.Pow(KlrxEp1, 2), 4)
+    dStress.TCEp2MidFex = RoundTo((math.Pow(math.Pi, 2) * E) / math.Pow(KlrxEp2, 2), 4)
+
+    bcFetc := RoundTo((math.Pow(math.Pi, 2) * E) / math.Pow(SLRbc, 2), 4)
+    dStress.BCFetc = bcFetc
+    tcIpFetc := RoundTo((math.Pow(math.Pi, 2) * E) / math.Pow(SLRtc, 2), 4)
+    dStress.TCIpMidFetc = tcIpFetc
+    tcEp1Fetc := RoundTo((math.Pow(math.Pi, 2) * E) / math.Pow(SLREp1, 2), 4)
+    dStress.TCEp1MidFetc = tcEp1Fetc
+    tcEp2Fetc := RoundTo((math.Pow(math.Pi, 2) * E) / math.Pow(SLREp2, 2), 4)
+    dStress.TCEp2MidFetc = tcEp2Fetc
+
+    expbc := (Qbc * Fy) / bcFetc
+    exptc := (Qtc * Fy) / tcIpFetc
+    expEp1 := (Qtc * Fy) / tcEp1Fetc
+    expEp2 := (Qtc * Fy) / tcEp2Fetc
+
+
+    if bcFetc <= abc {
+	dStress.BCFcr = RoundTo(.877 * bcFetc, 4)
+    } else {
+	dStress.BCFcr = RoundTo(Qbc * math.Pow(0.658, expbc) * Fy, 4)
+    }
+    if tcIpFetc <= atc {
+	dStress.TCIpMidFcr = RoundTo(Qtc * (math.Pow(0.658, exptc)) * Fy, 4)
+    } else {
+	dStress.TCIpMidFcr = .877 * tcIpFetc
+    }
+    if tcEp1Fetc <= atc {
+	dStress.TCEp1MidFcr = RoundTo(Qtc * (math.Pow(0.658, expEp1)) * Fy, 4)
+    } else {
+	dStress.TCEp1MidFcr = .877 * tcEp1Fetc
+    }
+    if tcEp2Fetc <= atc {
+	dStress.TCEp2MidFcr = RoundTo(Qtc * (math.Pow(0.658, expEp2)) * Fy, 4)
+    } else {
+	dStress.TCEp2MidFcr = .877 * tcEp2Fetc
+    }
+
+    dStress.BCFc = RoundTo(C * dStress.BCFcr, 4)
+    dStress.TCIpMidFc = RoundTo(C * dStress.TCIpMidFcr, 4)
+    dStress.TCEp1MidFc = RoundTo(C * dStress.TCEp1MidFcr, 4)
+    dStress.TCEp2MidFc = RoundTo(C * dStress.TCEp2MidFcr, 4)
+
+    dStress.BCPuc = RoundTo(dStress.BCFc * Abc, 4)
+    dStress.TCIpMidPuc = RoundTo(dStress.TCIpMidFc * Atc, 4)
+    dStress.TCEp1MidPuc = RoundTo(dStress.TCEp1MidFc * Atc, 4)
+    dStress.TCEp2MidPuc = RoundTo(dStress.TCEp2MidFc * Atc, 4)
+
+    forces := &page.TableAnalysis.AnalysisResults[0]    
+    if forces.BotChrdCmpFc == 0 {
+	dStress.BCcm = 1
+    }
+    Fc := forces.TopChrdCmpFcMid
+
+    Ep1Fc := forces.TopChrdEP1CmpFcMid
+    Ep2Fc := forces.TopChrdEP2CmpFcMid
+    Ipcm := RoundTo(1 - ((0.4 * Fc) / (C * dStress.TCIpMidFex)), 4)
+    dStress.TCIpMidcm = Ipcm
+
+    Ep1cm := RoundTo(1 - (0.3 * Ep1Fc) / (C * dStress.TCEp1MidFex), 4)
+    dStress.TCEp1Midcm = Ep1cm
+    Ep2cm := RoundTo(1 - (0.3 * Ep2Fc) / (C * dStress.TCEp2MidFex), 4)
+    dStress.TCEp2Midcm = Ep2cm
+}
+
 func designLoads(page *Page) {
     udlw := &page.Material.Forces[0].Udlw
     llWLL := &page.Material.Forces[0].LlWLL
@@ -1624,18 +2123,39 @@ func webMemberAngles(page *Page) {
     lpe1 := &page.Geometry.Properties[0].fepl
     lpe2 := &page.Geometry.Properties[0].sepl
     lip := &page.Geometry.Properties[0].ipl
+    W := page.TableResForce.ResForces[0].KipUdlWu 
+    L := page.ResGeom.ResProps[0].DLength
     
     beta := math.Atan(*de / *lbe) * (180 / math.Pi)
     gamma := math.Atan(*de / (*lbe - *lpe1)) * (180 / math.Pi)
     delta := math.Atan(*de / (*lpe1 + *lpe2 - *lbe)) * (180 / math.Pi)
     alpha := math.Atan(*de / *lip) * (180 / math.Pi)
+    rmax := (W * L) / 2
+    vmin := rmax * .25
 
     page.TableDOWForce.DOWForces[0].Beta = beta
     page.TableDOWForce.DOWForces[0].Gamma = gamma
     page.TableDOWForce.DOWForces[0].Delta = delta
     page.TableDOWForce.DOWForces[0].Alpha = alpha
+    page.TableDOWForce.DOWForces[0].Rmax = rmax
+    page.TableDOWForce.DOWForces[0].Vmin = vmin
 
+} 
+
+func angleProp(col, row int) string {
+    file, err := os.Open("Propiedades.csv")
+    if err != nil {
+	fmt.Println("Error: ", err)
+    }
+    defer file.Close()
+    reader := csv.NewReader(file)
+    record, err := reader.ReadAll()
+    if err != nil {
+	fmt.Println("Error: ", err)
+    }
+    return record[col][row]
 }
+
 func main() {
     t := &Template{
 	templates: template.Must(template.ParseGlob("views/*.html")),
@@ -1689,10 +2209,13 @@ func main() {
 	modElas := c.FormValue("modElas")
 	spaceChord := c.FormValue("spaceChord")
 
+	fmt.Println("Stress ", yieldStress, modElas)
+
 	// Chords input
 	topChord := c.FormValue("topChord")
 	bottomChord := c.FormValue("bottomChord")
 	fillTopChord := c.FormValue("fillTopChord")
+	fillBotChord := c.FormValue("fillBotChord")
 	topChordEP1 := c.FormValue("topChordEP1")
 	topChordEP2 := c.FormValue("topChordEP2")
 
@@ -1762,6 +2285,7 @@ func main() {
 	    topChord,
 	    bottomChord,
 	    fillTopChord,
+	    fillBotChord,
 	    udlw,
 	    llWLL,
 	    nsLRFD,
@@ -1830,12 +2354,20 @@ func main() {
 	    page.TableDesignWeldCon.DesignWeldCons = append(page.TableDesignWeldCon.DesignWeldCons, elementDesignWeldCon)
 	}
 
-
 	slendernesRadio(&page)
 	efectiveSlend(&page)
 	deCalculation(&page)
 	designLoads(&page)
 	webMemberAngles(&page)
+	checkShear(&page)
+
+	fmt.Println(page.TableMoment.Moments)
+	momentOfInertia(&page)
+	fmt.Println(page.TableMoment.Moments)
+
+	analysis(&page)
+	design(&page)
+
 
 	//fmt.Println()
 	//fmt.Printf("%+v", page)
@@ -1868,20 +2400,27 @@ func main() {
 	    part := "part" + si
 	    mark := "mark" + si
 	    crimped := "crimped" + si
+	    fill := "fill" + si
 
 	    MemberInputs[i].Part = c.FormValue(part)
 	    MemberInputs[i].Mark = c.FormValue(mark)
 	    MemberInputs[i].Crimped = c.FormValue(crimped)
-
-	    // page.TableDOWSlend.DOWSlendRats[i].IX = 30.35
+	    MemberInputs[i].Fill = c.FormValue(fill)
 
 	    mmark,_ := strconv.Atoi(MemberInputs[i].Mark)
+
 	    MemberInputs[i].Secction = record[mmark][2]
-	    //fmt.Println(page.WebMember.MemberInputs[i])
+
 	    anglePropsDOWSlend(mmark, i, MemberInputs[i].Crimped, &page)
-	    fmt.Println(part)
+
+	    efectiveSlendernes(i, &page)
+
+	    designWeb(mmark, i, &page)
+
+	    designStress(mmark, i, &page)
+
 	}
-	// fmt.Println(page.WebMember.MemberInputs)
+
 	return c.Render(http.StatusOK, "webMem", page )
     })
     e.Logger.Fatal(e.Start(":8080"))

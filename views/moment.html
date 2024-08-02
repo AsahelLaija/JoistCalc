@@ -1,26 +1,26 @@
 {{ block "Moments" . }}
-{{ $Moment := index .TableMoment.Moments 0 }}
+{{ $Momento := index .TableMoment.Moments 0 }}
 <table>
     <tr>
         <td>Ijoist</td>
 	<td>FORMULA</td>
-	<td>{{ $Moment.Ijoist }}</td>
+	<td>{{ $Momento.Ijoist }}</td>
     </tr>
     <tr>
         <td>Ireq</td>
         <td>FORMULA</td>
-	<td>{{ $Moment.Ireq360 }}</td>
+	<td>{{ $Momento.Ireq360 }}</td>
     </tr>
     <tr>
         <td>Ireq</td>
         <td>FORMULA</td>
-	<td>{{ $Moment.Ireq240 }}</td>
+	<td>{{ $Momento.Ireq240 }}</td>
     </tr>
     <tr>
-	<td>{{ $Moment.Ireq240 }}</td>
-        <td>{{ $Moment.Ijoist }}</td>
+	<td>{{ $Momento.Ireq240 }}</td>
 	<td> < </td>
-	<td>{{ $Moment.Check }}</td>
+        <td>{{ $Momento.Ijoist }}</td>
+	<td>{{ $Momento.Check }}</td>
     </tr>
 </table>
 

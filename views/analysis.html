@@ -1,4 +1,5 @@
 {{ block "analysisResult" . }}
+{{ $Res := index .TableAnalysis.AnalysisResults 0 }}
 <h3>Analysis Result</h3>
 <table>
     <thead>
@@ -27,80 +28,80 @@
         </tr>
 	<tr>
 	    <td>Bottom Chord (max)</td>
-	    <td></td>
-	    <td></td>
-	    <td></td>
-	    <td></td>
-	    <td></td>
-	    <td></td>
-	    <td></td>
-	    <td></td>
+	    <td>{{ $Res.BotChrdTnsForce }}</td> 
+	    <td>{{ $Res.BotChrdTnsFt }}</td> 
+	    <td>{{ $Res.BotChrdCmpForce }}</td> 
+	    <td>{{ $Res.BotChrdCmpFc }}</td>
+	    <td>{{ $Res.BotChrdMomDwnMu }}</td> 
+	    <td>{{ $Res.BotChrdMomDwnFb }}</td> 
+	    <td>{{ $Res.BotChrdMomUpMu }}</td> 
+	    <td>{{ $Res.BotChrdMomUpfb }}</td> 
 	</tr>
 	<tr>
 	    <td>Top Chord (Ip) mid-Panel</td>
-	    <td></td>
-	    <td></td>
-	    <td></td>
-	    <td></td>
-	    <td></td>
-	    <td></td>
-	    <td></td>
-	    <td></td>
+	    <td>{{ $Res.TopChrdTnsForceMid }}</td> 
+	    <td>{{ $Res.TopChrdTnsFtMid }}</td> 
+	    <td>{{ $Res.TopChrdCmpForceMid }}</td> 
+	    <td>{{ $Res.TopChrdCmpFcMid }}</td> 
+	    <td>{{ $Res.TopChrdMomDwnMuMid }}</td> 
+	    <td>{{ $Res.TopChrdMomDwnFbMid }}</td> 
+	    <td>{{ $Res.TopChrdMomUpMuMid }}</td> 
+	    <td>{{ $Res.TopChrdMomUpfbMid }}</td> 
 	</tr>
 	<tr>
 	    <td>Top Chord (Ip) point-Panel</td>
-	    <td></td>
-	    <td></td>
-	    <td></td>
-	    <td></td>
-	    <td></td>
-	    <td></td>
-	    <td></td>
-	    <td></td>
+	    <td>{{ $Res.TopChrdTnsForceMid }}</td> 
+	    <td>{{ $Res.TopChrdTnsFtMid }}</td> 
+	    <td>{{ $Res.TopChrdCmpForceMid }}</td> 
+	    <td>{{ $Res.TopChrdCmpFcMid }}</td> 
+	    <td>{{ $Res.TopChrdMomDwnMuPoint }}</td> 
+	    <td>{{ $Res.TopChrdMomDwnFbPoint }}</td> 
+	    <td>{{ $Res.TopChrdMomUpMuPoint }}</td> 
+	    <td>{{ $Res.TopChrdMomUpfbPoint }}</td> 
 	</tr>
 	<tr>
 	    <td>Top Chord (Ep1) mid-Panel</td>
-	    <td></td>
-	    <td></td>
-	    <td></td>
-	    <td></td>
-	    <td></td>
-	    <td></td>
-	    <td></td>
-	    <td></td>
+	    <td>{{ $Res.TopChrdEP1TnsForceMid }}</td> 
+	    <td>{{ $Res.TopChrdEP1TnsFtMid }}</td>    
+	    <td>{{ $Res.TopChrdEP1CmpForceMid }}</td> 
+	    <td>{{ $Res.TopChrdEP1CmpFcMid }}</td>   
+	    <td>{{ $Res.TopChrdEP1MomDwnMuMid }}</td> 
+	    <td>{{ $Res.TopChrdEP1MomDwnFbMid }}</td> 
+	    <td>{{ $Res.TopChrdEP1MomUpMuMid }}</td>  
+	    <td>{{ $Res.TopChrdEP1MomUpfbMid }}</td>  
 	</tr>
 	<tr>
 	    <td>Top Chord (Ep1) point-Panel</td>
-	    <td></td>
-	    <td></td>
-	    <td></td>
-	    <td></td>
-	    <td></td>
-	    <td></td>
-	    <td></td>
-	    <td></td>
+	    <td>{{ $Res.TopChrdEP1TnsForceMid }}</td> 
+	    <td>{{ $Res.TopChrdEP1TnsFtMid }}</td>    
+	    <td>{{ $Res.TopChrdEP1CmpForceMid }}</td> 
+	    <td>{{ $Res.TopChrdEP1CmpFcMid }}</td>   
+	    <td>{{ $Res.TopChrdEP1MomDwnMuPoint }}</td> 
+	    <td>{{ $Res.TopChrdEP1MomDwnFbPoint }}</td> 
+	    <td>{{ $Res.TopChrdEP1MomUpMuPoint }}</td>  
+	    <td>{{ $Res.TopChrdEP1MomUpfbPoint }}</td>  
 	</tr>
 	<tr>
 	    <td>Top Chord (Ep2) mid-Panel</td>
-	    <td></td>
-	    <td></td>
-	    <td></td>
-	    <td></td>
-	    <td></td>
-	    <td></td>
-	    <td></td>
-	    <td></td>
+	    <td>{{ $Res.TopChrdEP2TnsForceMid }}</td> 
+	    <td>{{ $Res.TopChrdEP2TnsFtMid }}</td>    
+	    <td>{{ $Res.TopChrdEP2CmpForceMid }}</td> 
+	    <td>{{ $Res.TopChrdEP2CmpFcMid }}</td>   
+	    <td>{{ $Res.TopChrdEP2MomDwnMuMid }}</td> 
+	    <td>{{ $Res.TopChrdEP2MomDwnFbMid }}</td> 
+	    <td>{{ $Res.TopChrdEP2MomUpMuMid }}</td>  
+	    <td>{{ $Res.TopChrdEP2MomUpfbMid }}</td>  
 	</tr>
 	<tr>
 	    <td>Top Chord (Ep2) point-Panel</td>
-	    <td></td>
-	    <td></td>
-	    <td></td>
-	    <td></td>
-	    <td></td>
-	    <td></td>
-	    <td></td>
-	    <td></td>
+	    <td>{{ $Res.TopChrdEP2TnsForceMid }}</td> 
+	    <td>{{ $Res.TopChrdEP2TnsFtMid }}</td>    
+	    <td>{{ $Res.TopChrdEP2CmpForceMid }}</td> 
+	    <td>{{ $Res.TopChrdEP2CmpFcMid }}</td>   
+	    <td>{{ $Res.TopChrdEP2MomDwnMuPoint }}</td> 
+	    <td>{{ $Res.TopChrdEP2MomDwnFbPoint }}</td> 
+	    <td>{{ $Res.TopChrdEP2MomUpMuPoint }}</td>  
+	    <td>{{ $Res.TopChrdEP2MomUpfbPoint }}</td>  
 	</tr>
     </tbody>
 </table>
