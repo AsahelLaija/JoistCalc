@@ -831,13 +831,41 @@ func newTableAnalysis() TableAnalysis {
 // Resistance Factor
 type ResistanceFactor struct {
     TensionFactor string // value as default is "Phi t"
-    TensionValue float64 // val
-	CompressionDStress: compressionDStress,
-	BendingFactor: bendingFactor,
-	BendingValue: bendingValue,
-	BendingDStress: bendingDStress,
-    }
+    TensionValue float64 // value as default is 0.9 Fy
+    TensionDStress string // string value as default is 0.9 Fy
+
+    CompressionFactor string // value as default is "Phi c"
+    CompressionValue float64 
+    CompressionDStress string // string value as default 0.9 Fy
+
+    BendingFactor string
+    BendingValue float64
+    BendingDStress string
 }
+
+type ResistanceFactors = []ResistanceFactor
+type TableResistance struct {
+    ResistanceFactors ResistanceFactors
+}
+
+func newResistanceFactor(
+    tensionFactor, compressionFactor, bendingFactor,
+    tensionDStress, compressionDStress, bendingDStress string,
+    tensionValue, compressionValue, bendingValue float64) ResistanceFactor {
+	return ResistanceFactor {
+	   TensionFactor: tensionFactor,
+	   TensionValue: tensionValue,
+	   TensionDStress: tensionDStress,
+	   CompressionFactor: compressionFactor,
+	   CompressionValue: compressionValue,
+	   CompressionDStress: compressionDStress,
+	   BendingFactor: bendingFactor,
+	   BendingValue: bendingValue,
+	   BendingDStress: bendingDStress,
+	}
+    }
+    
+
 func newTableResistance() TableResistance {
     return TableResistance {
 	ResistanceFactors: []ResistanceFactor{
